@@ -23,6 +23,10 @@ import 'package:tasaned_project/features/another_screens/learn_grow/presentation
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/my_listing_screen.dart';
 import 'package:tasaned_project/features/another_screens/learning_materials_details/presentation/screens/learnig_metarial_video_screen.dart';
 import 'package:tasaned_project/features/another_screens/learning_materials_details/presentation/screens/learning_materials_details_screen.dart';
+import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/my_courses_details_screen.dart';
+import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/my_courses_screen.dart';
+import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/my_courses_video_screen.dart';
+import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/upload_new_lesson_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_event/presentation/screens/my_event_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_exhibitions/presentation/screens/my_exhibitions_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_listing_screen/presentation/screens/edit_art_work_screen.dart';
@@ -118,15 +122,17 @@ class AppRoutes {
   static const String serviceRateScreen = "/ServiceRateScreen";
   static const String availabilityScreen = "/availabilityScreen";
   static const String rescheduleBooking = "/rescheduleBooking";
-    static const String eventDetailsScreen = "/eventDetailsScreen";
-    static const String createExhibitionScreen = "/createExhibitionScreen";
-    static const String createNewExhibitionScreen = "/createNewExhibitionScreen";
-    static const String createNewExhibitionGalleryScreen = "/createNewExhibitionGalleryScreen";
-    static const String createNewExhibitionFeatureArtistScreen = "/createNewExhibitionFeatureArtistScreen";
-    static const String createNewExhibitionTicketBookingScreen = "/createNewExhibitionTicketBookingScreen";
-    static const String createNewEventScreen = "/createNewEventScreen";
-    static const String createNewEventGalleryScreen = "/createNewEventGalleryScreen";
-    static const String createNewEventTicketBookingScreen = "/createNewEventTicketBookingScreen";
+  static const String eventDetailsScreen = "/eventDetailsScreen";
+  static const String createExhibitionScreen = "/createExhibitionScreen";
+  static const String createNewExhibitionScreen = "/createNewExhibitionScreen";
+  static const String createNewExhibitionGalleryScreen = "/createNewExhibitionGalleryScreen";
+  static const String createNewExhibitionFeatureArtistScreen = "/createNewExhibitionFeatureArtistScreen";
+  static const String createNewExhibitionTicketBookingScreen = "/createNewExhibitionTicketBookingScreen";
+  static const String createNewEventScreen = "/createNewEventScreen";
+  static const String createNewEventGalleryScreen = "/createNewEventGalleryScreen";
+  static const String createNewEventTicketBookingScreen = "/createNewEventTicketBookingScreen";
+    static const String uploadNewLessonScreen = "/uploadNewLessonScreen";
+
 
 
 
@@ -162,6 +168,9 @@ class AppRoutes {
   static const String myEventScreen = "/myEventScreen";
   static const String myExhibitionsScreen = "/myExhibitionsScreen";
   static const String visitorOrderHistoryScreen = "/visitorOrderHistoryScreen";
+  static const String myCourses="/myCoursesItem";
+  static const String myCoursesDetailsScreen="/myCoursesDetailsScreen";
+  static const String myCoursesVideoScreen="/myCoursesVideoScreen";
 
 
 
@@ -238,6 +247,12 @@ class AppRoutes {
     GetPage(name: myEventScreen, page: () => MyEventScreen()),
     GetPage(name: myExhibitionsScreen, page: () => MyExhibitionsScreen()),
     GetPage(name: visitorOrderHistoryScreen, page: () => VisitorOrderHistoryScreen()),
+    GetPage(name: myCourses, page: () => MyCoursesScreen()),
+    GetPage(name: myCoursesDetailsScreen, page:()=> MyCoursesDetailsScreen()),
+    GetPage(name: myCoursesVideoScreen, page:()=> MyCoursesVideoScreen()),
+        GetPage(name: uploadNewLessonScreen, page:()=>UploadNewLessonScreen()),
+
+
 
 
   ];

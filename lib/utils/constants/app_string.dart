@@ -557,4 +557,6 @@ static const String yourEventIsNowLiveDes = 'Congratulations! Your event is now 
   static const String editArtWork = 'Edit Art Work';
 
   // ... rest of the code remains the same ...
+
+  static const String myCourses = 'My Courses';
 }

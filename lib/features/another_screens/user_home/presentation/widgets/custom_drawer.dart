@@ -84,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
                               ),
                             ),
                             12.width,
-                         LocalStorage.myRoll == "museum" ? SizedBox() :   InkWell(
+                         LocalStorage.myRoll == "museum" || LocalStorage.myRoll == "educational_institution" ? SizedBox() :   InkWell(
                               onTap: () {
                                 Get.back();
                                 Get.toNamed(AppRoutes.followersScreen);
@@ -248,7 +248,7 @@ class CustomDrawer extends StatelessWidget {
 
 
 
-              if(LocalStorage.myRoll == "museum" || LocalStorage.myRoll == "educational_institution")...[
+              if(LocalStorage.myRoll == "museum")...[
 
                               //========================Saved item=========================
 
@@ -275,6 +275,35 @@ class CustomDrawer extends StatelessWidget {
             onTap: () => Get.toNamed(AppRoutes.myEventScreen),
           ),
           _DrawerDivider(),
+
+
+
+          ],
+
+        
+
+            if(LocalStorage.myRoll == "educational_institution")...[
+
+                              //========================Saved item=========================
+
+       _DrawerRowItem(
+            icon: Icons.bookmark_border,
+            text: AppString.saved,
+            onTap: () => Get.toNamed(AppRoutes.savedScreen),
+          ),
+          _DrawerDivider(),
+
+
+       _DrawerRowItem(
+        
+            icon: Icons.book_outlined,
+            text: AppString.myCourses,
+            onTap: () => Get.toNamed(AppRoutes.myCourses),
+          ),
+          _DrawerDivider(),
+
+             
+        
 
 
 

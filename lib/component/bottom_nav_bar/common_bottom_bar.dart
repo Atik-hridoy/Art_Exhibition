@@ -99,9 +99,13 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
         if (index == 1 &&
             (LocalStorage.myRoll == "artist" ||
                 LocalStorage.myRoll == "curator" ||
-                LocalStorage.myRoll == "museum" ||
-                LocalStorage.myRoll == "educational_institution")) {
+                LocalStorage.myRoll == "museum" 
+               )) {
           _showAddNewSheet();
+        }else if(index==1 &&  LocalStorage.myRoll == "educational_institution"){
+          Get.toNamed(AppRoutes.uploadNewLessonScreen, arguments: {
+            "title":"Upload New Lesson"
+          });
         } else {
           if (widget.currentIndex == 1 && LocalStorage.myRoll == "visitor") {
             OrderHistoryController.instance!.comeFrom("bottom");
