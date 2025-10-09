@@ -6,7 +6,6 @@ import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/category_item.dart';
-import '../../../../../component/bottom_nav_bar/common_bottom_bar.dart';
 import '../controller/category_controller.dart';
 
 class CategoryScreen extends StatelessWidget {
@@ -17,16 +16,17 @@ class CategoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
-
-            onTap: (){
-              Get.back();
-            },
-            child: Icon(Icons.arrow_back_ios, size: 23.sp,color: AppColors.titleColor,)),
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(Icons.arrow_back_ios, size: 23.sp, color: AppColors.titleColor),
+        ),
         title: CommonText(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: AppColors.titleColor,
-            text: AppString.allCategories),
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.titleColor,
+          text: AppString.allCategories,
+        ),
       ),
 
       body: GetBuilder<CategoryController>(
@@ -44,17 +44,18 @@ class CategoryScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final item = c.categories[index];
               return InkWell(
-                
-                   onTap: () =>     Get.toNamed(AppRoutes.featureArtsScreen, arguments: {
-                  "title":AppString.featureArts
-                }),
-                child: CategoryItem(title: item['title']!, imageSrc: item['image']!));
+                onTap: () => Get.toNamed(
+                  AppRoutes.featureArtsScreen,
+                  arguments: {"title": AppString.featureArts},
+                ),
+                child: CategoryItem(title: item['title']!, imageSrc: item['image']!),
+              );
             },
           ),
         ),
       ),
-      // bottomNavigationBar: CommonBottomNavBar(currentIndex: 1),
 
+      // bottomNavigationBar: CommonBottomNavBar(currentIndex: 1),
     );
   }
 }

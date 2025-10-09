@@ -10,13 +10,13 @@ import '../../../../../utils/constants/app_images.dart';
 import '../../../../../utils/constants/app_string.dart';
 
 class HistoryItem extends StatelessWidget {
-  String status;
-  HistoryItem({super.key,required this.status});
+  final String status;
+  const HistoryItem({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Get.toNamed(AppRoutes.nunnyBookingDetailsScreen);
       },
       child: Container(
@@ -68,8 +68,7 @@ class HistoryItem extends StatelessWidget {
 
                   Row(
                     children: [
-
-                   Icon(Icons.calendar_month, color: AppColors.bodyClr,),
+                      Icon(Icons.calendar_month, color: AppColors.bodyClr),
                       5.width,
                       CommonText(
                         fontSize: 12,
@@ -85,8 +84,7 @@ class HistoryItem extends StatelessWidget {
 
                   Row(
                     children: [
-
-                   Icon(Icons.location_on_outlined, color: AppColors.bodyClr,),
+                      Icon(Icons.location_on_outlined, color: AppColors.bodyClr),
                       5.width,
                       CommonText(
                         fontSize: 12,
@@ -98,50 +96,50 @@ class HistoryItem extends StatelessWidget {
                     ],
                   ),
 
-               if(status!="upComing" && status!="onGoing" && status!="newRequest")   CommonText(
-                      color: Colors.green,
-                      text: "Completed"),
+                  if (status != "upComing" &&
+                      status != "onGoing" &&
+                      status != "newRequest")
+                    CommonText(color: Colors.green, text: "Completed"),
 
-                  if(status=="newRequest")Row(children: [
+                  if (status == "newRequest")
+                    Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 6.h),
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(60.r),
+                          ),
+                          child: CommonText(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                            text: AppString.accept,
+                          ),
+                        ),
 
-                    Container(
-                      margin: EdgeInsets.only(top: 6.h),
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(60.r)
-                      ),
-                      child: CommonText(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                          text: AppString.accept),
+                        12.width,
+
+                        Container(
+                          margin: EdgeInsets.only(top: 6.h),
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.red,
+                            borderRadius: BorderRadius.circular(60.r),
+                          ),
+                          child: CommonText(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                            text: AppString.decline,
+                          ),
+                        ),
+                      ],
                     ),
-
-                    12.width,
-
-
-                    Container(
-                      margin: EdgeInsets.only(top: 6.h),
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.red,
-                        borderRadius: BorderRadius.circular(60.r)
-                      ),
-                      child: CommonText(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                          text: AppString.decline),
-                    ),
-                  ],)
                 ],
               ),
             ),
-
-
-
-
           ],
         ),
       ),

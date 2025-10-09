@@ -8,8 +8,8 @@ import '../../../../../utils/constants/app_images.dart';
 import '../../../../../utils/constants/app_string.dart';
 
 class BookingItem extends StatelessWidget {
-  String status;
-   BookingItem({super.key, this.status="Upcoming"});
+  final String status;
+  const BookingItem({super.key, this.status = "Upcoming"});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +53,23 @@ class BookingItem extends StatelessWidget {
                   color: AppColors.bodyClr,
                   text: "25 March 25 | 09:30am - 3:00pm",
                 ),
-                
+
                 CommonText(
-                    color: status=="Upcoming"?AppColors.primaryColor:status=="Ongoing"?AppColors.title2:status=="History"?Colors.green:Colors.red,
-                    text: status=="Upcoming"?"Pending":status=="Ongoing"?"Ongoing":status=="History"?"Completed":"Cancelled")
+                  color: status == "Upcoming"
+                      ? AppColors.primaryColor
+                      : status == "Ongoing"
+                      ? AppColors.title2
+                      : status == "History"
+                      ? Colors.green
+                      : Colors.red,
+                  text: status == "Upcoming"
+                      ? "Pending"
+                      : status == "Ongoing"
+                      ? "Ongoing"
+                      : status == "History"
+                      ? "Completed"
+                      : "Cancelled",
+                ),
               ],
             ),
           ),
@@ -83,11 +96,7 @@ class BookingItem extends StatelessWidget {
                     value: '',
                     child: Row(
                       children: [
-                        Icon(
-                          size: 25,
-                          Icons.edit,
-                          color: AppColors.textFiledColor,
-                        ),
+                        Icon(size: 25, Icons.edit, color: AppColors.textFiledColor),
                         5.width,
                         CommonText(text: AppString.editBooking),
                       ],
@@ -99,10 +108,7 @@ class BookingItem extends StatelessWidget {
                       children: [
                         Icon(size: 25, Icons.clear, color: AppColors.red),
                         5.width,
-                        CommonText(
-                          color: AppColors.red,
-                          text: AppString.cancel,
-                        ),
+                        CommonText(color: AppColors.red, text: AppString.cancel),
                       ],
                     ),
                   ),

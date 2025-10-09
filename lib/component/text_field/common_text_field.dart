@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../utils/constants/app_colors.dart';
 import '../text/common_text.dart';
@@ -17,7 +16,7 @@ class CommonTextField extends StatefulWidget {
     this.textInputAction = TextInputAction.next,
     this.keyboardType = TextInputType.text,
     this.mexLength,
-    this.maxline=1,
+    this.maxline = 1,
     this.validator,
     this.prefixText,
     this.paddingHorizontal = 16,
@@ -119,11 +118,9 @@ class _CommonTextFieldState extends State<CommonTextField> {
       child: Padding(
         padding: EdgeInsetsDirectional.only(end: 10.w),
         child: Icon(
-
           _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
           size: 20.sp,
           color: AppColors.normalGray2,
-
         ),
       ),
     );
