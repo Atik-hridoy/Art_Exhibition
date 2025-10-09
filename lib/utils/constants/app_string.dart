@@ -74,8 +74,7 @@ class AppString {
   static const String fullName = "Full Name";
   static const String createYourAccount = "Create Your Account";
   static const String otpVerify = "OTP Verify";
-  static const String otpVerifyDes =
-      "Enter the OTP Sent to Your Email";
+  static const String otpVerifyDes = "Enter the OTP Sent to Your Email";
   static const String inbox = "Inbox";
   static const String searchDoctor = "search a doctor";
   static const String activeNow = "Active Now";
@@ -135,7 +134,8 @@ class AppString {
   static const String accountVerifiedDes =
       "Your account is now verified. Connect with artist , collector , museum and many more";
   static const String signUpAsParentDes = "I am Parent/ Guardian seeking care";
-  static const String signInDes = "Sign in to continue your journey in the art world and connect with fellow artists";
+  static const String signInDes =
+      "Sign in to continue your journey in the art world and connect with fellow artists";
   static const String onboardingOneTwoDes =
       "Support independent creators by purchasing or commissioning artwork with just a few taps.";
   static const String onboardingOneThreeDes =
@@ -261,8 +261,7 @@ class AppString {
   static const String submitReport = "Submit a report";
   static const String giveReview = "Give Review";
   static const String reschedule = "Reschedule";
-  static const String cancelTitle =
-      "Are you sure you want to cancel this booking?";
+  static const String cancelTitle = "Are you sure you want to cancel this booking?";
   static const String cancelDes =
       "Canceling will remove your booking and may prevent rebooking for the same time.";
   static const String logOutDes =
@@ -280,11 +279,13 @@ class AppString {
   static const String chooseRoleTitle = "Choose Role";
   static const String chooseRoleSubtitle = "Select your role to begin your journey.";
   static const String roleGeneralUserCollectorTitle = "General User/ Collector";
-  static const String roleGeneralUserCollectorDes = "I love discovering and collecting art.";
+  static const String roleGeneralUserCollectorDes =
+      "I love discovering and collecting art.";
   static const String roleArtistCuratorTitle = "Artist / Curator Role";
   static const String roleArtistCuratorDes = "I create and curate art exhibitions.";
   static const String roleMuseumEduTitle = "Museum / Edu Institution";
-  static const String roleMuseumEduDes = "I manage exhibitions and provide learning materials.";
+  static const String roleMuseumEduDes =
+      "I manage exhibitions and provide learning materials.";
 
   // === New granular roles (6-role version)
   static const String roleVisitorTitle = "Visitor";
@@ -427,8 +428,7 @@ class AppString {
   static const String listArtwork = 'List Artwork';
   static const String authentication = 'Authentication';
   static const String mediumHintText = 'e.g., Watercolor on paper, oil on canvas';
-  static const String upgradeToPremiumDes =
-      'Enjoy workout access without limits';
+  static const String upgradeToPremiumDes = 'Enjoy workout access without limits';
   static const String confirmationDes =
       "Your order is being processed and will be shipped shortly. We're excited to get your items to you!";
 
@@ -477,7 +477,7 @@ class AppString {
   static const String yourOfferAmount = 'Your offer Amount';
   static const String messageOptional = 'Message (Optional)';
   static const String submitOffer = 'Submit Offer';
-  
+
   // ==== Resale Flow ====
   static const String resaleArt = 'Resale Art';
   static const String resaleInformation = 'Resale Information';
@@ -495,7 +495,7 @@ class AppString {
   static const String good = 'Good';
   static const String fair = 'Fair';
   static const String bad = 'Bad';
-  
+
   // ==== My Collections ====
   static const String myCollections = 'My Collections';
   static const String collections = 'Collections';
@@ -513,23 +513,24 @@ class AppString {
   static const String time = 'Time:';
   static const String joinEvent = 'Join Event';
   // ==== Create Exhibition success popup ====
-static const String itemListedSuccessfully = 'Item Listed Successfully!';
-static const String itemListedSuccessfullyDes =
-    "Your item has been successfully posted for sale. It's now visible to buyers!";
+  static const String itemListedSuccessfully = 'Item Listed Successfully!';
+  static const String itemListedSuccessfullyDes =
+      "Your item has been successfully posted for sale. It's now visible to buyers!";
 
-
-    // Create New Exhibition strings
-static const String exhibitionTitle = 'Exhibition Title';
-static const String enterExhibitionTitle = 'Enter artwork title';
-static const String writeSomethingAboutTheExhibition = 'Write something about the exhibition';
-static const String mmDdYyyy = 'mm/dd/yyyy';
-static const String visitingHours = 'Visiting Hours';
-static const String visitingHoursHint = 'e.g. 10:00 am - 6pm (Monday Closed)';
-static const String egNewYork = 'e.g New York';
-static const String searchGallery = 'Search Gallery';
-static const String saveAsDraft = 'Save as Draft';
-static const String yourEventIsNowLive = 'Your Event is now Live';
-static const String yourEventIsNowLiveDes = 'Congratulations! Your event is now published and visible to all potential visitors';
+  // Create New Exhibition strings
+  static const String exhibitionTitle = 'Exhibition Title';
+  static const String enterExhibitionTitle = 'Enter artwork title';
+  static const String writeSomethingAboutTheExhibition =
+      'Write something about the exhibition';
+  static const String mmDdYyyy = 'mm/dd/yyyy';
+  static const String visitingHours = 'Visiting Hours';
+  static const String visitingHoursHint = 'e.g. 10:00 am - 6pm (Monday Closed)';
+  static const String egNewYork = 'e.g New York';
+  static const String searchGallery = 'Search Gallery';
+  static const String saveAsDraft = 'Save as Draft';
+  static const String yourEventIsNowLive = 'Your Event is now Live';
+  static const String yourEventIsNowLiveDes =
+      'Congratulations! Your event is now published and visible to all potential visitors';
 
   // ==== Create New Event labels ====
   static const String createNewEvent = 'Create New Event';

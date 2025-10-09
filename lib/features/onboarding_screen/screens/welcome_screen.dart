@@ -20,7 +20,6 @@ class WelcomeScreen extends StatelessWidget {
         child: Column(
           children: [
             // Top background image section
-
             40.height,
             SizedBox(
               height: 530.h,
@@ -47,10 +46,7 @@ class WelcomeScreen extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [
-                            AppColors.white.withOpacity(0.0),
-                            AppColors.white,
-                          ],
+                          colors: [AppColors.white.withOpacity(0.0), AppColors.white],
                         ),
                       ),
                     ),
