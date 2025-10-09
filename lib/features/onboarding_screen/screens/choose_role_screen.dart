@@ -36,11 +36,13 @@ class ChooseRoleScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 5.height,
-  
+
                 CommonImage(
-                  
                   fill: BoxFit.fill,
-                  imageSrc: AppImages.logo, height: 80.r, width: 80.r,),
+                  imageSrc: AppImages.logo,
+                  height: 80.r,
+                  width: 80.r,
+                ),
 
                 22.height,
 
@@ -48,7 +50,7 @@ class ChooseRoleScreen extends StatelessWidget {
                   text: AppString.chooseRoleTitle,
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFFB07353),
+                  color: AppColors.primaryColor,
                 ),
 
                 8.height,
@@ -57,7 +59,7 @@ class ChooseRoleScreen extends StatelessWidget {
                   text: AppString.chooseRoleSubtitle,
                   fontSize: 13,
                   color: AppColors.bodyClr,
-                  
+
                   fontWeight: FontWeight.w400,
                   textAlign: TextAlign.center,
                 ),
@@ -96,7 +98,7 @@ class ChooseRoleScreen extends StatelessWidget {
                 10.height,
                 _RoleTile(
                   index: 3,
-                  image: AppImages.exhibition,
+                  image: AppImages.curator,
                   title: AppString.roleCuratorTitle,
                   subtitle: AppString.roleCuratorDes,
                   isSelected: controller.selectedIndex.value == 3,
@@ -116,7 +118,7 @@ class ChooseRoleScreen extends StatelessWidget {
                 12.height,
                 _RoleTile(
                   index: 5,
-                  image: AppImages.learning,
+                  image: AppImages.education,
                   title: AppString.roleEducationalInstitutionTitle,
                   subtitle: AppString.roleEducationalInstitutionDes,
                   isSelected: controller.selectedIndex.value == 5,
@@ -130,10 +132,10 @@ class ChooseRoleScreen extends StatelessWidget {
                   titleText: AppString.continues,
                   buttonRadius: 50,
                   onTap: () {
-               
-                    Get.offAllNamed(AppRoutes.signUp, arguments: {
-                      'role': controller.selectedRoleKey,
-                    });
+                    Get.offAllNamed(
+                      AppRoutes.signUp,
+                      arguments: {'role': controller.selectedRoleKey},
+                    );
                   },
                 ),
 
@@ -193,9 +195,7 @@ class _RoleTile extends StatelessWidget {
                 color: AppColors.yelloFade,
                 shape: BoxShape.circle,
               ),
-              child: CommonImage(
-                fill: BoxFit.fill,
-                imageSrc: image, ),
+              child: CommonImage(fill: BoxFit.fill, imageSrc: image),
             ),
             12.width,
             Expanded(
@@ -242,7 +242,10 @@ class _Radio extends StatelessWidget {
       width: 22.r,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: isSelected ? AppColors.primaryColor : Colors.grey, width: 2),
+        border: Border.all(
+          color: isSelected ? AppColors.primaryColor : Colors.grey,
+          width: 2,
+        ),
       ),
       child: isSelected
           ? Center(
