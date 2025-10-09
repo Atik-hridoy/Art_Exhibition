@@ -7,7 +7,6 @@ import '../controller/sign_up_controller.dart';
 import '../../../../../utils/constants/app_colors.dart';
 import 'choose_role_bottomsheet.dart';
 
-
 class SignUpAllField extends StatelessWidget {
   const SignUpAllField({super.key, required this.controller});
 
@@ -19,14 +18,16 @@ class SignUpAllField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// User Name here
-         CommonText(
-            fontSize: 14,
-            color: AppColors.titleColor,
-            fontWeight: FontWeight.w700,
-            text: AppString.fullName, bottom: 8, top: 12),
+        CommonText(
+          fontSize: 14,
+          color: AppColors.titleColor,
+          fontWeight: FontWeight.w700,
+          text: AppString.fullName,
+          bottom: 8,
+          top: 12,
+        ),
         CommonTextField(
           borderColor: AppColors.normalGray2,
-
 
           hintText: AppString.enterYourFullName,
           controller: controller.nameController,
@@ -35,10 +36,13 @@ class SignUpAllField extends StatelessWidget {
 
         /// User Email here
         const CommonText(
-            fontSize: 14,
+          fontSize: 14,
 
-            fontWeight: FontWeight.w700,
-            text: AppString.email, bottom: 8, top: 12),
+          fontWeight: FontWeight.w700,
+          text: AppString.email,
+          bottom: 8,
+          top: 12,
+        ),
         CommonTextField(
           borderColor: AppColors.normalGray2,
           controller: controller.emailController,
@@ -46,7 +50,6 @@ class SignUpAllField extends StatelessWidget {
           hintText: AppString.enterValidEmail,
           validator: OtherHelper.emailValidator,
         ),
-
 
         // /// User Name here
         // CommonText(
@@ -65,7 +68,6 @@ class SignUpAllField extends StatelessWidget {
         //   ),
         //   borderColor: AppColors.normalGray2,
 
-
         //   hintText: AppString.selectYourRole,
         //   controller: controller.chooseRoleController,
         //   validator: OtherHelper.validator,
@@ -73,9 +75,12 @@ class SignUpAllField extends StatelessWidget {
 
         /// User Password here
         const CommonText(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            text: AppString.password, bottom: 8, top: 12),
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          text: AppString.password,
+          bottom: 8,
+          top: 12,
+        ),
         CommonTextField(
           borderColor: AppColors.normalGray2,
 
@@ -87,10 +92,13 @@ class SignUpAllField extends StatelessWidget {
         ),
 
         /// User Confirm Password here
-         CommonText(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            text: AppString.confirmPassword, bottom: 8, top: 12),
+        CommonText(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          text: AppString.confirmPassword,
+          bottom: 8,
+          top: 12,
+        ),
         CommonTextField(
           borderColor: AppColors.normalGray2,
 
@@ -98,11 +106,8 @@ class SignUpAllField extends StatelessWidget {
 
           isPassword: true,
           hintText: AppString.confirmYourPassword,
-          validator:
-              (value) => OtherHelper.confirmPasswordValidator(
-                value,
-                controller.passwordController,
-              ),
+          validator: (value) =>
+              OtherHelper.confirmPasswordValidator(value, controller.passwordController),
         ),
       ],
     );

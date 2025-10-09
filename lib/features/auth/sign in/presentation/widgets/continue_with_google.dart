@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../component/image/common_image.dart';
@@ -18,23 +17,20 @@ class ContinueWithGoogle extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.normalGray2)
+        border: Border.all(color: AppColors.normalGray2),
       ),
-      
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          
-          CommonImage(
-              height: 25,
-              width: 25,
-              imageSrc: AppImages.google),
+          CommonImage(height: 25, width: 25, imageSrc: AppImages.google),
 
           CommonText(
-              left: 15,
-              fontWeight: FontWeight.w400,
-              fontSize: 12,
-              text: AppString.signUpWithGoogle)
+            left: 15,
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            text: AppString.signUpWithGoogle,
+          ),
         ],
       ),
     );

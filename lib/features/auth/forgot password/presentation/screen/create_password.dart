@@ -12,7 +12,6 @@ import '../../../../../utils/constants/app_images.dart';
 import '../../../../../utils/constants/app_string.dart';
 import '../../../../../utils/helpers/other_helper.dart';
 
-
 class CreatePassword extends StatelessWidget {
   CreatePassword({super.key});
 
@@ -21,8 +20,6 @@ class CreatePassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       /// Body Section starts here
       body: GetBuilder<ForgetPasswordController>(
         builder: (controller) {
@@ -48,14 +45,16 @@ class CreatePassword extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       35.height,
                       InkWell(
-                          onTap: (){
-                            Get.back();
-                          },
-                          child: Icon(Icons.arrow_back_ios, color: AppColors.textFiledColor,)),
-
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.textFiledColor,
+                        ),
+                      ),
 
                       90.height,
 
@@ -68,38 +67,37 @@ class CreatePassword extends StatelessWidget {
                         ).center,
                       ),
 
-
                       32.height,
                       CommonText(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primaryColor
-                          ,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primaryColor,
 
-                          text: AppString.resetPass).center,
-
+                        text: AppString.resetPass,
+                      ).center,
 
                       CommonText(
-                          fontSize: 12,
-                          left: 12,
-                          right: 12,
-                          top: 16,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.bodyClr
+                        fontSize: 12,
+                        left: 12,
+                        right: 12,
+                        top: 16,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.bodyClr,
+                        maxLines: 3,
 
-                          ,
-                          maxLines: 3,
-
-                          text: AppString.resetPassDes),
+                        text: AppString.resetPassDes,
+                      ),
 
                       32.height,
 
                       /// New Password here
-                       CommonText(
-                          fontSize: 14,
-                          color: AppColors.titleColor,
-                          fontWeight: FontWeight.w700,
-                          text: AppString.newPassword, bottom: 8),
+                      CommonText(
+                        fontSize: 14,
+                        color: AppColors.titleColor,
+                        fontWeight: FontWeight.w700,
+                        text: AppString.newPassword,
+                        bottom: 8,
+                      ),
                       CommonTextField(
                         borderColor: AppColors.normalGray2,
                         controller: controller.passwordController,
@@ -111,22 +109,23 @@ class CreatePassword extends StatelessWidget {
 
                       /// Confirm Password here
                       CommonText(
-                          fontSize: 14,
-                          color: AppColors.titleColor,
-                          top: 17,
-                          fontWeight: FontWeight.w700,
-                          text: AppString.confirmPassword, bottom: 8),
+                        fontSize: 14,
+                        color: AppColors.titleColor,
+                        top: 17,
+                        fontWeight: FontWeight.w700,
+                        text: AppString.confirmPassword,
+                        bottom: 8,
+                      ),
                       CommonTextField(
                         borderColor: AppColors.normalGray2,
 
                         controller: controller.confirmPasswordController,
 
                         hintText: AppString.confirmPassword,
-                        validator:
-                            (value) => OtherHelper.confirmPasswordValidator(
-                              value,
-                              controller.passwordController,
-                            ),
+                        validator: (value) => OtherHelper.confirmPasswordValidator(
+                          value,
+                          controller.passwordController,
+                        ),
                         isPassword: true,
                       ),
                       64.height,

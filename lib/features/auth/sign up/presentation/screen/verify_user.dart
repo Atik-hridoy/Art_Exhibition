@@ -32,8 +32,6 @@ class _VerifyUserState extends State<VerifyUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       /// Body Section starts here
       body: Stack(
         children: [
@@ -52,24 +50,23 @@ class _VerifyUserState extends State<VerifyUser> {
           ),
           GetBuilder<SignUpController>(
             builder: (controller) {
-              return  SingleChildScrollView(
+              return SingleChildScrollView(
                 padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
                 child: Form(
                   key: formKey,
                   child: Column(
-
                     children: [
                       /// instruction how to get OTP
-
-
                       35.height,
                       InkWell(
-                          onTap: (){
-                            Get.back();
-                          },
-                          child: Icon(Icons.arrow_back_ios, color: AppColors.textFiledColor,)).start,
-
-
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.textFiledColor,
+                        ),
+                      ).start,
 
                       73.height,
 
@@ -82,31 +79,27 @@ class _VerifyUserState extends State<VerifyUser> {
                         ).center,
                       ),
 
-
                       32.height,
                       CommonText(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primaryColor
-                          ,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primaryColor,
 
-                          text: AppString.otpVerify),
-
+                        text: AppString.otpVerify,
+                      ),
 
                       CommonText(
-                          fontSize: 12,
-                          left: 12,
-                          right: 12,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.titleColor
+                        fontSize: 12,
+                        left: 12,
+                        right: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.titleColor,
+                        maxLines: 3,
 
-                          ,
-                          maxLines: 3,
-
-                          text: AppString.otpVerifyDes),
+                        text: AppString.otpVerifyDes,
+                      ),
 
                       32.height,
-
 
                       /// OTP Filed here
                       Flexible(
@@ -144,31 +137,30 @@ class _VerifyUserState extends State<VerifyUser> {
                         ),
                       ),
 
-                      CommonText(
-                          top: 28,
-                          text: AppString.otpSent),
-                      controller.time == '00:00'? InkWell(
-                        onTap: (){
-                          controller.startTimer();
-                         // controller.forgotPasswordRepo();
-                        },
-                        child: CommonText(
-                            top: 5,
+                      CommonText(top: 28, text: AppString.otpSent),
+                      controller.time == '00:00'
+                          ? InkWell(
+                              onTap: () {
+                                controller.startTimer();
+                                // controller.forgotPasswordRepo();
+                              },
+                              child: CommonText(
+                                top: 5,
 
-                            color: AppColors.black,
-                            fontWeight: FontWeight.w600,
-                            text:  AppString.resendCode),
-                      ) : CommonText(
-                          fontSize: 12,
-                          top: 8,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.primaryColor,
-                          text: controller.time),
-
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w600,
+                                text: AppString.resendCode,
+                              ),
+                            )
+                          : CommonText(
+                              fontSize: 12,
+                              top: 8,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primaryColor,
+                              text: controller.time,
+                            ),
 
                       24.height,
-
-
 
                       ///  Submit Button here
                       CommonButton(

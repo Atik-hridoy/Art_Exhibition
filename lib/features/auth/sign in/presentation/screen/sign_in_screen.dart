@@ -16,21 +16,20 @@ import '../../../../../utils/helpers/other_helper.dart';
 import '../widgets/continue_with_google.dart';
 import '../../../../../services/storage/storage_services.dart';
 import '../../../../../services/storage/storage_keys.dart';
+
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       /// Body Sections Starts here
       body: GetBuilder<SignInController>(
         builder: (controller) {
           return Stack(
             children: [
               Opacity(
-                opacity:0.03,
+                opacity: 0.03,
                 child: Container(
                   width: double.infinity,
                   height: double.infinity,
@@ -62,6 +61,7 @@ class SignInScreen extends StatelessWidget {
                               imageSrc: AppImages.logo,
                             ).center,
                           ),
+
                           /// Log In Instruction here
                           Center(
                             child: CommonText(
@@ -84,16 +84,17 @@ class SignInScreen extends StatelessWidget {
                               top: 10,
                               color: AppColors.bodyClr,
                               fontWeight: FontWeight.w400,
-
                             ),
                           ),
 
                           /// Account Email Input here
-                           CommonText(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.titleColor,
-                              text: AppString.email, bottom: 8),
+                          CommonText(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.titleColor,
+                            text: AppString.email,
+                            bottom: 8,
+                          ),
                           CommonTextField(
                             controller: controller.emailController,
 
@@ -134,31 +135,31 @@ class SignInScreen extends StatelessWidget {
                                   width: 24.h,
                                   height: 24.w,
                                   decoration: BoxDecoration(
-                                    color: controller.isRemember ? AppColors.primaryColor : Colors.white,
+                                    color: controller.isRemember
+                                        ? AppColors.primaryColor
+                                        : Colors.white,
                                     border: Border.all(
-                                        width:controller.isRemember? 0: 2,
-                                        color: controller.isRemember?AppColors.white: Colors.grey),
+                                      width: controller.isRemember ? 0 : 2,
+                                      color: controller.isRemember
+                                          ? AppColors.white
+                                          : Colors.grey,
+                                    ),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: controller.isRemember
-                                      ? Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
+                                      ? Icon(Icons.check, color: Colors.white, size: 20)
                                       : null,
                                 ),
                               ),
 
                               8.width,
 
-
-
                               CommonText(
-                                  fontSize: 14,
-                                  color: AppColors.titleColorSecondary,
-                                  fontWeight: FontWeight.w500,
-                                  text: AppString.rememberMe),
+                                fontSize: 14,
+                                color: AppColors.titleColorSecondary,
+                                fontWeight: FontWeight.w500,
+                                text: AppString.rememberMe,
+                              ),
                               Spacer(),
                               GestureDetector(
                                 onTap: () => Get.toNamed(AppRoutes.forgotPassword),
@@ -177,7 +178,6 @@ class SignInScreen extends StatelessWidget {
 
                           /// Submit Button here
 
-
                           /// Submit Button here
                           // CommonButton(
                           //   buttonRadius: 60,
@@ -188,15 +188,17 @@ class SignInScreen extends StatelessWidget {
                           //   },
                           // ),
 
-
-                             // Quick Sign-in by Role (frontend only)
+                          // Quick Sign-in by Role (frontend only)
                           CommonButton(
                             titleText: "Sign in as ${AppString.roleVisitorTitle}",
                             buttonRadius: 60,
                             onTap: () async {
-                              await LocalStorage.setString(LocalStorageKeys.myRoll, 'visitor');
+                              await LocalStorage.setString(
+                                LocalStorageKeys.myRoll,
+                                'visitor',
+                              );
                               LocalStorage.myRoll = 'visitor';
-                      
+
                               Get.offAllNamed(AppRoutes.userHomeScreen);
                             },
                           ),
@@ -205,9 +207,15 @@ class SignInScreen extends StatelessWidget {
                             titleText: "Sign in as ${AppString.roleArtistTitle}",
                             buttonRadius: 60,
                             onTap: () async {
-                              await LocalStorage.setString(LocalStorageKeys.myRoll, 'artist');
+                              await LocalStorage.setString(
+                                LocalStorageKeys.myRoll,
+                                'artist',
+                              );
                               LocalStorage.myRoll = 'artist';
-                              Get.snackbar(AppString.signIn, 'Signed in as ${AppString.roleArtistTitle}');
+                              Get.snackbar(
+                                AppString.signIn,
+                                'Signed in as ${AppString.roleArtistTitle}',
+                              );
                               Get.offAllNamed(AppRoutes.userHomeScreen);
                             },
                           ),
@@ -216,9 +224,15 @@ class SignInScreen extends StatelessWidget {
                             titleText: "Sign in as ${AppString.roleCollectorTitle}",
                             buttonRadius: 60,
                             onTap: () async {
-                              await LocalStorage.setString(LocalStorageKeys.myRoll, 'collector');
+                              await LocalStorage.setString(
+                                LocalStorageKeys.myRoll,
+                                'collector',
+                              );
                               LocalStorage.myRoll = 'collector';
-                              Get.snackbar(AppString.signIn, 'Signed in as ${AppString.roleCollectorTitle}');
+                              Get.snackbar(
+                                AppString.signIn,
+                                'Signed in as ${AppString.roleCollectorTitle}',
+                              );
                               Get.offAllNamed(AppRoutes.userHomeScreen);
                             },
                           ),
@@ -227,9 +241,15 @@ class SignInScreen extends StatelessWidget {
                             titleText: "Sign in as ${AppString.roleCuratorTitle}",
                             buttonRadius: 60,
                             onTap: () async {
-                              await LocalStorage.setString(LocalStorageKeys.myRoll, 'curator');
+                              await LocalStorage.setString(
+                                LocalStorageKeys.myRoll,
+                                'curator',
+                              );
                               LocalStorage.myRoll = 'curator';
-                              Get.snackbar(AppString.signIn, 'Signed in as ${AppString.roleCuratorTitle}');
+                              Get.snackbar(
+                                AppString.signIn,
+                                'Signed in as ${AppString.roleCuratorTitle}',
+                              );
                               Get.offAllNamed(AppRoutes.userHomeScreen);
                             },
                           ),
@@ -238,25 +258,36 @@ class SignInScreen extends StatelessWidget {
                             titleText: "Sign in as ${AppString.roleMuseumTitle}",
                             buttonRadius: 60,
                             onTap: () async {
-                              await LocalStorage.setString(LocalStorageKeys.myRoll, 'museum');
+                              await LocalStorage.setString(
+                                LocalStorageKeys.myRoll,
+                                'museum',
+                              );
                               LocalStorage.myRoll = 'museum';
-                              Get.snackbar(AppString.signIn, 'Signed in as ${AppString.roleMuseumTitle}');
+                              Get.snackbar(
+                                AppString.signIn,
+                                'Signed in as ${AppString.roleMuseumTitle}',
+                              );
                               Get.offAllNamed(AppRoutes.userHomeScreen);
                             },
                           ),
                           10.height,
                           CommonButton(
-                            titleText: "Sign in as ${AppString.roleEducationalInstitutionTitle}",
+                            titleText:
+                                "Sign in as ${AppString.roleEducationalInstitutionTitle}",
                             buttonRadius: 60,
                             onTap: () async {
-                              await LocalStorage.setString(LocalStorageKeys.myRoll, 'educational_institution');
+                              await LocalStorage.setString(
+                                LocalStorageKeys.myRoll,
+                                'educational_institution',
+                              );
                               LocalStorage.myRoll = 'educational_institution';
-                              Get.snackbar(AppString.signIn, 'Signed in as ${AppString.roleEducationalInstitutionTitle}');
+                              Get.snackbar(
+                                AppString.signIn,
+                                'Signed in as ${AppString.roleEducationalInstitutionTitle}',
+                              );
                               Get.offAllNamed(AppRoutes.userHomeScreen);
                             },
                           ),
-
-
 
                           16.height,
 
@@ -280,40 +311,34 @@ class SignInScreen extends StatelessWidget {
                           15.height,
 
                           ContinueWithGoogle(),
-                          
 
-                       
                           16.height,
-
-
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-
                               CommonText(
-
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.textFiledColor,
-                                  text: AppString.newHere),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.textFiledColor,
+                                text: AppString.newHere,
+                              ),
 
                               5.width,
 
                               InkWell(
-                                onTap: (){
+                                onTap: () {
                                   Get.toNamed(AppRoutes.chooseRole);
                                 },
                                 child: CommonText(
-
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primaryColor,
-                                    text: AppString.joinUs),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primaryColor,
+                                  text: AppString.joinUs,
+                                ),
                               ),
                             ],
                           ),
-
                         ],
                       ),
                     ],

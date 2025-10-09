@@ -42,8 +42,7 @@ class ForgetPasswordController extends GetxController {
   );
 
   /// create Forget Password Controller instance
-  static ForgetPasswordController get instance =>
-      Get.put(ForgetPasswordController());
+  static ForgetPasswordController get instance => Get.put(ForgetPasswordController());
 
   @override
   void dispose() {
@@ -84,10 +83,7 @@ class ForgetPasswordController extends GetxController {
     update();
 
     Map<String, String> body = {"email": emailController.text};
-    var response = await ApiService.post(
-      ApiEndPoint.forgotPassword,
-      body: body,
-    );
+    var response = await ApiService.post(ApiEndPoint.forgotPassword, body: body);
 
     if (response.statusCode == 200) {
       Utils.successSnackBar(response.statusCode.toString(), response.message);
@@ -106,10 +102,7 @@ class ForgetPasswordController extends GetxController {
     return;
     isLoadingVerify = true;
     update();
-    Map<String, String> body = {
-      "email": emailController.text,
-      "otp": otpController.text,
-    };
+    Map<String, String> body = {"email": emailController.text, "otp": otpController.text};
     var response = await ApiService.post(ApiEndPoint.verifyOtp, body: body);
 
     if (response.statusCode == 200) {
@@ -127,7 +120,7 @@ class ForgetPasswordController extends GetxController {
   /// Create New Password Api Call
 
   Future<void> resetPasswordRepo() async {
- Get.offAllNamed(AppRoutes.passwordUpdated);
+    Get.offAllNamed(AppRoutes.passwordUpdated);
 
     return;
     isLoadingReset = true;

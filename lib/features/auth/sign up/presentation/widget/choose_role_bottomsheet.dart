@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -59,11 +58,7 @@ void chooseRoleBottomSheet(BuildContext context) {
                           shape: BoxShape.circle,
                           border: Border.all(color: AppColors.bodyClr),
                         ),
-                        child: Icon(
-                          size: 15.sp,
-                          Icons.clear,
-                          color: AppColors.bodyClr,
-                        ),
+                        child: Icon(size: 15.sp, Icons.clear, color: AppColors.bodyClr),
                       ),
                     ),
                   ],
@@ -85,32 +80,31 @@ void chooseRoleBottomSheet(BuildContext context) {
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
-                            width: 1.h,
-                            color: AppColors.bodyClr,
-                          ),
+                          border: Border.all(width: 1.h, color: AppColors.bodyClr),
                         ),
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                            children: [
-
-                              CommonText(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  text: category),
-                              SizedBox(
-                                height: 24.h,
-                                width: 24.w,
-                                child: Radio(
-                                    activeColor: AppColors.primaryColor,
-                                    value: category,
-                                    groupValue: controller.selectedRole,
-                                    onChanged: (val){
-                                      controller.changeChooseRole(val);
-                                    }),
-                              )
-                            ]),
+                          children: [
+                            CommonText(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              text: category,
+                            ),
+                            SizedBox(
+                              height: 24.h,
+                              width: 24.w,
+                              child: Radio(
+                                activeColor: AppColors.primaryColor,
+                                value: category,
+                                groupValue: controller.selectedRole,
+                                onChanged: (val) {
+                                  controller.changeChooseRole(val);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -125,7 +119,7 @@ void chooseRoleBottomSheet(BuildContext context) {
                   titleText: AppString.continues,
                 ),
 
-                40.height
+                40.height,
               ],
             ),
           );

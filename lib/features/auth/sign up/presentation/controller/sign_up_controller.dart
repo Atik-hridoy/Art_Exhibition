@@ -43,10 +43,7 @@ class SignUpController extends GetxController {
     text: kDebugMode ? "developernaimul00@gmail.com" : '',
   );
 
-
-  TextEditingController chooseRoleController = TextEditingController(
-
-  );
+  TextEditingController chooseRoleController = TextEditingController();
   TextEditingController passwordController = TextEditingController(
     text: kDebugMode ? 'hello123' : '',
   );
@@ -60,24 +57,19 @@ class SignUpController extends GetxController {
     text: kDebugMode ? '1234' : '',
   );
 
-
   var selectedRole = '';
 
   List roleList = [
-
     "User / Collector",
     "Artist / Curator",
     "Museum / Educational Institution",
-
-
   ];
 
   void changeChooseRole(String value) {
     selectedRole = value;
-    chooseRoleController.text=value;
+    chooseRoleController.text = value;
     update();
   }
-
 
   @override
   void dispose() {
