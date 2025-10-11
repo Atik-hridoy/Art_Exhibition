@@ -28,7 +28,7 @@ class CustomBottomSheet extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         width: double.maxFinite,
-        height: 340.h,
+        height: 370.h,
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -41,22 +41,28 @@ class CustomBottomSheet extends StatelessWidget {
 
           child: Column(
             children: [
-              CommonText(
-                fontSize: 20,
-                maxLines: 1,
-                fontWeight: FontWeight.w700,
+              SizedBox(
+                height: 120,
+                child: Column(
+                  children: [
+                    CommonText(
+                      fontSize: 20,
+                      maxLines: 1,
+                      fontWeight: FontWeight.w700,
+                      text: titleList[index],
+                    ),
+                    5.height,
+                    CommonText(
+                      fontSize: 12,
 
-                text: titleList[index],
-              ),
-              5.height,
-              CommonText(
-                fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.bodyClr,
+                      maxLines: 4,
 
-                fontWeight: FontWeight.w400,
-                color: AppColors.bodyClr,
-                maxLines: 4,
-
-                text: desList[index],
+                      text: desList[index],
+                    ),
+                  ],
+                ),
               ),
 
               36.height,

@@ -12,19 +12,32 @@ class ChooseRoleController extends GetxController {
   String get selectedRoleKey {
     switch (selectedIndex.value) {
       case 0:
-        return 'visitor';
+        return Role.user.role;
       case 1:
-        return 'artist';
+        return Role.artist.role;
       case 2:
-        return 'collector';
+        return Role.collector.role;
       case 3:
-        return 'curator';
+        return Role.curator.role;
       case 4:
-        return 'museum';
+        return Role.museum.role;
       case 5:
-        return 'educational_institution';
+        return Role.educational.role;
       default:
-        return 'visitor';
+        return Role.user.role;
     }
   }
+}
+
+enum Role {
+  user('USER'),
+  artist('ARTIST'),
+  collector('COLLECTOR'),
+  curator('CURATOR'),
+  museum('MUSEUM'),
+  educational('EDUCATIONAL_INSTITUTE');
+
+  final String role;
+
+  const Role(this.role);
 }

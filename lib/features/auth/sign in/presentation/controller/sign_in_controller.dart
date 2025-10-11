@@ -5,6 +5,7 @@ import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/services/storage/storage_keys.dart';
 import 'package:tasaned_project/services/storage/storage_services.dart';
+import 'package:tasaned_project/utils/log/app_log.dart';
 import '../../../../../config/route/app_routes.dart';
 
 class SignInController extends GetxController {
@@ -54,31 +55,28 @@ class SignInController extends GetxController {
     if (response.statusCode == 200) {
       var data = response.data;
 
-      LocalStorage.token = data['data']["accessToken"];
-      LocalStorage.userId = data['data']["attributes"]["_id"];
-      LocalStorage.myImage = data['data']["attributes"]["image"];
-      LocalStorage.myName = data['data']["attributes"]["fullName"];
-
-      LocalStorage.myEmail = data['data']["attributes"]["email"];
+      LocalStorage.token = data['data']['token'];
+      LocalStorage.userId = data['data']["user"]["_id"];
+      LocalStorage.myImage = data['data']["user"]["profileImage"];
+      LocalStorage.myName = data['data']["user"]["name"];
+      LocalStorage.myRoll = data['data']["user"]["role"];
+      LocalStorage.myEmail = data['data']["user"]["email"];
       LocalStorage.isLogIn = true;
 
       LocalStorage.setBool(LocalStorageKeys.isLogIn, LocalStorage.isLogIn);
       LocalStorage.setString(LocalStorageKeys.token, LocalStorage.token);
       LocalStorage.setString(LocalStorageKeys.userId, LocalStorage.userId);
+      LocalStorage.setString(LocalStorageKeys.myRoll, LocalStorage.myRoll);
       LocalStorage.setString(LocalStorageKeys.myImage, LocalStorage.myImage);
       LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
       LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
 
       Get.offAllNamed(AppRoutes.userHomeScreen);
-      // if (LocalStorage.myRoll == 'consultant') {
-      //   Get.offAllNamed(AppRoutes.doctorHome);
-      // } else {
-      //   Get.offAllNamed(AppRoutes.patientsHome);
-      // }
 
       emailController.clear();
       passwordController.clear();
     } else {
+      appLog("❤️ Value OF Response ${response.data}");
       Get.snackbar(response.statusCode.toString(), response.message);
     }
 

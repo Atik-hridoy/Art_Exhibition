@@ -37,7 +37,7 @@ class SignUpController extends GetxController {
   static SignUpController get instance => Get.put(SignUpController());
 
   TextEditingController nameController = TextEditingController(
-    text: kDebugMode ? "Namimul Hassan" : "",
+    text: kDebugMode ? "S M Nasim Ahmed" : "",
   );
   TextEditingController emailController = TextEditingController(
     text: kDebugMode ? "developernaimul00@gmail.com" : '',

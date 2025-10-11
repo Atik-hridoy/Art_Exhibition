@@ -19,10 +19,8 @@ class ApiService {
     Map<String, String>? header,
   }) => _request(url, "POST", body: body, header: header);
 
-  static Future<ApiResponseModel> get(
-    String url, {
-    Map<String, String>? header,
-  }) => _request(url, "GET", header: header);
+  static Future<ApiResponseModel> get(String url, {Map<String, String>? header}) =>
+      _request(url, "GET", header: header);
 
   static Future<ApiResponseModel> put(
     String url, {
@@ -62,10 +60,9 @@ class ApiService {
           await MultipartFile.fromFile(
             imagePath,
             filename: "$imageName.$extension",
-            contentType:
-                mimeType != null
-                    ? DioMediaType.parse(mimeType)
-                    : DioMediaType.parse("image/jpeg"),
+            contentType: mimeType != null
+                ? DioMediaType.parse(mimeType)
+                : DioMediaType.parse("image/jpeg"),
           ),
         ),
       );
@@ -88,9 +85,9 @@ class ApiService {
     Map<String, String>? header,
   }) async {
     // Frontend-only mode: avoid any network traffic and return a benign response
-    if (AppConfig.frontendOnly) {
-      return ApiResponseModel(200, {"message": "frontendOnly: no network call", "url": url});
-    }
+    // if (AppConfig.frontendOnly) {
+    //   return ApiResponseModel(200, {"message": "frontendOnly: no network call", "url": url});
+    // }
     try {
       final response = await _dio.request(
         url,
@@ -126,15 +123,10 @@ class ApiService {
         return ApiResponseModel(408, {"message": AppString.requestTimeOut});
 
       case DioExceptionType.badResponse:
-        return ApiResponseModel(
-          error.response?.statusCode,
-          error.response?.data,
-        );
+        return ApiResponseModel(error.response?.statusCode, error.response?.data);
 
       case DioExceptionType.connectionError:
-        return ApiResponseModel(503, {
-          "message": AppString.noInternetConnection,
-        });
+        return ApiResponseModel(503, {"message": AppString.noInternetConnection});
 
       default:
         return ApiResponseModel(400, {});
@@ -159,8 +151,7 @@ Dio _getMyDio() {
           ..receiveDataWhenStatusError = true
           ..responseType = ResponseType.json
           ..receiveTimeout = const Duration(seconds: 30)
-          ..baseUrl =
-              options.baseUrl.startsWith("http") ? "" : ApiEndPoint.baseUrl;
+          ..baseUrl = options.baseUrl.startsWith("http") ? "" : ApiEndPoint.baseUrl;
         handler.next(options);
       },
       onResponse: (response, handler) {

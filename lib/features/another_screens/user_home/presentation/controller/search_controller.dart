@@ -5,7 +5,7 @@ import 'package:tasaned_project/utils/constants/app_images.dart';
 class SearchControllerX extends GetxController {
   final TextEditingController queryController = TextEditingController(text: 'Ab');
 
-  final List<String> labels = const ['All', 'Artwork', 'Artist', 'Gallery / Museum'];
+  final List<String> labels = const ['All', 'Artwork', 'ARTIST', 'Gallery / Museum'];
   int selectedFilter = 0; // 0: All, 1: Artwork, 2: Artist, 3: Gallery / Museum
 
   final List<Map<String, String>> results = [

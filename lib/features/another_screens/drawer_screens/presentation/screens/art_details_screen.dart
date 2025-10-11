@@ -103,7 +103,11 @@ class ArtDetailsScreen extends StatelessWidget {
             ),
 
             12.height,
-            Divider(height: 1, thickness: 1, color: AppColors.stroke).paddingSymmetric(horizontal: 16.w),
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.stroke,
+            ).paddingSymmetric(horizontal: 16.w),
             12.height,
 
             // Specs (bold label, normal value)
@@ -164,7 +168,11 @@ class ArtDetailsScreen extends StatelessWidget {
             ),
 
             16.height,
-            Divider(height: 1, thickness: 1, color: AppColors.stroke).paddingSymmetric(horizontal: 16.w),
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.stroke,
+            ).paddingSymmetric(horizontal: 16.w),
             16.height,
 
             // About Artist
@@ -192,8 +200,18 @@ class ArtDetailsScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CommonText(text: AppString.artistNameSample, fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.titleColor),
-                        CommonText(text: 'Artist', fontSize: 10, fontWeight: FontWeight.w400, color: AppColors.titleColorSecondary),
+                        CommonText(
+                          text: AppString.artistNameSample,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.titleColor,
+                        ),
+                        CommonText(
+                          text: 'ARTIST',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.titleColorSecondary,
+                        ),
                       ],
                     ),
                   ),
@@ -202,15 +220,26 @@ class ArtDetailsScreen extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
                       side: BorderSide(color: AppColors.stroke),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
                       foregroundColor: AppColors.titleColor,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children:  [
-                        Icon(Icons.person_add_alt, size: 18.sp, color: AppColors.titleColor),
+                      children: [
+                        Icon(
+                          Icons.person_add_alt,
+                          size: 18.sp,
+                          color: AppColors.titleColor,
+                        ),
                         SizedBox(width: 6),
-                        CommonText(text: AppString.follow, fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.titleColor),
+                        CommonText(
+                          text: AppString.follow,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.titleColor,
+                        ),
                       ],
                     ),
                   ),
@@ -264,26 +293,39 @@ class ArtDetailsScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ClipRRect(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(10.r)),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(10.r),
+                            ),
                             child: CommonImage(
-                              
                               height: 140,
                               fill: BoxFit.cover,
-                              width:167,
-                              imageSrc: AppImages.artistCover),
+                              width: 167,
+                              imageSrc: AppImages.artistCover,
+                            ),
                           ),
                         ),
                         4.height,
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: CommonText(text: AppString.relatedArtTitleSample, fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.titleColor, maxLines: 1),
+                          child: CommonText(
+                            text: AppString.relatedArtTitleSample,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.titleColor,
+                            maxLines: 1,
+                          ),
                         ),
                         const Padding(
                           padding: EdgeInsets.fromLTRB(8, 0, 8, 6),
-                          child: CommonText(text: AppString.relatedArtPriceSample, fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.primaryColor),
+                          child: CommonText(
+                            text: AppString.relatedArtPriceSample,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
 
-                        7.height
+                        7.height,
                       ],
                     ),
                   );

@@ -135,7 +135,7 @@ class AppString {
       "Your account is now verified. Connect with artist , collector , museum and many more";
   static const String signUpAsParentDes = "I am Parent/ Guardian seeking care";
   static const String signInDes =
-      "Sign in to continue your journey in the art world and connect with fellow artists";
+      "Sign in to continue your journey in the art \nworld and connect with fellow artists";
   static const String onboardingOneTwoDes =
       "Support independent creators by purchasing or commissioning artwork with just a few taps.";
   static const String onboardingOneThreeDes =
@@ -423,7 +423,7 @@ class AppString {
   static const String chooseYourMainPhotoFirstShort = 'Choose your main photo first';
   static const String medium = 'Medium';
   static const String searchArtist = 'Search Artist';
-  static const String artist = 'Artist';
+  static const String artist = 'ARTIST';
   static const String price = 'Price';
   static const String listArtwork = 'List Artwork';
   static const String authentication = 'Authentication';
