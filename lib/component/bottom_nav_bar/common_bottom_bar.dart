@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/controller/order_history_controller.dart';
 import 'package:tasaned_project/services/storage/storage_services.dart';
+import 'package:tasaned_project/utils/enum/enum.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/constants/app_images.dart';
@@ -22,10 +23,11 @@ class CommonBottomNavBar extends StatefulWidget {
 class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
   final List<String> routes = [
     AppRoutes.userHomeScreen,
-    LocalStorage.myRoll == "collector"
-
+    LocalStorage.myRoll == Role.collector.role
         ? AppRoutes.myCollectionsScreen
-        : LocalStorage.myRoll == "visitor"? AppRoutes.visitorOrderHistoryScreen :AppRoutes.purchaseHistory,
+        : LocalStorage.myRoll == Role.user.role
+        ? AppRoutes.visitorOrderHistoryScreen
+        : AppRoutes.purchaseHistory,
     AppRoutes.chat,
     AppRoutes.profile,
   ];
@@ -34,10 +36,10 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
     return [
       "Home",
 
-      LocalStorage.myRoll == "artist" ||
-              LocalStorage.myRoll == "curator" ||
-              LocalStorage.myRoll == "museum" ||
-              LocalStorage.myRoll == "educational_institution"
+      LocalStorage.myRoll == Role.artist.role ||
+              LocalStorage.myRoll == Role.curator.role ||
+              LocalStorage.myRoll == Role.museum.role ||
+              LocalStorage.myRoll == Role.educational.role
           ? "Add New"
           : "Order",
       "Inbox",
@@ -48,10 +50,10 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
   String selectedImageSrc(int index) {
     return [
       AppImages.homeActive,
-      LocalStorage.myRoll == "artist" ||
-              LocalStorage.myRoll == "curator" ||
-              LocalStorage.myRoll == "museum" ||
-              LocalStorage.myRoll == "educational_institution"
+      LocalStorage.myRoll == Role.artist.role ||
+              LocalStorage.myRoll == Role.curator.role ||
+              LocalStorage.myRoll == Role.museum.role ||
+              LocalStorage.myRoll == Role.educational.role
           ? AppImages.addNewInactive
           : AppImages.orderActive,
 
@@ -63,10 +65,10 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
   String unselectedImageSrc(int index) {
     return [
       AppImages.homeInactive,
-      LocalStorage.myRoll == "artist" ||
-              LocalStorage.myRoll == "curator" ||
-              LocalStorage.myRoll == "museum" ||
-              LocalStorage.myRoll == "educational_institution"
+      LocalStorage.myRoll == Role.artist.role ||
+              LocalStorage.myRoll == Role.curator.role ||
+              LocalStorage.myRoll == Role.museum.role ||
+              LocalStorage.myRoll == Role.educational.role
           ? AppImages.addNewInactive
           : AppImages.orderInactive,
       AppImages.messageInactive,
@@ -97,17 +99,17 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
     return GestureDetector(
       onTap: () {
         if (index == 1 &&
-            (LocalStorage.myRoll == "artist" ||
-                LocalStorage.myRoll == "curator" ||
-                LocalStorage.myRoll == "museum" 
-               )) {
+            (LocalStorage.myRoll == Role.artist.role ||
+                LocalStorage.myRoll == Role.curator.role ||
+                LocalStorage.myRoll == Role.museum.role)) {
           _showAddNewSheet();
-        }else if(index==1 &&  LocalStorage.myRoll == "educational_institution"){
-          Get.toNamed(AppRoutes.uploadNewLessonScreen, arguments: {
-            "title":"Upload New Lesson"
-          });
+        } else if (index == 1 && LocalStorage.myRoll == Role.educational.role) {
+          Get.toNamed(
+            AppRoutes.uploadNewLessonScreen,
+            arguments: {"title": "Upload New Lesson"},
+          );
         } else {
-          if (widget.currentIndex == 1 && LocalStorage.myRoll == "visitor") {
+          if (widget.currentIndex == 1 && LocalStorage.myRoll == Role.user.role) {
             OrderHistoryController.instance!.comeFrom("bottom");
           }
 
@@ -127,9 +129,7 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
               height: 24,
               width: 24,
               fill: BoxFit.fill,
-              imageSrc: isSelected
-                  ? selectedImageSrc(index)
-                  : unselectedImageSrc(index),
+              imageSrc: isSelected ? selectedImageSrc(index) : unselectedImageSrc(index),
             ),
           ),
           SizedBox(height: 2.h),
@@ -180,7 +180,7 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
 
               SizedBox(height: 16.h),
 
-              if (LocalStorage.myRoll == "artist") ...[
+              if (LocalStorage.myRoll == Role.artist.role) ...[
                 _actionTile(
                   iconPath: AppImages.uploadArtwork,
                   label: 'Upload Artwork',
@@ -214,8 +214,8 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
                     );
                   },
                 ),
-              ] else if (LocalStorage.myRoll == "curator" ||
-                  LocalStorage.myRoll == "museum") ...[
+              ] else if (LocalStorage.myRoll == Role.curator.role ||
+                  LocalStorage.myRoll == Role.museum.role) ...[
                 _actionTile(
                   iconPath: AppImages.newExhibition,
                   label: 'Create New Exhibition',
@@ -240,7 +240,7 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
                     );
                   },
                 ),
-              ] else if (LocalStorage.myRoll == "educational_institution") ...[
+              ] else if (LocalStorage.myRoll == Role.educational.role) ...[
                 _actionTile(
                   iconPath: AppImages.createNewEvent,
                   label: 'Upload new Learning Materials',

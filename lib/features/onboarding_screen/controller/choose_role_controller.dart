@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tasaned_project/utils/enum/enum.dart';
 
 class ChooseRoleController extends GetxController {
   // 0: Visitor, 1: Artist, 2: Collector, 3: Curator, 4: Museum, 5: Educational Institution
@@ -27,17 +28,4 @@ class ChooseRoleController extends GetxController {
         return Role.user.role;
     }
   }
-}
-
-enum Role {
-  user('USER'),
-  artist('ARTIST'),
-  collector('COLLECTOR'),
-  curator('CURATOR'),
-  museum('MUSEUM'),
-  educational('EDUCATIONAL_INSTITUTE');
-
-  final String role;
-
-  const Role(this.role);
 }

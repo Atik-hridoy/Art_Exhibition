@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/services/storage/storage_services.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
+import 'package:tasaned_project/utils/enum/enum.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/order_tabs.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/order_list.dart';
@@ -12,8 +13,7 @@ import 'package:tasaned_project/utils/constants/app_string.dart';
 import '../controller/order_history_controller.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
-   OrderHistoryScreen({super.key});
-
+  OrderHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +34,7 @@ class OrderHistoryScreen extends StatelessWidget {
         ),
         leading: InkWell(
           onTap: () => Get.back(),
-          child: Icon(
-            Icons.arrow_back_ios,
-            size: 20.sp,
-            color: AppColors.titleColor,
-          ),
+          child: Icon(Icons.arrow_back_ios, size: 20.sp, color: AppColors.titleColor),
         ),
         actions: [
           Padding(
@@ -62,9 +58,7 @@ class OrderHistoryScreen extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
                 side: BorderSide(color: AppColors.stroke),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
                 foregroundColor: AppColors.titleColor,
               ),
               icon: Icon(Icons.filter_alt_outlined, size: 16.sp),
@@ -85,7 +79,7 @@ class OrderHistoryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Tabs
-                if (LocalStorage.myRoll != "visitor")
+                if (LocalStorage.myRoll != Role.user.role)
                   OrderTabs(
                     selectedTab: controller.selectedTab,
                     onChanged: controller.changeTab,
@@ -102,8 +96,6 @@ class OrderHistoryScreen extends StatelessWidget {
           );
         },
       ),
-
-  
     );
   }
 }
