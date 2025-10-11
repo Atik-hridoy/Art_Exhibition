@@ -6,10 +6,10 @@ class ApiEndPoint {
   static const signUp = "/users"; // Saved ny Nasim
   static const verifyEmail = "auth/verify-email"; // Saved ny Nasim
   static const signIn = "auth/login"; // Saved ny Nasim
-  static const forgotPassword = "users/forget-password";
+  static const forgotPassword = "auth/forget-password"; // Saved ny Nasim
   // static const verifyOtp = "users/verify-otp";
   static const resendOtp = "/auth/resend-otp"; // Saved ny Nasim
-  static const resetPassword = "users/reset-password";
+  static const resetPassword = "auth/reset-password"; // Saved ny Nasim
   static const changePassword = "users/change-password";
   static const user = "users";
   static const notifications = "Notifications";
