@@ -14,8 +14,6 @@ import '../../../../../utils/constants/app_colors.dart';
 import '../../../../../utils/constants/app_string.dart';
 import '../../../../../utils/helpers/other_helper.dart';
 import '../widgets/continue_with_google.dart';
-import '../../../../../services/storage/storage_services.dart';
-import '../../../../../services/storage/storage_keys.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -188,106 +186,6 @@ class SignInScreen extends StatelessWidget {
                             },
                           ),
 
-                          // Quick Sign-in by Role (frontend only)
-                          // CommonButton(
-                          //   titleText: "Sign in as ${AppString.roleVisitorTitle}",
-                          //   buttonRadius: 60,
-                          //   onTap: () async {
-                          //     await LocalStorage.setString(
-                          //       LocalStorageKeys.myRoll,
-                          //       'USER',
-                          //     );
-                          //     LocalStorage.myRoll = 'USER';
-
-                          //     Get.offAllNamed(AppRoutes.userHomeScreen);
-                          //   },
-                          // ),
-                          // 10.height,
-                          // CommonButton(
-                          //   titleText: "Sign in as ${AppString.roleArtistTitle}",
-                          //   buttonRadius: 60,
-                          //   onTap: () async {
-                          //     await LocalStorage.setString(
-                          //       LocalStorageKeys.myRoll,
-                          //       'ARTIST',
-                          //     );
-                          //     LocalStorage.myRoll = 'ARTIST';
-                          //     Get.snackbar(
-                          //       AppString.signIn,
-                          //       'Signed in as ${AppString.roleArtistTitle}',
-                          //     );
-                          //     Get.offAllNamed(AppRoutes.userHomeScreen);
-                          //   },
-                          // ),
-                          // 10.height,
-                          // CommonButton(
-                          //   titleText: "Sign in as ${AppString.roleCollectorTitle}",
-                          //   buttonRadius: 60,
-                          //   onTap: () async {
-                          //     await LocalStorage.setString(
-                          //       LocalStorageKeys.myRoll,
-                          //       'COLLECTOR',
-                          //     );
-                          //     LocalStorage.myRoll = 'COLLECTOR';
-                          //     Get.snackbar(
-                          //       AppString.signIn,
-                          //       'Signed in as ${AppString.roleCollectorTitle}',
-                          //     );
-                          //     Get.offAllNamed(AppRoutes.userHomeScreen);
-                          //   },
-                          // ),
-                          // 10.height,
-                          // CommonButton(
-                          //   titleText: "Sign in as ${AppString.roleCuratorTitle}",
-                          //   buttonRadius: 60,
-                          //   onTap: () async {
-                          //     await LocalStorage.setString(
-                          //       LocalStorageKeys.myRoll,
-                          //       'CURATOR',
-                          //     );
-                          //     LocalStorage.myRoll = 'CURATOR';
-                          //     Get.snackbar(
-                          //       AppString.signIn,
-                          //       'Signed in as ${AppString.roleCuratorTitle}',
-                          //     );
-                          //     Get.offAllNamed(AppRoutes.userHomeScreen);
-                          //   },
-                          // ),
-                          // 10.height,
-                          // CommonButton(
-                          //   titleText: "Sign in as ${AppString.roleMuseumTitle}",
-                          //   buttonRadius: 60,
-                          //   onTap: () async {
-                          //     await LocalStorage.setString(
-                          //       LocalStorageKeys.myRoll,
-                          //       'MUSEUM',
-                          //     );
-                          //     LocalStorage.myRoll = 'MUSEUM';
-                          //     Get.snackbar(
-                          //       AppString.signIn,
-                          //       'Signed in as ${AppString.roleMuseumTitle}',
-                          //     );
-                          //     Get.offAllNamed(AppRoutes.userHomeScreen);
-                          //   },
-                          // ),
-                          // 10.height,
-                          // CommonButton(
-                          //   titleText:
-                          //       "Sign in as ${AppString.roleEducationalInstitutionTitle}",
-                          //   buttonRadius: 60,
-                          //   onTap: () async {
-                          //     await LocalStorage.setString(
-                          //       LocalStorageKeys.myRoll,
-                          //       'EDUCATIONAL_INSTITUTE',
-                          //     );
-                          //     LocalStorage.myRoll = 'EDUCATIONAL_INSTITUTE';
-                          //     Get.snackbar(
-                          //       AppString.signIn,
-                          //       'Signed in as ${AppString.roleEducationalInstitutionTitle}',
-                          //     );
-                          //     Get.offAllNamed(AppRoutes.userHomeScreen);
-                          //   },
-                          // ),
                           16.height,
 
                           // Or divider

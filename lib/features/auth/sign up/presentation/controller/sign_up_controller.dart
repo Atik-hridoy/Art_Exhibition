@@ -1,20 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl_phone_field/countries.dart';
-
 import '../../../../../config/route/app_routes.dart';
 import '../../../../../services/api/api_service.dart';
 import '../../../../../services/storage/storage_keys.dart';
 import '../../../../../config/api/api_end_point.dart';
 import '../../../../../services/storage/storage_services.dart';
 import '../../../../../utils/app_utils.dart';
-import '../../../../../utils/helpers/other_helper.dart';
 
 class SignUpController extends GetxController {
-  /// Sign Up Form Key
   final signUpFormKey = GlobalKey<FormState>();
 
   bool isPopUpOpen = false;
@@ -26,13 +21,8 @@ class SignUpController extends GetxController {
 
   String time = "";
 
-  List selectedOption = ["User", "Consultant"];
-
-  String selectRole = "User";
-  String countryCode = "+880";
+  String selectRole = LocalStorage.myRoll;
   String? image;
-
-  String signUpToken = '';
 
   static SignUpController get instance => Get.put(SignUpController());
 
@@ -40,36 +30,19 @@ class SignUpController extends GetxController {
     text: kDebugMode ? "S M Nasim Ahmed" : "",
   );
   TextEditingController emailController = TextEditingController(
-    text: kDebugMode ? "developernaimul00@gmail.com" : '',
+    text: kDebugMode ? "exkakpg@fexbox.org" : '',
   );
 
-  TextEditingController chooseRoleController = TextEditingController();
   TextEditingController passwordController = TextEditingController(
     text: kDebugMode ? 'hello123' : '',
   );
   TextEditingController confirmPasswordController = TextEditingController(
     text: kDebugMode ? 'hello123' : '',
   );
-  TextEditingController numberController = TextEditingController(
-    text: kDebugMode ? '1865965581' : '',
-  );
-  TextEditingController otpController = TextEditingController(
-    text: kDebugMode ? '1234' : '',
-  );
+
+  TextEditingController otpController = TextEditingController();
 
   var selectedRole = '';
-
-  List roleList = [
-    "User / Collector",
-    "Artist / Curator",
-    "Museum / Educational Institution",
-  ];
-
-  void changeChooseRole(String value) {
-    selectedRole = value;
-    chooseRoleController.text = value;
-    update();
-  }
 
   @override
   void dispose() {
@@ -77,42 +50,24 @@ class SignUpController extends GetxController {
     super.dispose();
   }
 
-  onCountryChange(Country value) {
-    countryCode = value.dialCode.toString();
-  }
-
-  setSelectedRole(value) {
-    selectRole = value;
-    update();
-  }
-
-  openGallery() async {
-    image = await OtherHelper.openGallery();
-    update();
-  }
-
   signUpUser() async {
     if (!signUpFormKey.currentState!.validate()) return;
-    Get.toNamed(AppRoutes.verifyUser);
-    return;
     isLoading = true;
     update();
     Map<String, String> body = {
-      "fullName": nameController.text,
+      "name": nameController.text,
       "email": emailController.text,
-      "phoneNumber": numberController.text,
-      "countryCode": countryCode,
       "password": passwordController.text,
-      "role": selectRole.toLowerCase(),
+      "role": selectRole,
     };
 
     var response = await ApiService.post(ApiEndPoint.signUp, body: body);
 
     if (response.statusCode == 200) {
-      var data = response.data;
-      signUpToken = data['data']['signUpToken'];
+      LocalStorage.setString(LocalStorageKeys.myEmail, emailController.text);
       Get.toNamed(AppRoutes.verifyUser);
     } else {
+      print(LocalStorage.myRoll);
       Utils.errorSnackBar(response.statusCode.toString(), response.message);
     }
     isLoading = false;
@@ -138,46 +93,34 @@ class SignUpController extends GetxController {
   }
 
   Future<void> verifyOtpRepo() async {
-    Get.toNamed(AppRoutes.signIn);
-    return;
-
     isLoadingVerify = true;
     update();
-    Map<String, String> body = {"otp": otpController.text};
-    Map<String, String> header = {"SignUpToken": "signUpToken $signUpToken"};
-    var response = await ApiService.post(
-      ApiEndPoint.verifyEmail,
-      body: body,
-      header: header,
-    );
+    Map<String, dynamic> body = {
+      "email": emailController.text,
+      "oneTimeCode": int.tryParse(otpController.text) ?? 0,
+    };
+    var response = await ApiService.post(ApiEndPoint.verifyEmail, body: body);
 
     if (response.statusCode == 200) {
-      var data = response.data;
-
-      LocalStorage.token = data['data']["accessToken"];
-      LocalStorage.userId = data['data']["attributes"]["_id"];
-      LocalStorage.myImage = data['data']["attributes"]["image"];
-      LocalStorage.myName = data['data']["attributes"]["fullName"];
-      LocalStorage.myEmail = data['data']["attributes"]["email"];
-      LocalStorage.isLogIn = true;
-
-      LocalStorage.setBool(LocalStorageKeys.isLogIn, LocalStorage.isLogIn);
-      LocalStorage.setString(LocalStorageKeys.token, LocalStorage.token);
-      LocalStorage.setString(LocalStorageKeys.userId, LocalStorage.userId);
-      LocalStorage.setString(LocalStorageKeys.myImage, LocalStorage.myImage);
-      LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
-      LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
-
-      // if (LocalStorage.myRole == 'consultant') {
-      //   Get.toNamed(AppRoutes.personalInformation);
-      // } else {
-      //   Get.offAllNamed(AppRoutes.patientsHome);
-      // }
+      Get.toNamed(AppRoutes.accountVerifiedScreen);
     } else {
       Get.snackbar(response.statusCode.toString(), response.message);
     }
 
     isLoadingVerify = false;
     update();
+  }
+
+  Future<void> resendOtpRepo() async {
+    isLoadingVerify = true;
+    update();
+    Map<String, dynamic> body = {"email": emailController.text};
+    var response = await ApiService.post(ApiEndPoint.resendOtp, body: body);
+
+    if (response.statusCode == 200) {
+      startTimer();
+    } else {
+      Get.snackbar(response.statusCode.toString(), response.message);
+    }
   }
 }

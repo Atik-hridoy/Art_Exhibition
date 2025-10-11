@@ -51,7 +51,7 @@ class SignUpScreen extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.title2,
-                    text: AppString.yourInformation,
+                    text: AppString.createYourAccount,
                   ),
 
                   16.height,

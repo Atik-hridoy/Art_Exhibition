@@ -132,6 +132,7 @@ class ChooseRoleScreen extends StatelessWidget {
                   titleText: AppString.continues,
                   buttonRadius: 50,
                   onTap: () {
+                    // controller.selectedRoleKey
                     Get.offAllNamed(
                       AppRoutes.signUp,
                       arguments: {'role': controller.selectedRoleKey},

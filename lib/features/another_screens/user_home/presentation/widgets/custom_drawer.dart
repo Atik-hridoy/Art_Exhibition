@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/component/button/common_button.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
+import 'package:tasaned_project/component/pop_up/common_pop_menu.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/controller/order_history_controller.dart';
@@ -273,7 +274,7 @@ class CustomDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 24.h),
             child: InkWell(
               onTap: () {
-                Navigator.of(context).maybePop();
+                logOutPopUp();
               },
               child: Row(
                 children: [

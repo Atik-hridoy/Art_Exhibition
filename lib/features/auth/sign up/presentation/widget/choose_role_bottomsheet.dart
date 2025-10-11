@@ -65,51 +65,51 @@ void chooseRoleBottomSheet(BuildContext context) {
                 ),
 
                 20.height,
-                Expanded(
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: controller.roleList.length,
-                    itemBuilder: (context, index) {
-                      var category = controller.roleList[index];
-                      return Container(
-                        height: 48.h,
-                        margin: EdgeInsets.only(top: 7.h),
-                        width: double.infinity,
-                        padding: EdgeInsets.all(12.r),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(width: 1.h, color: AppColors.bodyClr),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                          children: [
-                            CommonText(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              text: category,
-                            ),
-                            SizedBox(
-                              height: 24.h,
-                              width: 24.w,
-                              child: Radio(
-                                activeColor: AppColors.primaryColor,
-                                value: category,
-                                groupValue: controller.selectedRole,
-                                onChanged: (val) {
-                                  controller.changeChooseRole(val);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                // Expanded(
+                //   child: ListView.builder(
+                //     physics: NeverScrollableScrollPhysics(),
+                //     shrinkWrap: true,
+                //     itemCount: controller.roleList.length,
+                //     itemBuilder: (context, index) {
+                //       var category = controller.roleList[index];
+                //       return Container(
+                //         height: 48.h,
+                //         margin: EdgeInsets.only(top: 7.h),
+                //         width: double.infinity,
+                //         padding: EdgeInsets.all(12.r),
+                //         decoration: BoxDecoration(
+                //           color: AppColors.white,
+                //           borderRadius: BorderRadius.circular(10.r),
+                //           border: Border.all(width: 1.h, color: AppColors.bodyClr),
+                //         ),
+                //         child: Row(
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
+                //           children: [
+                //             CommonText(
+                //               fontSize: 12,
+                //               fontWeight: FontWeight.w400,
+                //               text: category,
+                //             ),
+                //             SizedBox(
+                //               height: 24.h,
+                //               width: 24.w,
+                //               child: Radio(
+                //                 activeColor: AppColors.primaryColor,
+                //                 value: category,
+                //                 groupValue: controller.selectedRole,
+                //                 onChanged: (val) {
+                //                   controller.changeChooseRole(val);
+                //                 },
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
                 30.height,
 
                 CommonButton(

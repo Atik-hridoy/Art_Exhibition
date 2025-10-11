@@ -211,6 +211,7 @@ class AppString {
       "This will permanently remove your child’s information.";
   static const String removeChildrenTitle =
       "Are you sure you want to remove this child from your profile?";
+  static const String areYouSureLogOut = "Are you sure you want to Log Out?";
   static const String anySpecialInstructionsOrRequirements =
       "Any Special Instructions or Requirements";
   static const String bookingUpdates = "Booking Updates";

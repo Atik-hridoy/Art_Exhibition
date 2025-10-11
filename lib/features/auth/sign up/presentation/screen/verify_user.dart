@@ -141,8 +141,7 @@ class _VerifyUserState extends State<VerifyUser> {
                       controller.time == '00:00'
                           ? InkWell(
                               onTap: () {
-                                controller.startTimer();
-                                // controller.forgotPasswordRepo();
+                                controller.resendOtpRepo();
                               },
                               child: CommonText(
                                 top: 5,
@@ -168,7 +167,7 @@ class _VerifyUserState extends State<VerifyUser> {
                         isLoading: controller.isLoadingVerify,
                         onTap: () {
                           if (formKey.currentState!.validate()) {
-                            Get.toNamed(AppRoutes.accountVerifiedScreen);
+                            controller.verifyOtpRepo();
                           }
                         },
                       ),
