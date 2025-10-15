@@ -2,7 +2,7 @@ class ArtsResponse {
   final bool success;
   final String? message;
   final Pagination? pagination;
-  final List<Art> data;
+  final List<ArtDetails> data;
 
   ArtsResponse({
     required this.success,
@@ -19,7 +19,7 @@ class ArtsResponse {
           ? null
           : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
       data: (json['data'] as List<dynamic>? ?? [])
-          .map((e) => Art.fromJson(e as Map<String, dynamic>))
+          .map((e) => ArtDetails.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -62,7 +62,7 @@ class Pagination {
   };
 }
 
-class Art {
+class ArtDetails {
   final String id;
   final Artist? artist;
   final String image;
@@ -84,7 +84,7 @@ class Art {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  Art({
+  ArtDetails({
     required this.id,
     this.artist,
     required this.image,
@@ -107,11 +107,11 @@ class Art {
     this.updatedAt,
   });
 
-  factory Art.fromJson(Map<String, dynamic> json) {
+  factory ArtDetails.fromJson(Map<String, dynamic> json) {
     // JSON uses "daimentions" (typo) in your payload; also try "dimensions"
     final dimsJson = json['daimentions'] ?? json['dimensions'] ?? json['daimention'];
 
-    return Art(
+    return ArtDetails(
       id: (json['_id'] ?? '') as String,
       artist: json['artist'] == null
           ? null

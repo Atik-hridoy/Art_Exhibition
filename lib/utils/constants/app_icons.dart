@@ -3,4 +3,5 @@ class AppIcons {
 
   static const String burger = "$baseurl/burger.svg";
   static const String logoText = "$baseurl/home_logo.svg";
+  static const String noDataFoundIcon = "$baseurl/noDataFoundIcon.svg";
 }

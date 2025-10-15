@@ -5,6 +5,7 @@ import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/event_item.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/learning_medarials_item.dart';
+import 'package:tasaned_project/features/another_screens/user_home/presentation/controllers/home_controller.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/arts_item.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/category_item.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/popular_artist_item.dart';
@@ -28,41 +29,47 @@ class ListItemSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        20.height,
+    return GetBuilder(
+      init: HomeController(),
+      builder: (controller) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            20.height,
 
-        FeatureArtSection(),
+            FeatureArtSection(controller: controller),
 
-        20.height,
+            20.height,
 
-        CategorySection(),
+            CategorySection(controller: controller),
 
-        20.height,
+            20.height,
 
-        PopularArtist(),
+            PopularArtist(controller: controller),
 
-        RecomendedArts(),
+            RecomendedArts(controller: controller),
 
-        20.height,
+            20.height,
 
-        UpComingExibition(),
+            UpComingExibition(controller: controller),
 
-        20.height,
+            20.height,
 
-        UpcomingEvents(),
+            UpcomingEvents(controller: controller),
 
-        20.height,
+            20.height,
 
-        LearningMaterials(),
-      ],
+            LearningMaterials(controller: controller),
+          ],
+        );
+      },
     );
   }
 }
 
 class LearningMaterials extends StatelessWidget {
-  const LearningMaterials({super.key});
+  final HomeController controller;
+  const LearningMaterials({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +124,8 @@ class LearningMaterials extends StatelessWidget {
 }
 
 class UpcomingEvents extends StatelessWidget {
-  const UpcomingEvents({super.key});
+  final HomeController controller;
+  const UpcomingEvents({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +183,8 @@ class UpcomingEvents extends StatelessWidget {
 }
 
 class UpComingExibition extends StatelessWidget {
-  const UpComingExibition({super.key});
+  final HomeController controller;
+  const UpComingExibition({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +242,8 @@ class UpComingExibition extends StatelessWidget {
 }
 
 class RecomendedArts extends StatelessWidget {
-  const RecomendedArts({super.key});
+  final HomeController controller;
+  const RecomendedArts({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +289,8 @@ class RecomendedArts extends StatelessWidget {
 }
 
 class PopularArtist extends StatelessWidget {
-  const PopularArtist({super.key});
+  final HomeController controller;
+  const PopularArtist({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -334,7 +345,8 @@ class PopularArtist extends StatelessWidget {
 }
 
 class CategorySection extends StatelessWidget {
-  const CategorySection({super.key});
+  final HomeController controller;
+  const CategorySection({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -391,7 +403,8 @@ class CategorySection extends StatelessWidget {
 }
 
 class FeatureArtSection extends StatelessWidget {
-  const FeatureArtSection({super.key});
+  final HomeController controller;
+  const FeatureArtSection({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -426,26 +439,41 @@ class FeatureArtSection extends StatelessWidget {
 
         16.height,
 
-        SizedBox(
-          height: 182.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(
-                    AppRoutes.artDetailsScreen,
-                    arguments: {"screenType": "userHome"},
-                  );
-                },
-                child: ArtsItem(),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
+        controller.featureArtIsLoading
+            ? CircularProgressIndicator()
+            : controller.featureArtList?.length == null ||
+                  controller.featureArtList?.length == 0
+            ? SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                    CommonText(text: AppString.nofeatureArts, color: Colors.grey),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: 182.h,
+                child: ListView.separated(
+                  padding: EdgeInsets.only(right: 16.w),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.featureArtList!.length < 5
+                      ? controller.featureArtList!.length
+                      : 5,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(
+                          AppRoutes.artDetailsScreen,
+                          arguments: {"screenType": "userHome"},
+                        );
+                      },
+                      child: ArtsItem(),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                ),
+              ),
       ],
     );
   }

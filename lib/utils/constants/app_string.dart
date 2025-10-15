@@ -562,4 +562,7 @@ class AppString {
   // ... rest of the code remains the same ...
 
   static const String myCourses = 'My Courses';
+
+  ///////////// Integration error Handeling text /////////
+  static const String nofeatureArts = 'No Feature Arts Curretly Available';
 }
