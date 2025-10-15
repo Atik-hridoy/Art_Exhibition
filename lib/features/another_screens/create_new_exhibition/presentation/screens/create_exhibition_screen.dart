@@ -28,7 +28,7 @@ class CreateExhibitionScreen extends StatelessWidget {
             shadowColor: AppColors.transparent,
             surfaceTintColor: AppColors.transparent,
             title: CommonText(
-              text: AppString.createExhibition,
+              text: AppString.createArtwork,
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.titleColor,

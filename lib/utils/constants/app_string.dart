@@ -420,6 +420,7 @@ class AppString {
   static const String enterArtworkTitle = 'Enter artwork title';
   static const String artworkTitle = 'Artwork Title';
   static const String createExhibition = 'Create Exhibition';
+  static const String createArtwork = 'Create Artwork';
   static const String photos = 'Photos';
   static const String chooseYourMainPhotoFirstShort = 'Choose your main photo first';
   static const String medium = 'Medium';

@@ -33,6 +33,41 @@ class ListItemSection extends StatelessWidget {
       children: [
         20.height,
 
+        FeatureArtSection(),
+
+        20.height,
+
+        CategorySection(),
+
+        20.height,
+
+        PopularArtist(),
+
+        RecomendedArts(),
+
+        20.height,
+
+        UpComingExibition(),
+
+        20.height,
+
+        UpcomingEvents(),
+
+        20.height,
+
+        LearningMaterials(),
+      ],
+    );
+  }
+}
+
+class LearningMaterials extends StatelessWidget {
+  const LearningMaterials({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -40,14 +75,12 @@ class ListItemSection extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryColor,
-              text: AppString.featureArts,
+              text: AppString.learningMaterials,
             ),
 
             InkWell(
-              onTap: (){
-                Get.toNamed(AppRoutes.featureArtsScreen, arguments: {
-                  "title":AppString.featureArts
-                });
+              onTap: () {
+                Get.toNamed(AppRoutes.learningMeterials);
               },
               child: CommonText(
                 fontSize: 14,
@@ -69,21 +102,244 @@ class ListItemSection extends StatelessWidget {
             itemCount: 5,
             itemBuilder: (context, index) {
               return InkWell(
-
-                  onTap: (){
-                    Get.toNamed(AppRoutes.artDetailsScreen, arguments: {
-                      "screenType": "userHome",
-                    });
-                  },
-                  child: ArtsItem());
+                onTap: () {
+                  Get.toNamed(AppRoutes.artDetailsScreen);
+                },
+                child: LearningMedarialsItem(),
+              );
             },
             separatorBuilder: (_, __) => SizedBox(width: 16.w),
           ),
         ),
+      ],
+    );
+  }
+}
 
+class UpcomingEvents extends StatelessWidget {
+  const UpcomingEvents({super.key});
 
-        20.height,
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CommonText(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor,
+              text: AppString.upcomingEvents,
+            ),
 
+            InkWell(
+              onTap: () {
+                Get.toNamed(AppRoutes.upComingEventScreen);
+              },
+              child: CommonText(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.bodyClr,
+                text: AppString.seeAll,
+              ),
+            ),
+          ],
+        ),
+
+        16.height,
+
+        SizedBox(
+          height: 200.h,
+          child: ListView.separated(
+            padding: EdgeInsets.only(right: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Get.toNamed(
+                    AppRoutes.eventDetailsScreen,
+                    arguments: {"title": "User Home"},
+                  );
+                },
+                child: EventItem(),
+              );
+            },
+            separatorBuilder: (_, __) => SizedBox(width: 16.w),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class UpComingExibition extends StatelessWidget {
+  const UpComingExibition({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CommonText(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor,
+              text: AppString.upcomingExhibition,
+            ),
+
+            InkWell(
+              onTap: () {
+                Get.toNamed(AppRoutes.upComingExhibitionScreen);
+              },
+              child: CommonText(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.bodyClr,
+                text: AppString.seeAll,
+              ),
+            ),
+          ],
+        ),
+
+        16.height,
+
+        SizedBox(
+          height: 200.h,
+          child: ListView.separated(
+            padding: EdgeInsets.only(right: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Get.toNamed(
+                    AppRoutes.exhibitionDetailsScreen,
+                    arguments: {"title": "User Home"},
+                  );
+                },
+                child: ExhibitionItem(),
+              );
+            },
+            separatorBuilder: (_, __) => SizedBox(width: 16.w),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class RecomendedArts extends StatelessWidget {
+  const RecomendedArts({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CommonText(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor,
+              text: AppString.recommendedArts,
+            ),
+          ],
+        ),
+
+        16.height,
+
+        SizedBox(
+          height: 182.h,
+          child: ListView.separated(
+            padding: EdgeInsets.only(right: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Get.toNamed(
+                    AppRoutes.artDetailsScreen,
+                    arguments: {"screenType": "userHome"},
+                  );
+                },
+                child: ArtsItem(),
+              );
+            },
+            separatorBuilder: (_, __) => SizedBox(width: 16.w),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PopularArtist extends StatelessWidget {
+  const PopularArtist({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CommonText(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor,
+              text: AppString.popularArtist,
+            ),
+
+            InkWell(
+              onTap: () {
+                Get.toNamed(AppRoutes.popularArtistScreen);
+              },
+              child: CommonText(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.bodyClr,
+                text: AppString.seeAll,
+              ),
+            ),
+          ],
+        ),
+
+        16.height,
+
+        SizedBox(
+          height: 120.h,
+          child: ListView.separated(
+            padding: EdgeInsets.only(right: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Get.toNamed(AppRoutes.artistDetailsScreen);
+                },
+                child: PopularArtistItem(),
+              );
+            },
+            separatorBuilder: (_, __) => SizedBox(width: 16.w),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CategorySection extends StatelessWidget {
+  const CategorySection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -95,7 +351,7 @@ class ListItemSection extends StatelessWidget {
             ),
 
             InkWell(
-              onTap: (){
+              onTap: () {
                 Get.toNamed(AppRoutes.categoryScreen);
               },
               child: CommonText(
@@ -119,248 +375,78 @@ class ListItemSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final item = _homeCategories[index];
               return InkWell(
-                onTap: () =>     Get.toNamed(AppRoutes.featureArtsScreen, arguments: {
-                  "title":AppString.featureArts
-                }),
+                onTap: () => Get.toNamed(
+                  AppRoutes.featureArtsScreen,
+                  arguments: {"title": AppString.featureArts},
+                ),
                 child: CategoryItem(title: item['title']!, imageSrc: item['image']!),
               );
             },
             separatorBuilder: (_, __) => SizedBox(width: 6.w),
           ),
         ),
-
-        20.height,
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CommonText(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-              text: AppString.popularArtist,
-            ),
-
-            InkWell(
-              onTap: (){
-               Get.toNamed(AppRoutes.popularArtistScreen);
-              },
-              child: CommonText(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.bodyClr,
-                text: AppString.seeAll,
-              ),
-            ),
-          ],
-        ),
-
-        16.height,
-
-        SizedBox(
-          height: 120.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                
-                onTap: (){
-                  Get.toNamed(AppRoutes.artistDetailsScreen);
-                },
-                child: PopularArtistItem());
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
-
-               Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CommonText(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-              text: AppString.recommendedArts,
-            ),
-
-         ],
-        ),
-
-        16.height,
-
-        SizedBox(
-          height: 182.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-
-                  onTap: (){
-                    Get.toNamed(AppRoutes.artDetailsScreen, arguments: {
-                      "screenType": "userHome",
-                    });
-                  },
-                  child: ArtsItem());
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
-
-
-
-
-
-
-
-        20.height,
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CommonText(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-              text: AppString.upcomingExhibition,
-            ),
-
-            InkWell(
-              onTap: (){
-                Get.toNamed(AppRoutes.upComingExhibitionScreen);
-              },
-              child: CommonText(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.bodyClr,
-                text: AppString.seeAll,
-              ),
-            ),
-          ],
-        ),
-
-        16.height,
-
-        SizedBox(
-          height: 200.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                  onTap: (){
-                    Get.toNamed(AppRoutes.exhibitionDetailsScreen,
-                    arguments: {
-                      "title": "User Home",
-                    }
-                    
-                    );
-                  },
-                  child: ExhibitionItem());
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
-        20.height,
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CommonText(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-              text: AppString.upcomingEvents,
-            ),
-
-            InkWell(
-              onTap: (){
-                Get.toNamed(AppRoutes.upComingEventScreen);
-              },
-              child: CommonText(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.bodyClr,
-                text: AppString.seeAll,
-              ),
-            ),
-          ],
-        ),
-
-        16.height,
-
-        SizedBox(
-          height: 200.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                  onTap: (){
-                    Get.toNamed(AppRoutes.eventDetailsScreen, 
-                    arguments: {
-                      "title": "User Home",
-                    }
-                    );
-                  },
-                  child: EventItem());
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
-     20.height,
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CommonText(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-              text: AppString.learningMaterials,
-            ),
-
-            InkWell(
-              onTap: (){
-                Get.toNamed(AppRoutes.learningMeterials);
-              },
-              child: CommonText(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.bodyClr,
-                text: AppString.seeAll,
-              ),
-            ),
-          ],
-        ),
-
-        16.height,
-
-        SizedBox(
-          height: 182.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                  onTap: (){
-                    Get.toNamed(AppRoutes.artDetailsScreen);
-                  },
-                  child: LearningMedarialsItem());
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
-
-
       ],
     );
   }
+}
 
+class FeatureArtSection extends StatelessWidget {
+  const FeatureArtSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CommonText(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor,
+              text: AppString.featureArts,
+            ),
+
+            InkWell(
+              onTap: () {
+                Get.toNamed(
+                  AppRoutes.featureArtsScreen,
+                  arguments: {"title": AppString.featureArts},
+                );
+              },
+              child: CommonText(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.bodyClr,
+                text: AppString.seeAll,
+              ),
+            ),
+          ],
+        ),
+
+        16.height,
+
+        SizedBox(
+          height: 182.h,
+          child: ListView.separated(
+            padding: EdgeInsets.only(right: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Get.toNamed(
+                    AppRoutes.artDetailsScreen,
+                    arguments: {"screenType": "userHome"},
+                  );
+                },
+                child: ArtsItem(),
+              );
+            },
+            separatorBuilder: (_, __) => SizedBox(width: 16.w),
+          ),
+        ),
+      ],
+    );
+  }
 }
