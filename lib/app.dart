@@ -16,15 +16,18 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       designSize: const Size(375, 812),
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        navigatorKey: Get.key,
-        defaultTransition: Transition.fadeIn,
-        theme: themeData,
-        transitionDuration: const Duration(milliseconds: 300),
-        initialBinding: DependencyInjection(),
-        initialRoute: AppRoutes.splash,
-        getPages: AppRoutes.routes,
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          navigatorKey: Get.key,
+          defaultTransition: Transition.fadeIn,
+          theme: themeData,
+          transitionDuration: const Duration(milliseconds: 300),
+          initialBinding: DependencyInjection(),
+          initialRoute: AppRoutes.splash,
+          getPages: AppRoutes.routes,
+        ),
       ),
     );
   }

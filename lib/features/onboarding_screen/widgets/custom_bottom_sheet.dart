@@ -65,7 +65,7 @@ class CustomBottomSheet extends StatelessWidget {
                 ),
               ),
 
-              36.height,
+              26.height,
               // Wrap only DotIndicator with Obx
               DotIndicator(selectIndex: index),
 

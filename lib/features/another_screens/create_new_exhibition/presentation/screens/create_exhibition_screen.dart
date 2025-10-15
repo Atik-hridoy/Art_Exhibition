@@ -15,7 +15,6 @@ import '../controllers/create_exhibition_controller.dart';
 
 class CreateExhibitionScreen extends StatelessWidget {
   const CreateExhibitionScreen({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,10 @@ class CreateExhibitionScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.searchBg,
                         borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: AppColors.stroke, style: BorderStyle.solid),
+                        border: Border.all(
+                          color: AppColors.stroke,
+                          style: BorderStyle.solid,
+                        ),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -74,7 +76,8 @@ class CreateExhibitionScreen extends StatelessWidget {
                           ),
                           4.height,
                           CommonText(
-                            text: '${AppString.photos}: ${controller.photosCount.toString().padLeft(1, '0')}/05 : ${AppString.chooseYourMainPhotoFirstShort}',
+                            text:
+                                '${AppString.photos}: ${controller.photosCount.toString().padLeft(1, '0')}/05 : ${AppString.chooseYourMainPhotoFirstShort}',
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.bodyClr,
@@ -99,7 +102,10 @@ class CreateExhibitionScreen extends StatelessWidget {
                 12.height,
                 _label(AppString.category),
                 8.height,
-                _categorySelector(controller),
+                GestureDetector(
+                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                  child: _categorySelector(controller),
+                ),
 
                 12.height,
                 _label(AppString.description),
@@ -205,7 +211,6 @@ class CreateExhibitionScreen extends StatelessWidget {
     );
   }
 
- 
   Widget _imagesGrid(CreateExhibitionController c) {
     final canAddMore = c.imagePaths.length < 5;
     final tiles = <Widget>[];
@@ -291,7 +296,17 @@ class CreateExhibitionScreen extends StatelessWidget {
 
   Widget _categorySelector(CreateExhibitionController c) {
     return InkWell(
-      onTap: _showCategorySheet,
+      onTap: () async {
+        // Close keyboard first
+        // FocusScope.of(Get.context!).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+
+        // Wait until the keyboard is fully dismissed
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        // Then show the sheet
+        _showCategorySheet();
+      },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
         decoration: BoxDecoration(
@@ -311,14 +326,18 @@ class CreateExhibitionScreen extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: _showCategorySheet,
+              onTap: () {
+                // FocusManager.instance.primaryFocus?.unfocus();
+                _showCategorySheet();
+              },
               child: Icon(Icons.arrow_drop_down, color: AppColors.bodyClr),
-            )
+            ),
           ],
         ),
       ),
     );
   }
+  // FocusManager.instance.primaryFocus?.unfocus(),
 
   void _showCategorySheet() {
     Get.bottomSheet(
@@ -373,7 +392,10 @@ class CreateExhibitionScreen extends StatelessWidget {
               width: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: selected ? AppColors.primaryColor : AppColors.stroke, width: 2),
+                border: Border.all(
+                  color: selected ? AppColors.primaryColor : AppColors.stroke,
+                  width: 2,
+                ),
               ),
               child: selected
                   ? Center(
@@ -387,7 +409,7 @@ class CreateExhibitionScreen extends StatelessWidget {
                       ),
                     )
                   : null,
-            )
+            ),
           ],
         ),
       ),
@@ -396,7 +418,18 @@ class CreateExhibitionScreen extends StatelessWidget {
 
   Widget _authSelector(CreateExhibitionController c) {
     return InkWell(
-      onTap: _showAuthSheet,
+      onTap: () async {
+        // Close keyboard first
+        // FocusScope.of(Get.context!).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+
+        // Wait until the keyboard is fully dismissed
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        // Then show the sheet
+        _showAuthSheet();
+      },
+
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
         decoration: BoxDecoration(
@@ -418,7 +451,7 @@ class CreateExhibitionScreen extends StatelessWidget {
             InkWell(
               onTap: _showAuthSheet,
               child: Icon(Icons.arrow_drop_down, color: AppColors.bodyClr),
-            )
+            ),
           ],
         ),
       ),
@@ -480,7 +513,10 @@ class CreateExhibitionScreen extends StatelessWidget {
               width: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: selected ? AppColors.primaryColor : AppColors.stroke, width: 2),
+                border: Border.all(
+                  color: selected ? AppColors.primaryColor : AppColors.stroke,
+                  width: 2,
+                ),
               ),
               child: selected
                   ? Center(
@@ -494,7 +530,7 @@ class CreateExhibitionScreen extends StatelessWidget {
                       ),
                     )
                   : null,
-            )
+            ),
           ],
         ),
       ),
@@ -503,10 +539,18 @@ class CreateExhibitionScreen extends StatelessWidget {
 
   Widget _sheetContainer({required String title, required Widget child}) {
     return Container(
-      padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 24.h + MediaQuery.of(Get.context!).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        left: 16.w,
+        right: 16.w,
+        top: 16.h,
+        bottom: 24.h + MediaQuery.of(Get.context!).viewInsets.bottom,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -539,14 +583,10 @@ class CreateExhibitionScreen extends StatelessWidget {
               ],
             ),
             16.height,
-            Container(width: double.infinity,
-            
-            height: 1,
-            color: AppColors.stroke,
-            ),
+            Container(width: double.infinity, height: 1, color: AppColors.stroke),
 
             22.height,
-           
+
             child,
             20.height,
             CommonButton(
