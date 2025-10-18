@@ -1,4 +1,5 @@
 import 'package:tasaned_project/config/api/api_end_point.dart';
+import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
@@ -91,6 +92,23 @@ Future<ArtDetails?> getArtDetails({required String artId}) async {
       'An error with repository',
       'Please contact with developer art details',
     );
+    return null;
+  }
+}
+
+Future<List<CategoryModel>?> getCategory() async {
+  try {
+    var response = await ApiService.get('${ApiEndPoint.category}?limit=10000');
+
+    if (response.statusCode == 200) {
+      var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
     return null;
   }
 }

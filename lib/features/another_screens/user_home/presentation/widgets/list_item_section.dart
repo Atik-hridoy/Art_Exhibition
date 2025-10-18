@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/event_item.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/learning_medarials_item.dart';
@@ -397,25 +398,45 @@ class CategorySection extends StatelessWidget {
 
         16.height,
 
-        SizedBox(
-          height: 130.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 8.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: _homeCategories.length,
-            itemBuilder: (context, index) {
-              final item = _homeCategories[index];
-              return InkWell(
-                onTap: () => Get.toNamed(
-                  AppRoutes.featureArtsScreen,
-                  arguments: {"title": AppString.featureArts},
+        controller.categoryIsLoading
+            ? CircularProgressIndicator()
+            : controller.categoryList?.length == null ||
+                  controller.categoryList?.length == 0
+            ? SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                    CommonText(text: AppString.noCategory, color: Colors.grey),
+                  ],
                 ),
-                child: CategoryItem(title: item['title']!, imageSrc: item['image']!),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 6.w),
-          ),
-        ),
+              )
+            : SizedBox(
+                height: 130.h,
+                child: ListView.separated(
+                  padding: EdgeInsets.only(right: 8.w),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.categoryList!.length < 5
+                      ? controller.categoryList!.length
+                      : 5,
+                  itemBuilder: (context, index) {
+                    final item = controller.categoryList?[index];
+                    return InkWell(
+                      onTap: () => Get.toNamed(
+                        AppRoutes.featureArtsScreen,
+                        arguments: {"title": AppString.featureArts},
+                      ),
+                      child: CategoryItem(
+                        title: item?.title ?? 'N/A',
+                        imageSrc: item?.title != null
+                            ? ApiEndPoint.imageUrl + (item?.image ?? '')
+                            : '',
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(width: 6.w),
+                ),
+              ),
       ],
     );
   }

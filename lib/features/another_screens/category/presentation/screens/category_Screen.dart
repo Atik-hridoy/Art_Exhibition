@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
@@ -31,28 +32,46 @@ class CategoryScreen extends StatelessWidget {
 
       body: GetBuilder<CategoryController>(
         init: CategoryController(),
-        builder: (c) => Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          child: GridView.builder(
-            itemCount: c.categories.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 12.w,
-              mainAxisSpacing: 16.h,
-              mainAxisExtent: 130.h,
-            ),
-            itemBuilder: (context, index) {
-              final item = c.categories[index];
-              return InkWell(
-                onTap: () => Get.toNamed(
-                  AppRoutes.featureArtsScreen,
-                  arguments: {"title": AppString.featureArts},
+        builder: (controller) => controller.categoryIsLoading
+            ? CircularProgressIndicator()
+            : controller.categoryList?.length == null ||
+                  controller.categoryList?.length == 0
+            ? SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                    CommonText(text: AppString.noCategory, color: Colors.grey),
+                  ],
                 ),
-                child: CategoryItem(title: item['title']!, imageSrc: item['image']!),
-              );
-            },
-          ),
-        ),
+              )
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                child: GridView.builder(
+                  itemCount: controller.categoryList?.length ?? 0,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12.w,
+                    mainAxisSpacing: 16.h,
+                    mainAxisExtent: 130.h,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = controller.categoryList?[index];
+                    return InkWell(
+                      onTap: () => Get.toNamed(
+                        AppRoutes.featureArtsScreen,
+                        arguments: {"title": AppString.featureArts},
+                      ),
+                      child: CategoryItem(
+                        title: item?.title ?? 'N/A',
+                        imageSrc: item?.title != null
+                            ? ApiEndPoint.imageUrl + (item?.image ?? '')
+                            : '',
+                      ),
+                    );
+                  },
+                ),
+              ),
       ),
 
       // bottomNavigationBar: CommonBottomNavBar(currentIndex: 1),

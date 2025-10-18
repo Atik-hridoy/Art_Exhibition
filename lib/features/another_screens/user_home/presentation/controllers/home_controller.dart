@@ -1,11 +1,13 @@
 import 'package:get/get.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
+import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 
 class HomeController extends GetxController {
   List<FeaturesArtCardModel>? featureArtList;
   List<FeaturesArtCardModel>? recommendedArtList;
+  List<CategoryModel>? categoryList;
   bool featureArtIsLoading = false;
   bool categoryIsLoading = false;
   bool populartArtistIsLoading = false;
@@ -46,10 +48,27 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> category() async {
+    try {
+      categoryIsLoading = true;
+      var response = await getCategory();
+      if (response != null) {
+        categoryList = response;
+        categoryIsLoading = false;
+      }
+      update();
+    } catch (error) {
+      categoryIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
   @override
   void onInit() {
     featuredArt();
     recommendedArt();
+    category();
     super.onInit();
   }
 }
