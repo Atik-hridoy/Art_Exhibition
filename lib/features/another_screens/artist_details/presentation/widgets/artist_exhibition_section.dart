@@ -16,21 +16,25 @@ class ArtistExhibitionSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: GridView.builder(
-          itemCount: 8,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.w,
-            mainAxisSpacing: 16.h,
-            mainAxisExtent: 210.h,
-          ),
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () => Get.toNamed(AppRoutes.exhibitionScreen),
-              child: const _ExhibitionItem(),
-            );
-          }),
+        itemCount: 8,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12.w,
+          mainAxisSpacing: 16.h,
+          mainAxisExtent: 210.h,
+        ),
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () => Get.toNamed(
+              AppRoutes.exhibitionDetailsScreen,
+              arguments: {'title': 'Exibition'},
+            ),
+            child: const _ExhibitionItem(),
+          );
+        },
+      ),
     );
   }
 }
@@ -90,42 +94,39 @@ class _ExhibitionItem extends StatelessWidget {
           ),
 
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 6),
+            padding: EdgeInsets.symmetric(horizontal: 6),
             child: Row(
               children: [
                 Icon(
-                    size: 18.sp,
-                    color: AppColors.bodyClr,
-                    Icons.account_balance_rounded),
+                  size: 18.sp,
+                  color: AppColors.bodyClr,
+                  Icons.account_balance_rounded,
+                ),
                 Flexible(
                   child: CommonText(
-                    
-                      left: 4,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.bodyClr,
-                      text: "Classical Masters"),
-                )
-               
+                    left: 4,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.bodyClr,
+                    text: "Classical Masters",
+                  ),
+                ),
               ],
             ),
           ),
           4.height,
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 6),
+            padding: EdgeInsets.symmetric(horizontal: 6),
             child: Row(
               children: [
-                Icon(
-                    size: 18.sp,
-                    color: AppColors.bodyClr,
-                    Icons.calendar_month),
+                Icon(size: 18.sp, color: AppColors.bodyClr, Icons.calendar_month),
                 CommonText(
-                    left: 4,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.bodyClr,
-                    text: "Jul 10 - Nov 20")
-
+                  left: 4,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.bodyClr,
+                  text: "Jul 10 - Nov 20",
+                ),
               ],
             ),
           ),

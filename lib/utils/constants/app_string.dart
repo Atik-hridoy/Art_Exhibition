@@ -564,5 +564,8 @@ class AppString {
   static const String myCourses = 'My Courses';
 
   ///////////// Integration error Handeling text /////////
-  static const String nofeatureArts = 'No Feature Arts Curretly Available';
+  static const String nofeatureArts = 'No Feature Arts Currently Available';
+  static const String noRelatedArts = 'No Related Arts Currently Available';
+  static const String noRecommendedArts = 'No Recommended Arts Curretly Available';
+  static const String noSavedArts = 'No Saved Arts Curretly Available';
 }

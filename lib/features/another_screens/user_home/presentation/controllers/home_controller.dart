@@ -5,10 +5,11 @@ import 'package:tasaned_project/utils/app_utils.dart';
 
 class HomeController extends GetxController {
   List<FeaturesArtCardModel>? featureArtList;
+  List<FeaturesArtCardModel>? recommendedArtList;
   bool featureArtIsLoading = false;
   bool categoryIsLoading = false;
   bool populartArtistIsLoading = false;
-  bool recommandedArtIsLoading = false;
+  bool recommendedArtIsLoading = false;
   bool upComingExibitionIsLoading = false;
   bool upComingEventIsLoading = false;
   bool learningMaterialIsLoading = false;
@@ -29,9 +30,26 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> recommendedArt() async {
+    try {
+      recommendedArtIsLoading = true;
+      var response = await getRecommendedArt();
+      if (response != null) {
+        recommendedArtList = response;
+        recommendedArtIsLoading = false;
+      }
+      update();
+    } catch (error) {
+      recommendedArtIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
   @override
   void onInit() {
     featuredArt();
+    recommendedArt();
     super.onInit();
   }
 }

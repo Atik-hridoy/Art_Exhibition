@@ -1,7 +1,7 @@
 class FeaturesArtCardModel {
   final String id;
   final Artist? artist;
-  final String image;
+  final String image; // keep single image string
   final String title;
   final String? category;
   final num? price;
@@ -17,16 +17,24 @@ class FeaturesArtCardModel {
     required this.isOnFavorite,
   });
 
-  factory FeaturesArtCardModel.fromJson(Map<String, dynamic> json) =>
-      FeaturesArtCardModel(
-        id: json['_id'] ?? '',
-        artist: json['artist'] != null ? Artist.fromJson(json['artist']) : null,
-        image: json['image'] ?? '',
-        title: json['title'] ?? '',
-        category: json['category'],
-        price: json['price'],
-        isOnFavorite: json['isOnFavorite'] ?? false,
-      );
+  factory FeaturesArtCardModel.fromJson(Map<String, dynamic> json) {
+    // extract the first image from the list if available
+    final images = json['images'];
+    String imagePath = '';
+    if (images is List && images.isNotEmpty) {
+      imagePath = images.first ?? '';
+    }
+
+    return FeaturesArtCardModel(
+      id: json['_id'] ?? '',
+      artist: json['artist'] != null ? Artist.fromJson(json['artist']) : null,
+      image: imagePath,
+      title: json['title'] ?? '',
+      category: json['category'],
+      price: json['price'],
+      isOnFavorite: json['isOnFavorite'] ?? false,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     '_id': id,

@@ -24,30 +24,27 @@ class ArtistDetailsScreen extends StatelessWidget {
       ),
 
       body: GetBuilder(
-          init: ArtistDetailsController(),
-          builder: (controller) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  ArtistDetailsHeadingSection(),
+        init: ArtistDetailsController(),
+        builder: (controller) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                ArtistDetailsHeadingSection(),
 
-                  controller.isTypeSelected=="aboutUS"
-                      ? const ArtistAboutUsSection()
-                      : controller.isTypeSelected=="artWork"
-                          ? const ArtistArtWorkSection()
-                          : controller.isTypeSelected=="exhibition"
-                              ? const ArtistExhibitionSection()
-                              : controller.isTypeSelected=="event"
-                                  ? const ArtistEventSection()
-                                  : const SizedBox()
-
-
-
-                ],
-              ),
-            );
-          }
+                controller.isTypeSelected == "aboutUS"
+                    ? const ArtistAboutUsSection()
+                    : controller.isTypeSelected == "artWork"
+                    ? const ArtistArtWorkSection()
+                    : controller.isTypeSelected == "exhibition"
+                    ? const ArtistExhibitionSection()
+                    : controller.isTypeSelected == "event"
+                    ? const ArtistEventSection()
+                    : const SizedBox(),
+              ],
+            ),
+          );
+        },
       ),
-    ) ;
+    );
   }
 }

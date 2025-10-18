@@ -18,6 +18,8 @@ class ApiEndPoint {
   static const chats = "chats";
   static const messages = "messages";
 
-  ////////////// features Art //////////////////
+  //////////////  Art //////////////////
   static const featuresArt = 'arts';
+  static const recommendedArt = 'arts/recommended';
+  static const savedItem = 'save';
 }

@@ -17,7 +17,6 @@ import 'package:tasaned_project/features/another_screens/my_collection/presentat
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/saved_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/followers_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/following_screen.dart';
-import 'package:tasaned_project/features/another_screens/exhibition/presentation/screens/exhibition_screen.dart';
 import 'package:tasaned_project/features/another_screens/exhibition_details/presentation/screens/exhibition_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/learn_grow/presentation/screens/learn_and_grow_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/my_listing_screen.dart';
@@ -40,7 +39,6 @@ import 'package:tasaned_project/features/another_screens/user_home/presentation/
 import 'package:tasaned_project/features/another_screens/user_resel/presentation/screens/user_resel_screen.dart';
 import 'package:tasaned_project/features/another_screens/visitor_order_history/presentations/screens/visitor_order_history_screen.dart';
 import 'package:tasaned_project/features/profile/presentation/screen/transantion_screen.dart';
-import '../../features/another_screens/grandle_gallery/presentation/screens/grandle_gallery.dart';
 import '../../features/another_screens/nunny_booking/presentation/screens/nunny_booking_screen.dart';
 import '../../features/another_screens/parent_booking/presentation/screens/parent_booking_screen.dart';
 import '../../features/another_screens/user_home/presentation/screens/learning_metarial_screen.dart';
@@ -117,7 +115,8 @@ class AppRoutes {
   static const String galleryScreen = "/galleryScreen.dart";
   static const String addPhotoGallery = "/addPhotoGallery.dart";
   static const String nunnyBookingDetailsScreen = "/NunnyBookingDetailsScreen.dart";
-  static const String certificationsExperienceScreen = "/certificationsExperienceScreen.dart";
+  static const String certificationsExperienceScreen =
+      "/certificationsExperienceScreen.dart";
   static const String preferenceScreen = "/preferenceScreen";
   static const String serviceRateScreen = "/ServiceRateScreen";
   static const String availabilityScreen = "/availabilityScreen";
@@ -125,16 +124,17 @@ class AppRoutes {
   static const String eventDetailsScreen = "/eventDetailsScreen";
   static const String createExhibitionScreen = "/createExhibitionScreen";
   static const String createNewExhibitionScreen = "/createNewExhibitionScreen";
-  static const String createNewExhibitionGalleryScreen = "/createNewExhibitionGalleryScreen";
-  static const String createNewExhibitionFeatureArtistScreen = "/createNewExhibitionFeatureArtistScreen";
-  static const String createNewExhibitionTicketBookingScreen = "/createNewExhibitionTicketBookingScreen";
+  static const String createNewExhibitionGalleryScreen =
+      "/createNewExhibitionGalleryScreen";
+  static const String createNewExhibitionFeatureArtistScreen =
+      "/createNewExhibitionFeatureArtistScreen";
+  static const String createNewExhibitionTicketBookingScreen =
+      "/createNewExhibitionTicketBookingScreen";
   static const String createNewEventScreen = "/createNewEventScreen";
   static const String createNewEventGalleryScreen = "/createNewEventGalleryScreen";
-  static const String createNewEventTicketBookingScreen = "/createNewEventTicketBookingScreen";
-    static const String uploadNewLessonScreen = "/uploadNewLessonScreen";
-
-
-
+  static const String createNewEventTicketBookingScreen =
+      "/createNewEventTicketBookingScreen";
+  static const String uploadNewLessonScreen = "/uploadNewLessonScreen";
 
   //============================
   static const String userHomeScreen = "/userHomeScreen";
@@ -168,17 +168,15 @@ class AppRoutes {
   static const String myEventScreen = "/myEventScreen";
   static const String myExhibitionsScreen = "/myExhibitionsScreen";
   static const String visitorOrderHistoryScreen = "/visitorOrderHistoryScreen";
-  static const String myCourses="/myCoursesItem";
-  static const String myCoursesDetailsScreen="/myCoursesDetailsScreen";
-  static const String myCoursesVideoScreen="/myCoursesVideoScreen";
-
-
+  static const String myCourses = "/myCoursesItem";
+  static const String myCoursesDetailsScreen = "/myCoursesDetailsScreen";
+  static const String myCoursesVideoScreen = "/myCoursesVideoScreen";
 
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => const SplashScreen()),
     GetPage(name: welcome, page: () => const WelcomeScreen()),
     GetPage(name: chooseRole, page: () => const ChooseRoleScreen()),
-    GetPage(name: onboarding, page: () =>  OnboardingScreen()),
+    GetPage(name: onboarding, page: () => OnboardingScreen()),
     GetPage(name: signUp, page: () => SignUpScreen()),
     GetPage(name: verifyUser, page: () => const VerifyUser()),
     GetPage(name: accountVerifiedScreen, page: () => const AccountVerifiedScreen()),
@@ -203,9 +201,7 @@ class AppRoutes {
     GetPage(name: aboutUsScreen, page: () => AboutUsScreen()),
     GetPage(name: nunnyBookingScreen, page: () => NunnyBookingScreen()),
 
-
     //================ user home screen
-
     GetPage(name: userHomeScreen, page: () => UserHomeScreen()),
     GetPage(name: categoryScreen, page: () => CategoryScreen()),
     GetPage(name: learnAndGrowScreen, page: () => LearnAndGrowScreen()),
@@ -217,18 +213,30 @@ class AppRoutes {
     GetPage(name: checkOutScreen, page: () => CheckOutScreen()),
     GetPage(name: paymentConfirmationScreen, page: () => PaymentConfirmationScreen()),
     GetPage(name: offerSubmittedScreen, page: () => const OfferSubmittedScreen()),
-    GetPage(name: grandleGallery, page: () => GrandleGallery()),
+    // TODO: GetPage(name: grandleGallery, page: () => GrandleGallery()),
     GetPage(name: artistDetailsScreen, page: () => ArtistDetailsScreen()),
-    GetPage(name: exhibitionScreen, page: () => ExhibitionScreen()),
-    GetPage(name: exhibitionDetailsScreen, page: () =>  ExhibitionDetailsScreen()),
+    //TODO:  GetPage(name: exhibitionScreen, page: () => ExhibitionScreen()),
+    GetPage(name: exhibitionDetailsScreen, page: () => ExhibitionDetailsScreen()),
     GetPage(name: createExhibitionScreen, page: () => CreateExhibitionScreen()),
-    GetPage(name: createNewExhibitionScreen, page: () =>  CreateNewExhibitionScreen()),
-    GetPage(name: createNewExhibitionGalleryScreen, page: () =>  CreateNewExhibitionGalleryScreen()),
-    GetPage(name: createNewExhibitionFeatureArtistScreen, page: () =>  CreateNewExhibitionFeatureArtistScreen()),
-    GetPage(name: createNewExhibitionTicketBookingScreen, page: () =>  CreateNewExhibitionTicketBookingScreen()),
-    GetPage(name: createNewEventScreen, page: () =>  CreateNewEventScreen()),
-    GetPage(name: createNewEventGalleryScreen, page: () =>  CreateNewEventGalleryScreen()),
-    GetPage(name: createNewEventTicketBookingScreen, page: () =>  CreateNewEventTicketBookingScreen()),
+    GetPage(name: createNewExhibitionScreen, page: () => CreateNewExhibitionScreen()),
+    GetPage(
+      name: createNewExhibitionGalleryScreen,
+      page: () => CreateNewExhibitionGalleryScreen(),
+    ),
+    GetPage(
+      name: createNewExhibitionFeatureArtistScreen,
+      page: () => CreateNewExhibitionFeatureArtistScreen(),
+    ),
+    GetPage(
+      name: createNewExhibitionTicketBookingScreen,
+      page: () => CreateNewExhibitionTicketBookingScreen(),
+    ),
+    GetPage(name: createNewEventScreen, page: () => CreateNewEventScreen()),
+    GetPage(name: createNewEventGalleryScreen, page: () => CreateNewEventGalleryScreen()),
+    GetPage(
+      name: createNewEventTicketBookingScreen,
+      page: () => CreateNewEventTicketBookingScreen(),
+    ),
     GetPage(name: myListingScreen, page: () => MyListingScreen()),
     GetPage(name: purchaseHistory, page: () => OrderHistoryScreen()),
     GetPage(name: transactionHistory, page: () => TransactionScreen()),
@@ -240,7 +248,10 @@ class AppRoutes {
     GetPage(name: learningMeterials, page: () => LearningMetarialScreen()),
     GetPage(name: userReselScreen, page: () => UserReselScreen()),
     GetPage(name: learningMaterialVideoScreen, page: () => LearningMaterialVideoScreen()),
-    GetPage(name: learningMaterialsDetailsScreen, page: () => LearningMaterialsDetailsScreen()),
+    GetPage(
+      name: learningMaterialsDetailsScreen,
+      page: () => LearningMaterialsDetailsScreen(),
+    ),
     GetPage(name: eventDetailsScreen, page: () => EventDetailsScreen()),
     GetPage(name: myListScreen, page: () => MyListScreen()),
     GetPage(name: editArtWorkScreen, page: () => EditArtWorkScreen()),
@@ -248,12 +259,8 @@ class AppRoutes {
     GetPage(name: myExhibitionsScreen, page: () => MyExhibitionsScreen()),
     GetPage(name: visitorOrderHistoryScreen, page: () => VisitorOrderHistoryScreen()),
     GetPage(name: myCourses, page: () => MyCoursesScreen()),
-    GetPage(name: myCoursesDetailsScreen, page:()=> MyCoursesDetailsScreen()),
-    GetPage(name: myCoursesVideoScreen, page:()=> MyCoursesVideoScreen()),
-        GetPage(name: uploadNewLessonScreen, page:()=>UploadNewLessonScreen()),
-
-
-
-
+    GetPage(name: myCoursesDetailsScreen, page: () => MyCoursesDetailsScreen()),
+    GetPage(name: myCoursesVideoScreen, page: () => MyCoursesVideoScreen()),
+    GetPage(name: uploadNewLessonScreen, page: () => UploadNewLessonScreen()),
   ];
 }

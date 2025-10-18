@@ -5,6 +5,7 @@ import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/controller/saved_controller.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
+import 'package:tasaned_project/utils/enum/enum.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 import '../widgets/saved_screen_grid_section.dart';
@@ -30,11 +31,7 @@ class SavedScreen extends StatelessWidget {
           onTap: () {
             Get.back();
           },
-          child: Icon(
-            Icons.arrow_back_ios,
-            size: 23.sp,
-            color: AppColors.titleColor,
-          ),
+          child: Icon(Icons.arrow_back_ios, size: 23.sp, color: AppColors.titleColor),
         ),
       ),
 
@@ -45,74 +42,93 @@ class SavedScreen extends StatelessWidget {
             return Column(
               children: [
                 15.height,
-        
+
                 SingleChildScrollView(
-                  scrollDirection: Axis.horizontal
-                  ,
+                  scrollDirection: Axis.horizontal,
                   child: Padding(
                     padding: EdgeInsets.only(left: 23.w),
                     child: Row(
                       children: [
                         InkWell(
-        
-                            onTap: (){
-                              controller.updateCategorySelected(type: "art");
-                            },
-                            child: categoryItem(isSelected:controller.isSelected=="art"? true:false, title: AppString.art)),
-        
+                          onTap: () {
+                            controller.updateCategorySelected(type: SaveType.arts.value);
+                          },
+                          child: categoryItem(
+                            isSelected: controller.isSelected == SaveType.arts.value
+                                ? true
+                                : false,
+                            title: AppString.art,
+                          ),
+                        ),
+
                         7.width,
-        
+
                         InkWell(
-        
-                            onTap: (){
-                              controller.updateCategorySelected(type: "exhibition");
-                            },
-                            child: categoryItem(isSelected: controller.isSelected=="exhibition"? true:false, title: AppString.exhibition)),
+                          onTap: () {
+                            controller.updateCategorySelected(
+                              type: SaveType.exhibition.value,
+                            );
+                          },
+                          child: categoryItem(
+                            isSelected: controller.isSelected == SaveType.exhibition.value
+                                ? true
+                                : false,
+                            title: AppString.exhibition,
+                          ),
+                        ),
                         7.width,
-        
+
                         InkWell(
-        
-                            onTap: (){
-                              controller.updateCategorySelected(type: "events");
-                            },
-                            child: categoryItem(isSelected: controller.isSelected=="events"? true:false, title: AppString.events)),
+                          onTap: () {
+                            controller.updateCategorySelected(type: SaveType.event.value);
+                          },
+                          child: categoryItem(
+                            isSelected: controller.isSelected == SaveType.event.value
+                                ? true
+                                : false,
+                            title: AppString.events,
+                          ),
+                        ),
                         7.width,
-        
+
                         InkWell(
-        
-                            onTap: (){
-                              controller.updateCategorySelected(type: "learning");
-                            },
-                            child: categoryItem(isSelected: controller.isSelected=="learning"? true:false, title: AppString.learningMaterials)),
+                          onTap: () {
+                            controller.updateCategorySelected(
+                              type: SaveType.learning.value,
+                            );
+                          },
+                          child: categoryItem(
+                            isSelected: controller.isSelected == SaveType.learning.value
+                                ? true
+                                : false,
+                            title: AppString.learningMaterials,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
 
                 12.height,
-        
-        
-                SavedScreenGridSection()
+
+                SavedScreenGridSection(),
               ],
             );
-          }
+          },
         ),
       ),
     );
   }
 
-  Widget categoryItem({isSelected, title}){
+  Widget categoryItem({isSelected, title}) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 15.w,
-        vertical: 5.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color:isSelected? AppColors.primaryColor:AppColors.white,
+        color: isSelected ? AppColors.primaryColor : AppColors.white,
         borderRadius: BorderRadius.circular(18.r),
       ),
       child: CommonText(
-        color: isSelected?AppColors.white:AppColors.titleColor,
+        color: isSelected ? AppColors.white : AppColors.titleColor,
         text: title,
       ),
     );

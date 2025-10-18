@@ -263,26 +263,45 @@ class RecomendedArts extends StatelessWidget {
 
         16.height,
 
-        SizedBox(
-          height: 182.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(
-                    AppRoutes.artDetailsScreen,
-                    arguments: {"screenType": "userHome"},
-                  );
-                },
-                child: ArtsItem(),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
+        controller.featureArtIsLoading
+            ? CircularProgressIndicator()
+            : controller.recommendedArtList?.length == null ||
+                  controller.recommendedArtList?.length == 0
+            ? SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                    CommonText(text: AppString.noRecommendedArts, color: Colors.grey),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: 182.h,
+                child: ListView.separated(
+                  padding: EdgeInsets.only(right: 16.w),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(
+                          AppRoutes.artDetailsScreen,
+                          arguments: {"screenType": "userHome"},
+                        );
+                      },
+                      child: ArtsItem(
+                        imageUrl: controller.recommendedArtList?[index].image ?? '',
+                        price: controller.recommendedArtList?[index].price as int,
+                        title: controller.recommendedArtList?[index].title ?? '',
+                        isSaved:
+                            controller.recommendedArtList?[index].isOnFavorite ?? false,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                ),
+              ),
       ],
     );
   }
@@ -468,7 +487,12 @@ class FeatureArtSection extends StatelessWidget {
                           arguments: {"screenType": "userHome"},
                         );
                       },
-                      child: ArtsItem(),
+                      child: ArtsItem(
+                        imageUrl: controller.featureArtList?[index].image ?? '',
+                        price: controller.featureArtList?[index].price as int,
+                        title: controller.featureArtList?[index].title ?? '',
+                        isSaved: controller.featureArtList?[index].isOnFavorite ?? false,
+                      ),
                     );
                   },
                   separatorBuilder: (_, __) => SizedBox(width: 16.w),

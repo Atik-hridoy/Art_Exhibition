@@ -22,116 +22,143 @@ class FeatureArtsScreen extends StatelessWidget {
         shadowColor: AppColors.transparent,
         surfaceTintColor: AppColors.transparent,
         title: CommonText(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: AppColors.titleColor,
-            text: title),
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.titleColor,
+          text: title,
+        ),
         leading: InkWell(
-            onTap: (){
-              Get.back();
-            },
-            child: Icon(Icons.arrow_back_ios, size: 23.sp,color: AppColors.titleColor,)),
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(Icons.arrow_back_ios, size: 23.sp, color: AppColors.titleColor),
+        ),
       ),
-      
+
       body: GetBuilder<FeatureArtsController>(
         init: FeatureArtsController(),
         builder: (controller) => Column(
-        children: [
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: InkWell(
+                    onTap: _showSortSheet,
+                    child: Container(
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.searchBg,
+                        border: Border(
+                          bottom: BorderSide(color: AppColors.stroke),
+                          right: BorderSide(color: AppColors.stroke),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(size: 18.sp, color: AppColors.bodyClr, Icons.swap_vert),
 
-          Row(children: [
-
-            Expanded(
-              flex: 1,
-              child: InkWell(
-                onTap: _showSortSheet,
-                child: Container(
-                height: 44.h,
-                decoration: BoxDecoration(
-                    color: AppColors.searchBg,
-                    border: Border(bottom: BorderSide(color: AppColors.stroke), right: BorderSide(color: AppColors.stroke))
+                          CommonText(
+                            fontSize: 16,
+                            left: 3,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.bodyClr,
+                            text: AppString.sort,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                   Icon(
-                       size: 18.sp,
-                       color: AppColors.bodyClr,
-                       Icons.swap_vert),
+                Expanded(
+                  flex: 1,
+                  child: InkWell(
+                    onTap: _showFilterSheet,
+                    child: Container(
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.searchBg,
+                        border: Border(
+                          bottom: BorderSide(color: AppColors.stroke),
+                          right: BorderSide(color: AppColors.stroke),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            size: 18.sp,
+                            color: AppColors.bodyClr,
+                            Icons.filter_alt_rounded,
+                          ),
 
-                    CommonText(
-                        fontSize: 16,
-                        left: 3,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.bodyClr,
-                        text: AppString.sort)
-                  ],
+                          CommonText(
+                            fontSize: 16,
+                            left: 3,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.bodyClr,
+                            text: AppString.filter,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              ),
+              ],
             ),
-            Expanded(
-              flex: 1,
-              child: InkWell(
-                onTap: _showFilterSheet,
-                child: Container(
-                height: 44.h,
-                decoration: BoxDecoration(
-                    color: AppColors.searchBg,
-                    border: Border(bottom: BorderSide(color: AppColors.stroke), right: BorderSide(color: AppColors.stroke))
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                        size: 18.sp,
-                        color: AppColors.bodyClr,
-                        Icons.filter_alt_rounded),
 
-                    CommonText(
-                        fontSize: 16,
-                        left: 3,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.bodyClr,
-                        text: AppString.filter)
-                  ],
-                ),
-              ),
-              ),
-            ),
+            15.height,
 
-          ],),
-
-          15.height,
-
-
-          Expanded(
-            child: Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 16.w),
-              child: GridView.builder(
-
-                itemCount: 20,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,  // Number of columns
-                crossAxisSpacing: 16, // Horizontal space between items
-                mainAxisSpacing:20 , // Vertical space between items
-                mainAxisExtent: 210, // Tile height to prevent overflow of ArtsItem
-              ), itemBuilder: (context, index){
-
-                    return InkWell(
-
-                        onTap: (){
-                          Get.toNamed(AppRoutes.artDetailsScreen, arguments: {
-                            "screenType": "userHome",
-                          });
+            controller.featureArtIsLoading
+                ? CircularProgressIndicator()
+                : controller.featureArtList?.length == null ||
+                      controller.featureArtList?.length == 0
+                ? SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                        CommonText(text: AppString.nofeatureArts, color: Colors.grey),
+                      ],
+                    ),
+                  )
+                : Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: GridView.builder(
+                        itemCount: 20,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Number of columns
+                          crossAxisSpacing: 16, // Horizontal space between items
+                          mainAxisSpacing: 20, // Vertical space between items
+                          mainAxisExtent:
+                              210, // Tile height to prevent overflow of ArtsItem
+                        ),
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Get.toNamed(
+                                AppRoutes.artDetailsScreen,
+                                arguments: {"screenType": "userHome"},
+                              );
+                            },
+                            child: ArtsItem(
+                              imageUrl: controller.featureArtList?[index].image ?? '',
+                              price: controller.featureArtList?[index].price as int,
+                              title: controller.featureArtList?[index].title ?? '',
+                              isSaved:
+                                  controller.featureArtList?[index].isOnFavorite ?? false,
+                            ),
+                          );
                         },
-                        child: ArtsItem());
-              }),
-            ),
-          )
-
-        ],
+                      ),
+                    ),
+                  ),
+          ],
+        ),
       ),
-  ));
+    );
   }
 
   // ================= Sort Bottom Sheet =================
@@ -191,7 +218,10 @@ class FeatureArtsScreen extends StatelessWidget {
               width: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: selected ? AppColors.primaryColor : AppColors.stroke, width: 2),
+                border: Border.all(
+                  color: selected ? AppColors.primaryColor : AppColors.stroke,
+                  width: 2,
+                ),
               ),
               child: selected
                   ? Center(
@@ -205,7 +235,7 @@ class FeatureArtsScreen extends StatelessWidget {
                       ),
                     )
                   : null,
-            )
+            ),
           ],
         ),
       ),
@@ -222,8 +252,6 @@ class FeatureArtsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-
                 15.height,
                 CommonText(
                   text: 'Category',
@@ -231,15 +259,10 @@ class FeatureArtsScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: AppColors.titleColor,
                 ),
-                
-
-
-
-
 
                 12.height,
                 _categoryDropdown(controller),
-              25.height,
+                25.height,
                 CommonText(
                   text: 'Price',
                   fontSize: 14,
@@ -372,7 +395,12 @@ class FeatureArtsScreen extends StatelessWidget {
 
   Widget _sheetContainer({required String title, required Widget child}) {
     return Container(
-      padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 24.h + MediaQuery.of(Get.context!).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        left: 16.w,
+        right: 16.w,
+        top: 16.h,
+        bottom: 24.h + MediaQuery.of(Get.context!).viewInsets.bottom,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -387,7 +415,6 @@ class FeatureArtsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-            
               children: [
                 Expanded(
                   child: CommonText(
@@ -402,17 +429,13 @@ class FeatureArtsScreen extends StatelessWidget {
                   onTap: () => Get.back(),
                   child: Container(
                     padding: EdgeInsets.all(2.h),
-                    
+
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.bodyClr),
                     ),
-                    child: Icon(
-                      
-                      Icons.close, color: AppColors.bodyClr,
-                      size: 18.sp,
-                      
-                      )),
+                    child: Icon(Icons.close, color: AppColors.bodyClr, size: 18.sp),
+                  ),
                 ),
               ],
             ),

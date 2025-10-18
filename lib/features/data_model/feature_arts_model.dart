@@ -23,13 +23,6 @@ class ArtsResponse {
           .toList(),
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'success': success,
-    'message': message,
-    'pagination': pagination?.toJson(),
-    'data': data.map((e) => e.toJson()).toList(),
-  };
 }
 
 class Pagination {
@@ -53,19 +46,12 @@ class Pagination {
       totalPage: (json['totalPage'] ?? 0) as int,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'total': total,
-    'limit': limit,
-    'page': page,
-    'totalPage': totalPage,
-  };
 }
 
 class ArtDetails {
   final String id;
   final Artist? artist;
-  final String image;
+  final List<String> images; // all images (new addition)
   final String? seller;
   final String title;
   final String? category;
@@ -87,7 +73,7 @@ class ArtDetails {
   ArtDetails({
     required this.id,
     this.artist,
-    required this.image,
+    required this.images,
     this.seller,
     required this.title,
     this.category,
@@ -108,23 +94,37 @@ class ArtDetails {
   });
 
   factory ArtDetails.fromJson(Map<String, dynamic> json) {
-    // JSON uses "daimentions" (typo) in your payload; also try "dimensions"
-    final dimsJson = json['daimentions'] ?? json['dimensions'] ?? json['daimention'];
+    // Parse images safely
+    // List<String> parsedImages = [];
+    // if (json['images'] is List) {
+    //   parsedImages = (json['images'] as List)
+    //       .where((e) => e != null)
+    //       .map((e) => e.toString())
+    //       .toList();
+    // } else if (json['image'] is String) {
+    //   parsedImages = [json['image']];
+    // }
 
     return ArtDetails(
       id: (json['_id'] ?? '') as String,
       artist: json['artist'] == null
           ? null
           : Artist.fromJson(json['artist'] as Map<String, dynamic>),
-      image: (json['image'] ?? '') as String,
+      images: (json['images'] is List)
+          ? (json['images'] as List)
+                .where((e) => e != null)
+                .map((e) => e.toString())
+                .toList()
+          : [],
       seller: json['seller'] as String?,
       title: (json['title'] ?? '') as String,
       category: json['category'] as String?,
-      price: json['price'] != null ? json['price'] as num : null,
+      price: json['price'] as num?,
       description: json['description'] as String?,
-      dimensions: dimsJson == null
+      dimensions: json['daimentions'] == null
           ? null
-          : Dimensions.fromJson(dimsJson as Map<String, dynamic>),
+          : Dimensions.fromJson(json['daimentions'] as Map<String, dynamic>),
+
       authentication: json['authentication'] as String?,
       status: json['status'] as String?,
       sold: json['sold'] == true,
@@ -144,30 +144,6 @@ class ArtDetails {
           : null,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    '_id': id,
-    'artist': artist?.toJson(),
-    'image': image,
-    'seller': seller,
-    'title': title,
-    'category': category,
-    'price': price,
-    'description': description,
-    // Use the original key name to match the API (keeps "daimentions")
-    'daimentions': dimensions?.toJson(),
-    'authentication': authentication,
-    'status': status,
-    'sold': sold,
-    'acceptOffer': acceptOffer,
-    'sendOffer': sendOffer,
-    'isOnFavorite': isOnFavorite,
-    'resale': resale,
-    'resaleInfo': resaleInfo?.toJson(),
-    'collector': collector,
-    'createdAt': createdAt?.toIso8601String(),
-    'updatedAt': updatedAt?.toIso8601String(),
-  };
 }
 
 class Artist {
@@ -184,13 +160,6 @@ class Artist {
     role: json['role'] as String?,
     profileImage: json['profileImage'] as String?,
   );
-
-  Map<String, dynamic> toJson() => {
-    '_id': id,
-    'name': name,
-    'role': role,
-    'profileImage': profileImage,
-  };
 }
 
 class Dimensions {
@@ -211,8 +180,6 @@ class Dimensions {
               : double.tryParse(json['width'].toString()))
         : null,
   );
-
-  Map<String, dynamic> toJson() => {'height': height, 'width': width};
 }
 
 class ResaleInfo {
@@ -242,13 +209,4 @@ class ResaleInfo {
     originalPrice: json['originalPrice'] as num?,
     resalerId: json['resalerId'] as String?,
   );
-
-  Map<String, dynamic> toJson() => {
-    '_id': id,
-    'condition': condition,
-    'additionalInfo': additionalInfo,
-    'prevPurchase': prevPurchase?.toIso8601String(),
-    'originalPrice': originalPrice,
-    'resalerId': resalerId,
-  };
 }

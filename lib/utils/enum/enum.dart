@@ -12,3 +12,23 @@ enum Role {
 
   const Role(this.role);
 }
+
+enum ArtStatus {
+  unique('Unique'),
+  resale('Resale');
+
+  final String value;
+
+  const ArtStatus(this.value);
+}
+
+enum SaveType {
+  arts('Arts'),
+  event('Event'),
+  exhibition('Exhibition'),
+  learning('Learning');
+
+  final String value;
+
+  const SaveType(this.value);
+}
