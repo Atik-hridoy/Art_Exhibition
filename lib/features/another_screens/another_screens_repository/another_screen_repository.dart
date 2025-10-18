@@ -2,6 +2,7 @@ import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
+import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/enum/enum.dart';
@@ -55,7 +56,7 @@ Future<List<FeaturesArtCardModel>?> getRecommendedArt({
   }
 }
 
-Future<List<FeaturesArtCardModel>?> getSavedArtItem({
+Future<List<SavedArtCardModel>?> getSavedArtItem({
   int page = 1,
   int limit = 10,
   String type = 'Arts',
@@ -67,7 +68,7 @@ Future<List<FeaturesArtCardModel>?> getSavedArtItem({
 
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
-          .map((e) => FeaturesArtCardModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => SavedArtCardModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return responseBody;
     }

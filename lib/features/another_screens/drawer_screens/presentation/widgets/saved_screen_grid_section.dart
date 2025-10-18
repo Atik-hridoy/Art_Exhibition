@@ -130,7 +130,7 @@ class SavedArt extends StatelessWidget {
             ),
           )
         : GridView.builder(
-            itemCount: 8,
+            itemCount: controller.savedArtList?.length ?? 0,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -147,7 +147,7 @@ class SavedArt extends StatelessWidget {
                 },
                 child: ArtsItem(
                   imageUrl: controller.savedArtList?[index].image ?? '',
-                  price: controller.savedArtList?[index].price as int,
+                  price: controller.savedArtList![index].price as int,
                   title: controller.savedArtList?[index].title ?? '',
                   isSaved: controller.savedArtList?[index].isOnFavorite ?? false,
                 ),
