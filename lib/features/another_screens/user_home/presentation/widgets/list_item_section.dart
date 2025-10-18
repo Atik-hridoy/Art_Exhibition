@@ -11,19 +11,10 @@ import 'package:tasaned_project/features/another_screens/user_home/presentation/
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/category_item.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/popular_artist_item.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
-import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 import 'exhibition_item.dart';
-
-// Demo categories for the Home category row
-const List<Map<String, String>> _homeCategories = [
-  {"title": "Abstract", "image": AppImages.category},
-  {"title": "Expressionism", "image": AppImages.category},
-  {"title": "Surrealism", "image": AppImages.category},
-  {"title": "Minimalism", "image": AppImages.category},
-];
 
 class ListItemSection extends StatelessWidget {
   const ListItemSection({super.key});

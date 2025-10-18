@@ -127,7 +127,7 @@ class FeatureArtsScreen extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: GridView.builder(
-                        itemCount: 20,
+                        itemCount: controller.featureArtList?.length ?? 0,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, // Number of columns
                           crossAxisSpacing: 16, // Horizontal space between items

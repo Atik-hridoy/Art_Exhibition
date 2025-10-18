@@ -70,4 +70,10 @@ class FeatureArtsController extends GetxController {
     status = 'Unique';
     update();
   }
+
+  @override
+  void onInit() {
+    featuredArt();
+    super.onInit();
+  }
 }
