@@ -1,6 +1,7 @@
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/exibition_card_model.dart';
+import 'package:tasaned_project/features/data_model/exibition_model.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
@@ -142,6 +143,21 @@ Future<List<ExhibitionCardModel>?> getExibition({int page = 1, int limit = 10}) 
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
           .map((e) => ExhibitionCardModel.fromJson(e as Map<String, dynamic>))
           .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    return null;
+  }
+}
+
+Future<Exhibition?> getExibitionDetails({required String id}) async {
+  try {
+    var response = await ApiService.get('${ApiEndPoint.exhibition}/$id');
+
+    if (response.statusCode == 200) {
+      var responseBody = Exhibition.fromJson(response.data['data']);
       return responseBody;
     }
     return null;

@@ -55,6 +55,7 @@ dependencies:
   dotted_border: ^3.1.0
   smooth_page_indicator: ^1.2.1
   dotted_line: ^3.2.3
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

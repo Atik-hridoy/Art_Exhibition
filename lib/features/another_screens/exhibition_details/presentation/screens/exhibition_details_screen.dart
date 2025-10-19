@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:tasaned_project/component/button/common_button.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
-import 'package:tasaned_project/features/another_screens/exhibition_details/presentation/widget/art_item.dart';
+import 'package:tasaned_project/features/another_screens/exhibition_details/controller/exhibition_details_controller.dart';
+import 'package:tasaned_project/features/another_screens/exhibition_details/presentation/widget/artist_item.dart';
+import 'package:tasaned_project/features/data_model/exibition_model.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class ExhibitionDetailsScreen extends StatelessWidget {
-   ExhibitionDetailsScreen({super.key});
+  ExhibitionDetailsScreen({super.key});
 
-   final String title=Get.arguments["title"];
+  final String title = Get.arguments["title"];
 
   @override
   Widget build(BuildContext context) {
@@ -35,227 +38,297 @@ class ExhibitionDetailsScreen extends StatelessWidget {
           color: AppColors.titleColor,
         ),
         actions: [
-   title == "My Exhibition"
+          title == "My Exhibition"
               ? _moreActions(
                   onEdit: () {
-                    Get.toNamed(AppRoutes.createNewExhibitionScreen, arguments: {
-                      "title": "Edit Exhibition"
-                    });
-                   
-           
+                    Get.toNamed(
+                      AppRoutes.createNewExhibitionScreen,
+                      arguments: {"title": "Edit Exhibition"},
+                    );
                   },
                   onDelete: () => _confirmDelete(context),
                 )
-              :  Icon(Icons.favorite_border_outlined, size: 18.sp, color: AppColors.titleColor),
+              : Icon(
+                  Icons.favorite_border_outlined,
+                  size: 18.sp,
+                  color: AppColors.titleColor,
+                ),
           14.width,
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Banner with virtual tour tag
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Stack(
-                    children: [
-                      CommonImage(
-                        height: 200.h,
-                        width: double.infinity,
-                        fill: BoxFit.cover,
-                        imageSrc: AppImages.exhibitionScreen,
-                      ),
-                      Positioned(
-                        top: 12,
-                        right: 12,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColor,
-                            borderRadius: BorderRadius.circular(20.r),
-                            
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.play_circle_outline, size: 16.sp, color: AppColors.white),
-                              6.width,
-                              CommonText(
-                                text: AppString.virtualTour,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+        child: GetBuilder(
+          init: ExhibitionDetailsController(),
+          builder: (controller) {
+            String? formattedDate(DateTime? date) {
+              if (date == null) {
+                return null;
+              }
+              String formattedDate = DateFormat('d MMM yy').format(date);
+              return formattedDate;
+            }
 
-                14.height,
+            String? calculateRemainingDays(DateTime? startDate, DateTime? endDate) {
+              if (startDate == null || endDate == null) {
+                return null;
+              }
+              // Remove the time part to make calculation purely date-based
+              DateTime start = DateTime(startDate.year, startDate.month, startDate.day);
+              DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+              int remainingDays = end.difference(start).inDays;
+              remainingDays = remainingDays.isNegative ? 0 : remainingDays;
+              return remainingDays.toString();
+            }
 
-                // Title + Curated by
-                CommonText(
-                  text: 'Modern Abstractions',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.titleColor,
-                ),
-                6.height,
-                Row(
+            DateTime? startDate = controller.exibition?.startDate;
+            DateTime? endDate = controller.exibition?.endDate;
+            String image =
+                (controller.exibition?.images != null &&
+                    controller.exibition!.images!.isNotEmpty)
+                ? controller.exibition!.images![0]
+                : 'N/A';
+            String title = controller.exibition?.title ?? 'N/A';
+            String creatorName = controller.exibition?.creatorId?.name ?? 'N/A';
+            String about = controller.exibition?.description ?? 'N/A';
+            String formatterdStartDate = formattedDate(startDate) ?? 'N/A';
+            String formatterdEndDate = formattedDate(endDate) ?? 'N/A';
+            String deysRemaining =
+                calculateRemainingDays(DateTime.now(), startDate) ?? 'N/A';
+            String visitingHour = controller.exibition?.visitingHour ?? 'N/A';
+            String venue = controller.exibition?.venue ?? 'N/A';
+            String ticketPrice = controller.exibition?.ticketPrice.toString() ?? 'N/A';
+            List<Artist> artist = controller.exibition?.artists ?? [];
+
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CommonText(
-                      text: 'Curated by ',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.bodyClr,
+                    // Banner with virtual tour tag
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: Stack(
+                        children: [
+                          CommonImage(
+                            height: 200.h,
+                            width: double.infinity,
+                            fill: BoxFit.cover,
+                            imageSrc: image, //AppImages.exhibitionScreen,
+                          ),
+
+                          // Positioned(
+                          //   top: 12,
+                          //   right: 12,
+                          //   child: Container(
+                          //     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                          //     decoration: BoxDecoration(
+                          //       color: AppColors.primaryColor,
+                          //       borderRadius: BorderRadius.circular(20.r),
+                          //     ),
+                          //     child: Row(
+                          //       children: [
+                          //         Icon(
+                          //           Icons.play_circle_outline,
+                          //           size: 16.sp,
+                          //           color: AppColors.white,
+                          //         ),
+                          //         6.width,
+                          //         CommonText(
+                          //           text: AppString.virtualTour,
+                          //           fontSize: 12,
+                          //           fontWeight: FontWeight.w500,
+                          //           color: AppColors.white,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                     ),
+
+                    14.height,
+
+                    // Title + Curated by
                     CommonText(
-                      text: 'Mark Cena',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primaryColor,
+                      text: title, // 'Modern Abstractions',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.titleColor,
                     ),
-                  ],
-                ),
-
-                16.height,
-
-                // About the Exhibition
-                _box(
-                  title: AppString.aboutTheExhibition,
-                  child: CommonText(
-                    text:
-                        'Immerse yourself in a captivating collection of contemporary abstract artworks that challenge perception and ignite imagination. Features 30+ pieces from renowned international artists.',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.bodyClr,
-                    textAlign: TextAlign.start,
-                    maxLines: 10,
-                  ),
-                ),
-
-                // Exhibition Details
-                _box(
-                  title: AppString.exhibitionDetails,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _detail(
-                        icon: Icons.calendar_month_outlined,
-                        label: AppString.duration,
-                        value: '15 July 25 - 30 July 25',
-                        subValue: '4 Days Remaining',
-                        subColor: Colors.green,
-                      ),
-                      12.height,
-                      _detail(
-                        icon: Icons.access_time,
-                        label: AppString.visitingHour,
-                        value: '10:00 am - 6:00 pm (Monday Closed)',
-                      ),
-                      12.height,
-                      _detail(
-                        icon: Icons.location_on_outlined,
-                        label: AppString.venue,
-                        value: 'The Art Collective Gallery, New York',
-                      ),
-                      12.height,
-                      _detail(
-                        icon: Icons.confirmation_number_outlined,
-                        label: AppString.tickerPrice,
-                        value: 'General : 18\$',
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Gallery / Museum
-
-                Container(
-                  padding: EdgeInsets.all(16.r),
-
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: AppColors.stroke),
-                  ),
-
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 18.r,
-                        backgroundColor: AppColors.stroke,
-                        child: ClipOval(
-                          child: CommonImage(height: 40.h, width: 40.h, imageSrc: AppImages.ellips, fill: BoxFit.cover),
+                    6.height,
+                    Row(
+                      children: [
+                        CommonText(
+                          text: 'Curated by ',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.bodyClr,
                         ),
+                        CommonText(
+                          text: creatorName, //'Mark Cena',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
+                    ),
+
+                    16.height,
+
+                    // About the Exhibition
+                    _box(
+                      title: AppString.aboutTheExhibition,
+                      child: CommonText(
+                        text: about,
+                        // 'Immerse yourself in a captivating collection of contemporary abstract artworks that challenge perception and ignite imagination. Features 30+ pieces from renowned international artists.',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.bodyClr,
+                        textAlign: TextAlign.start,
+                        maxLines: 10,
                       ),
-                      10.width,
-                      Column(
+                    ),
+
+                    // Exhibition Details
+                    _box(
+                      title: AppString.exhibitionDetails,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
-                          CommonText(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.bodyClr,
-                            text: "Gallery / Museum"),
-                          CommonText(
-                            text: 'The Art Gallery',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.titleColor,
+                          _detail(
+                            icon: Icons.calendar_month_outlined,
+                            label: AppString.duration,
+                            value:
+                                '$formatterdStartDate - $formatterdEndDate', // '15 July 25 - 30 July 25',
+                            subValue:
+                                '$deysRemaining days remaining', // '4 Days Remaining',
+                            subColor: Colors.green,
+                          ),
+                          12.height,
+                          _detail(
+                            icon: Icons.access_time,
+                            label: AppString.visitingHour,
+                            value: visitingHour, //  '10:00 am - 6:00 pm (Monday Closed)',
+                          ),
+                          12.height,
+                          _detail(
+                            icon: Icons.location_on_outlined,
+                            label: AppString.venue,
+                            value: venue, // 'The Art Collective Gallery, New York',
+                          ),
+                          12.height,
+                          _detail(
+                            icon: Icons.confirmation_number_outlined,
+                            label: AppString.tickerPrice,
+                            value: ticketPrice, // 'General : 18\$',
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // Gallery / Museum
+                    Container(
+                      padding: EdgeInsets.all(16.r),
+
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: AppColors.stroke),
+                      ),
+
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 18.r,
+                            backgroundColor: AppColors.stroke,
+                            child: ClipOval(
+                              child: CommonImage(
+                                height: 40.h,
+                                width: 40.h,
+                                imageSrc: AppImages.ellips,
+                                fill: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          10.width,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CommonText(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.bodyClr,
+                                text: "Gallery / Museum",
+                              ),
+                              CommonText(
+                                text: 'The Art Gallery',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.titleColor,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    20.height,
+
+                    // Featured Artists
+                    CommonText(
+                      text: 'Featured Artists',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.titleColor,
+                    ),
+                    10.height,
+                    SizedBox(
+                      height: 120.h,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: artist.length,
+                        separatorBuilder: (_, __) => 14.width,
+                        itemBuilder: (context, index) {
+                          return ArtistItem(
+                            name: artist[index].name ?? 'N/A',
+                            follower: artist[index].followers ?? 0,
+                          );
+                        },
+                      ),
+                    ),
+
+                    50.height,
+                  ],
                 ),
-
-
-             
-                20.height,
-
-                // Featured Artists
-                CommonText(
-                  text: 'Featured Artists',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.titleColor,
-                ),
-                10.height,
-                SizedBox(
-                  height: 120.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 6,
-                    separatorBuilder: (_, __) => 14.width,
-                    itemBuilder: (context, index) {
-                      return ArtItem();},
-                  ),
-                ),
-
-              50.height,
-              ],
-              
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.r),
-            topRight: Radius.circular(20.r),
-          ),
-          border: Border(top: BorderSide(color: AppColors.stroke)),
-        ),
-        child: CommonButton(onTap: () {}, titleText: AppString.getTickets),
+      bottomNavigationBar: GetBuilder(
+        init: ExhibitionDetailsController(),
+        builder: (controller) {
+          String buyTicketURL = controller.exibition?.bookingUrl ?? 'N/A';
+
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.r),
+                topRight: Radius.circular(20.r),
+              ),
+              border: Border(top: BorderSide(color: AppColors.stroke)),
+            ),
+            child: CommonButton(
+              onTap: () {
+                controller.openInBrowser(buyTicketURL);
+              },
+              titleText: AppString.getTickets,
+            ),
+          );
+        },
       ),
     );
   }
@@ -341,16 +414,9 @@ class ExhibitionDetailsScreen extends StatelessWidget {
     );
   }
 
-    Widget _moreActions({
-    required VoidCallback onEdit,
-    required VoidCallback onDelete,
-  }) {
+  Widget _moreActions({required VoidCallback onEdit, required VoidCallback onDelete}) {
     return PopupMenuButton<String>(
-      icon: Icon(
-        Icons.more_vert,
-        size: 18.sp,
-        color: AppColors.titleColor,
-      ),
+      icon: Icon(Icons.more_vert, size: 18.sp, color: AppColors.titleColor),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       onSelected: (value) {
         if (value == 'Edit') onEdit();
@@ -361,11 +427,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
           value: 'Edit',
           child: Row(
             children: [
-              Icon(
-                Icons.edit_outlined,
-                size: 18.sp,
-                color: AppColors.bodyClr,
-              ),
+              Icon(Icons.edit_outlined, size: 18.sp, color: AppColors.bodyClr),
               8.width,
               CommonText(
                 text: AppString.edit,
@@ -381,11 +443,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
           value: 'Delete',
           child: Row(
             children: [
-              Icon(
-                Icons.delete_outline,
-                size: 18.sp,
-                color: AppColors.red,
-              ),
+              Icon(Icons.delete_outline, size: 18.sp, color: AppColors.red),
               8.width,
               CommonText(
                 text: AppString.delete,
@@ -404,9 +462,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
     Get.dialog(
       Dialog(
         insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           child: Column(
@@ -414,11 +470,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Warning icon in subtle background
-              Icon(
-                Icons.warning_amber_rounded,
-                color: AppColors.red,
-                size: 80.sp,
-              ),
+              Icon(Icons.warning_amber_rounded, color: AppColors.red, size: 80.sp),
               14.height,
               // Title
               CommonText(
@@ -445,7 +497,6 @@ class ExhibitionDetailsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 60.0),
                 child: Row(
                   children: [
-                 
                     Expanded(
                       child: SizedBox(
                         height: 44.h,
@@ -475,7 +526,6 @@ class ExhibitionDetailsScreen extends StatelessWidget {
                       child: SizedBox(
                         height: 44.h,
                         child: OutlinedButton(
-                          
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: AppColors.title2, width: 1.2),
                             shape: StadiumBorder(),
@@ -500,6 +550,4 @@ class ExhibitionDetailsScreen extends StatelessWidget {
       barrierDismissible: false,
     );
   }
-
-
 }

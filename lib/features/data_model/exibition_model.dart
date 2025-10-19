@@ -58,26 +58,6 @@ class Exhibition {
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     isOnFavorite: json["isOnFavorite"],
   );
-
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "creatorId": creatorId?.toJson(),
-    "title": title,
-    "description": description,
-    "ticketPrice": ticketPrice,
-    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
-    "startDate": startDate?.toIso8601String(),
-    "endDate": endDate?.toIso8601String(),
-    "visitingHour": visitingHour,
-    "venue": venue,
-    "field": field,
-    "bookingUrl": bookingUrl,
-    "artists": artists == null ? [] : List<dynamic>.from(artists!.map((x) => x.toJson())),
-    "status": status,
-    "createdAt": createdAt?.toIso8601String(),
-    "updatedAt": updatedAt?.toIso8601String(),
-    "isOnFavorite": isOnFavorite,
-  };
 }
 
 class CreatorId {
@@ -94,13 +74,6 @@ class CreatorId {
     role: json["role"],
     profileImage: json["profileImage"],
   );
-
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "name": name,
-    "role": role,
-    "profileImage": profileImage,
-  };
 }
 
 class Artist {
@@ -119,12 +92,4 @@ class Artist {
     followers: json["followers"],
     role: json["role"],
   );
-
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "name": name,
-    "profileImage": profileImage,
-    "followers": followers,
-    "role": role,
-  };
 }
