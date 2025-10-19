@@ -1,13 +1,16 @@
 import 'package:get/get.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
 import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
+import 'package:tasaned_project/features/data_model/saved_exibition_card_model.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/enum/enum.dart';
 
 class SavedController extends GetxController {
   String isSelected = SaveType.arts.value;
   bool savedArtIsLoading = false;
+  bool upComingExibitionIsLoading = false;
   List<SavedArtCardModel>? savedArtList;
+  List<SavedExibitionCardModel>? savedExibitionList;
 
   Future<void> savedArt() async {
     try {
@@ -21,6 +24,23 @@ class SavedController extends GetxController {
       update();
     } catch (error) {
       savedArtIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
+  Future<void> savedExibition() async {
+    try {
+      upComingExibitionIsLoading = true;
+      var response = await getSavedExibitionItem();
+      if (response != null) {
+        savedExibitionList = response;
+        upComingExibitionIsLoading = false;
+      }
+      upComingExibitionIsLoading = false;
+      update();
+    } catch (error) {
+      upComingExibitionIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
       update();
     }

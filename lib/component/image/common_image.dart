@@ -56,8 +56,11 @@ class CommonImage extends StatelessWidget {
           image: DecorationImage(image: imageProvider, fit: fill),
         ),
       ),
-      progressIndicatorBuilder: (context, url, downloadProgress) =>
-          CircularProgressIndicator(value: downloadProgress.progress),
+      progressIndicatorBuilder: (context, url, downloadProgress) => Transform.scale(
+        scaleY: .23,
+        scaleX: .2,
+        child: CircularProgressIndicator(value: downloadProgress.progress),
+      ),
       errorWidget: (context, url, error) {
         errorLog(error, source: "Common Image");
 

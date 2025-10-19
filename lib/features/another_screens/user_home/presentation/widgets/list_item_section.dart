@@ -208,26 +208,50 @@ class UpComingExibition extends StatelessWidget {
 
         16.height,
 
-        SizedBox(
-          height: 200.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(
-                    AppRoutes.exhibitionDetailsScreen,
-                    arguments: {"title": "User Home"},
-                  );
-                },
-                child: ExhibitionItem(),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
+        controller.upComingExibitionIsLoading
+            ? CircularProgressIndicator()
+            : controller.exhibitionList?.length == null ||
+                  controller.exhibitionList?.length == 0
+            ? SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                    CommonText(text: AppString.nofeatureArts, color: Colors.grey),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: 200.h,
+                child: ListView.separated(
+                  padding: EdgeInsets.only(right: 16.w),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.exhibitionList!.length < 5
+                      ? controller.exhibitionList!.length
+                      : 5,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(
+                          AppRoutes.exhibitionDetailsScreen,
+                          arguments: {"title": "User Home"},
+                        );
+                      },
+                      child: ExhibitionItem(
+                        image: controller.exhibitionList?[index].image ?? '',
+                        title: controller.exhibitionList?[index].title ?? 'N/A',
+                        venue: controller.exhibitionList?[index].venue ?? 'N/A',
+                        isSaved: controller.exhibitionList?[index].isOnFavorite ?? false,
+                        startDate:
+                            controller.exhibitionList?[index].startDate ?? DateTime.now(),
+                        endDate:
+                            controller.exhibitionList?[index].startDate ?? DateTime.now(),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                ),
+              ),
       ],
     );
   }

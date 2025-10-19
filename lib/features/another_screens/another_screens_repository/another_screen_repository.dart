@@ -1,8 +1,10 @@
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
+import 'package:tasaned_project/features/data_model/exibition_card_model.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
+import 'package:tasaned_project/features/data_model/saved_exibition_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/enum/enum.dart';
@@ -56,19 +58,37 @@ Future<List<FeaturesArtCardModel>?> getRecommendedArt({
   }
 }
 
-Future<List<SavedArtCardModel>?> getSavedArtItem({
-  int page = 1,
-  int limit = 10,
-  String type = 'Arts',
-}) async {
+Future<List<SavedArtCardModel>?> getSavedArtItem({int page = 1, int limit = 10}) async {
   try {
     var response = await ApiService.get(
-      '${ApiEndPoint.savedItem}?page=$page&limit=$limit&type=$type',
+      '${ApiEndPoint.savedItem}?page=$page&limit=$limit&type=Arts',
     );
 
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
           .map((e) => SavedArtCardModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    return null;
+  }
+}
+
+Future<List<SavedExibitionCardModel>?> getSavedExibitionItem({
+  int page = 1,
+  int limit = 10,
+}) async {
+  try {
+    var response = await ApiService.get(
+      '${ApiEndPoint.savedItem}?page=$page&limit=$limit&type=Event',
+    );
+
+    if (response.statusCode == 200) {
+      var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => SavedExibitionCardModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return responseBody;
     }
@@ -104,6 +124,23 @@ Future<List<CategoryModel>?> getCategory() async {
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
           .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    return null;
+  }
+}
+
+Future<List<ExhibitionCardModel>?> getExibition({int page = 1, int limit = 10}) async {
+  try {
+    var response = await ApiService.get(ApiEndPoint.exhibition);
+
+    if (response.statusCode == 200) {
+      var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => ExhibitionCardModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return responseBody;
     }

@@ -27,7 +27,7 @@ class SavedScreenGridSection extends StatelessWidget {
               controller.isSelected == SaveType.arts.value
                   ? SavedArt(controller: controller)
                   : controller.isSelected == SaveType.exhibition.value
-                  ? SavedExibition()
+                  ? SavedExibition(controller: controller)
                   : controller.isSelected == SaveType.event.value
                   ? SavedEvent()
                   : SavedLearning(),
@@ -88,26 +88,49 @@ class SavedEvent extends StatelessWidget {
 }
 
 class SavedExibition extends StatelessWidget {
-  const SavedExibition({super.key});
+  final SavedController controller;
+  const SavedExibition({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: 20,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Number of columns
-        crossAxisSpacing: 15, // Horizontal space between items
-        mainAxisSpacing: 20,
+    return controller.upComingExibitionIsLoading
+        ? CircularProgressIndicator()
+        : controller.savedExibitionList?.length == null ||
+              controller.savedExibitionList?.length == 0
+        ? SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                CommonText(text: AppString.nofeatureArts, color: Colors.grey),
+              ],
+            ),
+          )
+        : GridView.builder(
+            itemCount: controller.savedExibitionList?.length ?? 0,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // Number of columns
+              crossAxisSpacing: 15, // Horizontal space between items
+              mainAxisSpacing: 20,
 
-        mainAxisExtent: 200.h,
-        // Vertical space between items
-      ),
-      itemBuilder: (context, index) {
-        return ExhibitionItem();
-      },
-    );
+              mainAxisExtent: 200.h,
+              // Vertical space between items
+            ),
+            itemBuilder: (context, index) {
+              return ExhibitionItem(
+                image: controller.savedExibitionList?[index].image ?? '',
+                title: controller.savedExibitionList?[index].title ?? 'N/A',
+                venue: controller.savedExibitionList?[index].venue ?? 'N/A',
+                isSaved: controller.savedExibitionList?[index].isOnFavorite ?? false,
+                startDate:
+                    controller.savedExibitionList?[index].startDate ?? DateTime.now(),
+                endDate:
+                    controller.savedExibitionList?[index].startDate ?? DateTime.now(),
+              );
+            },
+          );
   }
 }
 
