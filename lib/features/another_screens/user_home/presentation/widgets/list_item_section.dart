@@ -312,6 +312,9 @@ class RecomendedArts extends StatelessWidget {
                         title: controller.recommendedArtList?[index].title ?? '',
                         isSaved:
                             controller.recommendedArtList?[index].isOnFavorite ?? false,
+                        onTapSave: () {
+                          controller.savedToggle(index: index);
+                        },
                       ),
                     );
                   },
@@ -528,6 +531,9 @@ class FeatureArtSection extends StatelessWidget {
                         price: controller.featureArtList?[index].price as int,
                         title: controller.featureArtList?[index].title ?? '',
                         isSaved: controller.featureArtList?[index].isOnFavorite ?? false,
+                        onTapSave: () async {
+                          controller.savedToggle(index: index);
+                        },
                       ),
                     );
                   },

@@ -26,4 +26,5 @@ class ApiEndPoint {
   static const exhibition = 'exhibition';
   static const following = 'following';
   static const unFollowing = 'following/unfollow';
+  static const saveToggle = 'save/toggle';
 }

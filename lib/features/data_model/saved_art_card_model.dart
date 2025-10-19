@@ -4,7 +4,7 @@ class SavedArtCardModel {
   final String title;
   final String? category;
   final num? price;
-  final bool isOnFavorite;
+  bool isOnFavorite;
 
   SavedArtCardModel({
     required this.id,
@@ -33,7 +33,7 @@ class SavedArtCardModel {
       category: item['category'],
       price: item['price'],
       // JSON doesn’t include "isOnFavorite" — default to false
-      isOnFavorite: json['isOnFavorite'] ?? false,
+      isOnFavorite: json['isOnFavorite'] ?? true,
     );
   }
 

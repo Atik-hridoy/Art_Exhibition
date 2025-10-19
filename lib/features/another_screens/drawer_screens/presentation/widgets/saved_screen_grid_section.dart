@@ -160,19 +160,24 @@ class SavedArt extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 15,
               mainAxisSpacing: 20,
-
               mainAxisExtent: 180.h,
             ),
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  Get.toNamed(AppRoutes.artDetailsScreen);
+                  Get.toNamed(
+                    AppRoutes.artDetailsScreen,
+                    arguments: {'screenType': 'null'},
+                  );
                 },
                 child: ArtsItem(
                   imageUrl: controller.savedArtList?[index].image ?? '',
                   price: controller.savedArtList![index].price as int,
                   title: controller.savedArtList?[index].title ?? '',
                   isSaved: controller.savedArtList?[index].isOnFavorite ?? false,
+                  onTapSave: () async {
+                    await controller.savedArtToggle(index: index);
+                  },
                 ),
               );
             },

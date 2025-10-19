@@ -149,6 +149,10 @@ class FeatureArtsScreen extends StatelessWidget {
                               title: controller.featureArtList?[index].title ?? '',
                               isSaved:
                                   controller.featureArtList?[index].isOnFavorite ?? false,
+
+                              onTapSave: () async {
+                                await controller.savedToggle(index: index);
+                              },
                             ),
                           );
                         },

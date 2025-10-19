@@ -91,16 +91,25 @@ class ArtDetailsScreen extends StatelessWidget {
                             Positioned(
                               top: 10,
                               right: 10,
-                              child: Container(
-                                padding: EdgeInsets.all(6.r),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  size: 18.sp,
-                                  color: AppColors.titleColor,
+                              child: GestureDetector(
+                                onTap: () => controller.saveToggle(),
+                                child: Container(
+                                  padding: EdgeInsets.all(6.r),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: controller.isSaved
+                                      ? Icon(
+                                          Icons.favorite,
+                                          size: 18.sp,
+                                          color: AppColors.titleColor,
+                                        )
+                                      : Icon(
+                                          Icons.favorite_border,
+                                          size: 18.sp,
+                                          color: AppColors.titleColor,
+                                        ),
                                 ),
                               ),
                             ),
@@ -439,6 +448,9 @@ class RelatedArtScreen extends StatelessWidget {
                       price: controller.relatedArtList?[index].price as int,
                       title: controller.relatedArtList?[index].title ?? '',
                       isSaved: controller.relatedArtList?[index].isOnFavorite ?? false,
+                      onTapSave: () async {
+                        await controller.saveRelatedArtToggle(index: index);
+                      },
                     ),
                   ),
                 );

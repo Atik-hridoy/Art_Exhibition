@@ -12,6 +12,7 @@ class ArtsItem extends StatelessWidget {
   final int price;
   final String title;
   final bool isSaved;
+  final VoidCallback? onTapSave;
 
   const ArtsItem({
     super.key,
@@ -21,6 +22,7 @@ class ArtsItem extends StatelessWidget {
     required this.price,
     required this.title,
     required this.isSaved,
+    required this.onTapSave,
   });
 
   @override
@@ -37,34 +39,44 @@ class ArtsItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: CommonImage(
-                    width: double.infinity,
-                    fill: BoxFit.fill,
-                    height: 107.h,
-                    imageSrc: ApiEndPoint.imageUrl + imageUrl,
+            Builder(
+              builder: (context) {
+                return Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: CommonImage(
+                        width: double.infinity,
+                        fill: BoxFit.fill,
+                        height: 107.h,
+                        imageSrc: ApiEndPoint.imageUrl + imageUrl,
 
-                    // AppImages.arts,
-                  ),
-                ),
-
-                Positioned(
-                  top: 7,
-                  right: 7,
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.white,
+                        // AppImages.arts,
+                      ),
                     ),
-                    child: Icon(size: 16.sp, Icons.favorite_border),
-                  ),
-                ),
-              ],
+
+                    Positioned(
+                      top: 7,
+                      right: 7,
+                      child: InkWell(
+                        onTap: onTapSave,
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.white,
+                          ),
+                          child: Icon(
+                            isSaved ? Icons.favorite : Icons.favorite_border,
+                            color: isSaved ? Colors.black : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
 
             CommonText(

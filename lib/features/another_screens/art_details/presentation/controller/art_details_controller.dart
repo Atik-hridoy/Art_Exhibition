@@ -14,9 +14,11 @@ class ArtDetailsController extends GetxController {
   bool isFollowing = false;
   bool isArtDataLoading = false;
   bool relatedArtIsLoading = false;
+  bool isSaved = false;
   List<FeaturesArtCardModel>? relatedArtList;
   ArtDetails? artData;
   String? category;
+  String? artID;
 
   // Make an Offer popup controllers
   final TextEditingController offerAmountCtrl = TextEditingController(text: '15');
@@ -61,6 +63,44 @@ class ArtDetailsController extends GetxController {
     }
   }
 
+  Future<void> saveToggle() async {
+    try {
+      Map<String, dynamic> body = {'type': 'Arts', "item": artID};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+      if (response.statusCode == 200) {
+        response.data["data"]["deletedCount"] == null ? isSaved = true : isSaved = false;
+        update();
+      }
+    } catch (e) {
+      Utils.errorSnackBar('An error with saving', 'Please contact with developer');
+      update();
+    }
+  }
+
+  Future<void> saveRelatedArtToggle({required int index}) async {
+    try {
+      FeaturesArtCardModel? art = relatedArtList?[index];
+      if (art == null) return;
+
+      // // Optional: optimistic UI update (instant toggle before API)
+      // art.isOnFavorite = !(art.isOnFavorite ?? false);
+      // update();
+
+      Map<String, dynamic> body = {'type': 'Arts', 'item': art.id};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+
+      if (response.statusCode == 200) {
+        // Sync based on backend response
+        bool isNowSaved = response.data["data"]["deletedCount"] == null;
+        art.isOnFavorite = isNowSaved;
+        update();
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Could not toggle favorite');
+      update();
+    }
+  }
+
   Future<void> artDetails() async {
     try {
       isArtDataLoading = true;
@@ -84,14 +124,11 @@ class ArtDetailsController extends GetxController {
   Future<void> reletedArt() async {
     try {
       relatedArtIsLoading = true;
-      var response = await getFeaturedArt(
-        // TODO: Need to change the Art ID parameter
-        category: category ?? '',
-        limit: 8,
-        page: 1,
-      );
+      var response = await getFeaturedArt(category: category ?? '', limit: 8, page: 1);
       if (response != null) {
         relatedArtList = response;
+        var temp = relatedArtList!.where((art) => art.id != artID).toList();
+        relatedArtList = temp;
         relatedArtIsLoading = false;
       }
       update();
@@ -105,8 +142,9 @@ class ArtDetailsController extends GetxController {
   void initialFunction() async {
     await artDetails();
     if (artData != null) {
-      bool doFollow = artData?.followArtist ?? false;
-      isFollowing = doFollow;
+      isFollowing = artData?.followArtist ?? false;
+      isSaved = artData?.isOnFavorite ?? false;
+      artID = artData?.id ?? '';
     }
     await reletedArt();
   }

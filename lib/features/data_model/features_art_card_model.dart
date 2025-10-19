@@ -5,7 +5,7 @@ class FeaturesArtCardModel {
   final String title;
   final String? category;
   final num? price;
-  final bool isOnFavorite;
+  bool isOnFavorite;
 
   FeaturesArtCardModel({
     required this.id,
