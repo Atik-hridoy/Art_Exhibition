@@ -64,6 +64,7 @@ class ArtDetails {
   final bool acceptOffer;
   final bool sendOffer;
   final bool isOnFavorite;
+  final bool followArtist;
   final bool? resale;
   final ResaleInfo? resaleInfo;
   final String? collector;
@@ -86,6 +87,7 @@ class ArtDetails {
     required this.acceptOffer,
     required this.sendOffer,
     required this.isOnFavorite,
+    required this.followArtist,
     this.resale,
     this.resaleInfo,
     this.collector,
@@ -131,6 +133,7 @@ class ArtDetails {
       acceptOffer: json['acceptOffer'] == true,
       sendOffer: json['sendOffer'] == true,
       isOnFavorite: json['isOnFavorite'] == true,
+      followArtist: json['followArtist'] == true,
       resale: json['resale'] as bool?,
       resaleInfo: json['resaleInfo'] == null
           ? null
@@ -151,14 +154,28 @@ class Artist {
   final String? name;
   final String? role;
   final String? profileImage;
+  final int? followers;
+  final String? about;
+  final String? keyAchivements;
 
-  Artist({required this.id, this.name, this.role, this.profileImage});
+  Artist({
+    required this.id,
+    this.name,
+    this.role,
+    this.profileImage,
+    this.followers,
+    this.about,
+    this.keyAchivements,
+  });
 
   factory Artist.fromJson(Map<String, dynamic> json) => Artist(
     id: (json['_id'] ?? '') as String,
     name: json['name'] as String?,
     role: json['role'] as String?,
     profileImage: json['profileImage'] as String?,
+    followers: json['followers'] as int?,
+    about: json['about'] as String?,
+    keyAchivements: json['keyAchivements'] as String?,
   );
 }
 

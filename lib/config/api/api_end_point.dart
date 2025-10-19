@@ -24,4 +24,6 @@ class ApiEndPoint {
   static const savedItem = 'save';
   static const category = 'category';
   static const exhibition = 'exhibition';
+  static const following = 'following';
+  static const unFollowing = 'following/unfollow';
 }

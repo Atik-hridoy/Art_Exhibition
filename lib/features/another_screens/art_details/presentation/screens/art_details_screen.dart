@@ -54,6 +54,8 @@ class ArtDetailsScreen extends StatelessWidget {
           String? artistName = controller.artData?.artist?.name;
           String? role = controller.artData?.artist?.role;
           String? artistImage = controller.artData?.artist?.profileImage;
+          String? about = controller.artData?.artist?.about ?? 'N/A';
+          String? artistId = controller.artData?.artist?.id ?? 'N/A';
 
           return SingleChildScrollView(
             child: Column(
@@ -265,7 +267,9 @@ class ArtDetailsScreen extends StatelessWidget {
                                   Spacer(),
                                   InkWell(
                                     onTap: () {
-                                      controller.toggleFollow();
+                                      controller.isFollowing
+                                          ? controller.toggleUnfollow(artistID: artistId)
+                                          : controller.toggleFollow(artistID: artistId);
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -307,8 +311,8 @@ class ArtDetailsScreen extends StatelessWidget {
                               color: AppColors.bodyClr,
                               fontWeight: FontWeight.w400,
                               textAlign: TextAlign.start,
-                              text:
-                                  "John Currin’s provocative portraits blend satirical exaggeration with grotesque beauty, masterfully ...Read more..",
+                              text: about,
+                              //  "John Currin’s provocative portraits blend satirical exaggeration with grotesque beauty, masterfully ...Read more..",
                             ),
 
                             15.height,
