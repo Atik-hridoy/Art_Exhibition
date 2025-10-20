@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
+import 'package:tasaned_project/features/data_model/event_card_model.dart';
 import 'package:tasaned_project/features/data_model/exibition_card_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
@@ -12,6 +13,7 @@ class HomeController extends GetxController {
   List<FeaturesArtCardModel>? recommendedArtList;
   List<CategoryModel>? categoryList;
   List<ExhibitionCardModel>? exhibitionList;
+  List<EventCardModel>? eventsList;
   bool featureArtIsLoading = false;
   bool categoryIsLoading = false;
   bool populartArtistIsLoading = false;
@@ -84,6 +86,22 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> events() async {
+    try {
+      upComingEventIsLoading = true;
+      var response = await getEvents();
+      if (response != null) {
+        eventsList = response;
+        upComingEventIsLoading = false;
+      }
+      update();
+    } catch (error) {
+      upComingEventIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
   void savedArtListToggle({required int index}) async {
     try {
       FeaturesArtCardModel? art = featureArtList?[index];
@@ -132,12 +150,37 @@ class HomeController extends GetxController {
     }
   }
 
+  void savedEventsListToggle({required int index}) async {
+    try {
+      EventCardModel? event = eventsList?[index];
+      if (event == null) return;
+
+      // // Optional: optimistic UI update (instant toggle before API)
+      // art.isOnFavorite = !(art.isOnFavorite ?? false);
+      // update();
+
+      Map<String, dynamic> body = {'type': 'Event', 'item': event.id};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+
+      if (response.statusCode == 200) {
+        // Sync based on backend response
+        bool isNowSaved = response.data["data"]["deletedCount"] == null;
+        event.isOnFavorite = isNowSaved;
+        update();
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Could not toggle favorite');
+      update();
+    }
+  }
+
   @override
   void onInit() {
     featuredArt();
     recommendedArt();
     category();
     exhibition();
+    events();
     super.onInit();
   }
 }

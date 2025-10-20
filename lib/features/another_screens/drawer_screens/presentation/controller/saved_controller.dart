@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
 import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
+import 'package:tasaned_project/features/data_model/saved_event_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_exibition_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
@@ -11,8 +12,10 @@ class SavedController extends GetxController {
   String isSelected = SaveType.arts.value;
   bool savedArtIsLoading = false;
   bool upComingExibitionIsLoading = false;
+  bool upComingEventLoading = false;
   List<SavedArtCardModel>? savedArtList;
   List<SavedExibitionCardModel>? savedExibitionList;
+  List<SavedEventCardModel>? savedEventList;
 
   Future<void> savedArt() async {
     try {
@@ -43,6 +46,23 @@ class SavedController extends GetxController {
       update();
     } catch (error) {
       upComingExibitionIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
+  Future<void> savedEvent() async {
+    try {
+      upComingEventLoading = true;
+      var response = await getSavedEventItem();
+      if (response != null) {
+        savedEventList = response;
+        upComingEventLoading = false;
+      }
+      upComingEventLoading = false;
+      update();
+    } catch (error) {
+      upComingEventLoading = false;
       Utils.errorSnackBar('Error', error.toString());
       update();
     }
@@ -96,6 +116,30 @@ class SavedController extends GetxController {
     }
   }
 
+  void savedEventListToggle({required int index}) async {
+    try {
+      SavedEventCardModel? event = savedEventList?[index];
+      if (event == null) return;
+
+      // // Optional: optimistic UI update (instant toggle before API)
+      // art.isOnFavorite = !(art.isOnFavorite ?? false);
+      // update();
+
+      Map<String, dynamic> body = {'type': 'Event', 'item': event.id};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+
+      if (response.statusCode == 200) {
+        // Sync based on backend response
+        bool isNowSaved = response.data["data"]["deletedCount"] == null;
+        event.isOnFavorite = isNowSaved;
+        update();
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Could not toggle favorite');
+      update();
+    }
+  }
+
   updateCategorySelected({type}) {
     isSelected = type;
     update();
@@ -105,6 +149,7 @@ class SavedController extends GetxController {
   void onInit() {
     savedArt();
     savedExibition();
+    savedEvent();
     super.onInit();
   }
 }

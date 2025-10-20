@@ -149,26 +149,50 @@ class UpcomingEvents extends StatelessWidget {
 
         16.height,
 
-        SizedBox(
-          height: 200.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(
-                    AppRoutes.eventDetailsScreen,
-                    arguments: {"title": "User Home"},
-                  );
-                },
-                child: EventItem(),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
-        ),
+        controller.featureArtIsLoading
+            ? CircularProgressIndicator()
+            : controller.eventsList?.length == null || controller.eventsList?.length == 0
+            ? SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                    CommonText(text: AppString.noEvent, color: Colors.grey),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: 200.h,
+                child: ListView.separated(
+                  padding: EdgeInsets.only(right: 16.w),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.eventsList!.length < 5
+                      ? controller.eventsList!.length
+                      : 5,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(
+                          AppRoutes.eventDetailsScreen,
+                          arguments: {"title": "User Home"},
+                        );
+                      },
+                      child: EventItem(
+                        cover: controller.eventsList?[index].cover ?? '',
+                        title: controller.eventsList?[index].title ?? '',
+                        date: controller.eventsList?[index].date ?? '',
+                        month: controller.eventsList?[index].month ?? '',
+                        venue: controller.eventsList?[index].venue ?? '',
+                        isSaved: controller.eventsList?[index].isOnFavorite ?? false,
+                        onTapSave: () async {
+                          controller.savedEventsListToggle(index: index);
+                        },
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                ),
+              ),
       ],
     );
   }

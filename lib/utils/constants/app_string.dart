@@ -570,5 +570,7 @@ class AppString {
   static const String noRecommendedArts = 'No Recommended Arts Curretly Available';
   static const String noSavedArts = 'No Saved Arts Curretly Available';
   static const String noExibition = 'No upcoming exibition yet';
+  static const String noEvent = 'No upcoming Event yet';
   static const String noSavedExibition = 'No saved exibition';
+  static const String noSavedEvent = 'No saved event';
 }

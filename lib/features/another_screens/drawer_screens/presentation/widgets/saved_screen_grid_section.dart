@@ -29,7 +29,7 @@ class SavedScreenGridSection extends StatelessWidget {
                   : controller.isSelected == SaveType.exhibition.value
                   ? SavedExibition(controller: controller)
                   : controller.isSelected == SaveType.event.value
-                  ? SavedEvent()
+                  ? SavedEvent(controller: controller)
                   : SavedLearning(),
             ],
           ),
@@ -64,26 +64,50 @@ class SavedLearning extends StatelessWidget {
 }
 
 class SavedEvent extends StatelessWidget {
-  const SavedEvent({super.key});
+  final SavedController controller;
+  const SavedEvent({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: 20,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Number of columns
-        crossAxisSpacing: 15, // Horizontal space between items
-        mainAxisSpacing: 20,
+    return controller.upComingEventLoading
+        ? CircularProgressIndicator()
+        : controller.savedEventList?.length == null ||
+              controller.savedEventList?.length == 0
+        ? SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                CommonText(text: AppString.noSavedEvent, color: Colors.grey),
+              ],
+            ),
+          )
+        : GridView.builder(
+            itemCount: controller.savedEventList?.length ?? 0,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // Number of columns
+              crossAxisSpacing: 15, // Horizontal space between items
+              mainAxisSpacing: 20,
 
-        mainAxisExtent: 185.h,
-        // Vertical space between items
-      ),
-      itemBuilder: (context, index) {
-        return EventItem();
-      },
-    );
+              mainAxisExtent: 185.h,
+              // Vertical space between items
+            ),
+            itemBuilder: (context, index) {
+              return EventItem(
+                cover: controller.savedEventList?[index].cover ?? '',
+                title: controller.savedEventList?[index].title ?? '',
+                date: controller.savedEventList?[index].date ?? '',
+                month: controller.savedEventList?[index].month ?? '',
+                venue: controller.savedEventList?[index].venue ?? '',
+                isSaved: controller.savedEventList?[index].isOnFavorite ?? false,
+                onTapSave: () async {
+                  controller.savedEventListToggle(index: index);
+                },
+              );
+            },
+          );
   }
 }
 
