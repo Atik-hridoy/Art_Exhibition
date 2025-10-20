@@ -9,7 +9,7 @@ class ArtsItem extends StatelessWidget {
   final double itemWidth;
   final double itemHeight;
   final String imageUrl;
-  final int price;
+  final num price;
   final String title;
   final bool isSaved;
   final VoidCallback? onTapSave;
@@ -69,6 +69,7 @@ class ArtsItem extends StatelessWidget {
                           ),
                           child: Icon(
                             isSaved ? Icons.favorite : Icons.favorite_border,
+                            size: 16.sp,
                             color: isSaved ? Colors.black : Colors.grey,
                           ),
                         ),

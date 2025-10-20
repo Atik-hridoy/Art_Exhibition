@@ -14,6 +14,7 @@ class ExhibitionItem extends StatelessWidget {
   final bool isSaved;
   final DateTime startDate;
   final DateTime endDate;
+  final VoidCallback? onTapSave;
 
   const ExhibitionItem({
     super.key,
@@ -23,6 +24,7 @@ class ExhibitionItem extends StatelessWidget {
     required this.isSaved,
     required this.startDate,
     required this.endDate,
+    required this.onTapSave,
   });
 
   @override
@@ -60,14 +62,21 @@ class ExhibitionItem extends StatelessWidget {
               Positioned(
                 top: 7,
                 right: 7,
-                child: Container(
-                  padding: EdgeInsets.all(4),
+                child: InkWell(
+                  onTap: onTapSave,
+                  child: Container(
+                    padding: EdgeInsets.all(4),
 
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.white,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.white,
+                    ),
+                    child: Icon(
+                      isSaved ? Icons.favorite : Icons.favorite_border,
+                      size: 16.sp,
+                      color: isSaved ? Colors.black : Colors.grey,
+                    ),
                   ),
-                  child: Icon(size: 16.sp, Icons.favorite_border),
                 ),
               ),
             ],

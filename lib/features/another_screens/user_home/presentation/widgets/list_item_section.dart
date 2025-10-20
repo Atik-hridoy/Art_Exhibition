@@ -246,6 +246,9 @@ class UpComingExibition extends StatelessWidget {
                             controller.exhibitionList?[index].startDate ?? DateTime.now(),
                         endDate:
                             controller.exhibitionList?[index].startDate ?? DateTime.now(),
+                        onTapSave: () {
+                          controller.savedExibitionListToggle(index: index);
+                        },
                       ),
                     );
                   },
@@ -308,12 +311,12 @@ class RecomendedArts extends StatelessWidget {
                       },
                       child: ArtsItem(
                         imageUrl: controller.recommendedArtList?[index].image ?? '',
-                        price: controller.recommendedArtList?[index].price as int,
+                        price: controller.recommendedArtList?[index].price ?? 0,
                         title: controller.recommendedArtList?[index].title ?? '',
                         isSaved:
                             controller.recommendedArtList?[index].isOnFavorite ?? false,
                         onTapSave: () {
-                          controller.savedToggle(index: index);
+                          controller.savedArtListToggle(index: index);
                         },
                       ),
                     );
@@ -532,7 +535,7 @@ class FeatureArtSection extends StatelessWidget {
                         title: controller.featureArtList?[index].title ?? '',
                         isSaved: controller.featureArtList?[index].isOnFavorite ?? false,
                         onTapSave: () async {
-                          controller.savedToggle(index: index);
+                          controller.savedArtListToggle(index: index);
                         },
                       ),
                     );

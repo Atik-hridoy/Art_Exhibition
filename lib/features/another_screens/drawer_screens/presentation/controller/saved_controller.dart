@@ -31,6 +31,23 @@ class SavedController extends GetxController {
     }
   }
 
+  Future<void> savedExibition() async {
+    try {
+      upComingExibitionIsLoading = true;
+      var response = await getSavedExibitionItem();
+      if (response != null) {
+        savedExibitionList = response;
+        upComingExibitionIsLoading = false;
+      }
+      upComingExibitionIsLoading = false;
+      update();
+    } catch (error) {
+      upComingExibitionIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
   Future<void> savedArtToggle({required int index}) async {
     try {
       SavedArtCardModel? art = savedArtList?[index];
@@ -55,19 +72,26 @@ class SavedController extends GetxController {
     }
   }
 
-  Future<void> savedExibition() async {
+  void savedExibitionListToggle({required int index}) async {
     try {
-      upComingExibitionIsLoading = true;
-      var response = await getSavedExibitionItem();
-      if (response != null) {
-        savedExibitionList = response;
-        upComingExibitionIsLoading = false;
+      SavedExibitionCardModel? exibition = savedExibitionList?[index];
+      if (exibition == null) return;
+
+      // // Optional: optimistic UI update (instant toggle before API)
+      // art.isOnFavorite = !(art.isOnFavorite ?? false);
+      // update();
+
+      Map<String, dynamic> body = {'type': 'Exhibition', 'item': exibition.id};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+
+      if (response.statusCode == 200) {
+        // Sync based on backend response
+        bool isNowSaved = response.data["data"]["deletedCount"] == null;
+        exibition.isOnFavorite = isNowSaved;
+        update();
       }
-      upComingExibitionIsLoading = false;
-      update();
-    } catch (error) {
-      upComingExibitionIsLoading = false;
-      Utils.errorSnackBar('Error', error.toString());
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Could not toggle favorite');
       update();
     }
   }
@@ -80,6 +104,7 @@ class SavedController extends GetxController {
   @override
   void onInit() {
     savedArt();
+    savedExibition();
     super.onInit();
   }
 }

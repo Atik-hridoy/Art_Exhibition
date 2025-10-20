@@ -6,7 +6,7 @@ class SavedExibitionCardModel {
   final DateTime? startDate;
   final DateTime? endDate;
   final String? venue;
-  final bool? isOnFavorite;
+  bool? isOnFavorite;
 
   SavedExibitionCardModel({
     this.id,
@@ -20,17 +20,23 @@ class SavedExibitionCardModel {
 
   factory SavedExibitionCardModel.fromJson(Map<String, dynamic> json) {
     String? firstImage;
-    if (json["images"] != null && json["images"] is List && json["images"].isNotEmpty) {
-      firstImage = json["images"][0];
+    if (json["item"]["images"] != null &&
+        json["item"]["images"] is List &&
+        json["item"]["images"].isNotEmpty) {
+      firstImage = json["item"]["images"][0];
     }
 
     return SavedExibitionCardModel(
-      id: json["_id"],
-      title: json["title"],
+      id: json["item"]["_id"],
+      title: json["item"]["title"],
       image: firstImage,
-      startDate: json["startDate"] == null ? null : DateTime.parse(json["startDate"]),
-      endDate: json["endDate"] == null ? null : DateTime.parse(json["endDate"]),
-      venue: json["venue"],
+      startDate: json["item"]["startDate"] == null
+          ? null
+          : DateTime.parse(json["item"]["startDate"]),
+      endDate: json["item"]["endDate"] == null
+          ? null
+          : DateTime.parse(json["item"]["endDate"]),
+      venue: json["item"]["venue"],
       isOnFavorite: true, // since it’s inside favorites
     );
   }

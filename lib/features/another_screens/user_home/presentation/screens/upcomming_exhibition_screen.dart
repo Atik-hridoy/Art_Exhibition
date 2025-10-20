@@ -154,6 +154,9 @@ class UpComingExhibitionScreen extends StatelessWidget {
                                 endDate:
                                     controller.exhibitionList?[index].startDate ??
                                     DateTime.now(),
+                                onTapSave: () {
+                                  controller.savedExhibitionToggle(index: index);
+                                },
                               ),
                             );
                           },

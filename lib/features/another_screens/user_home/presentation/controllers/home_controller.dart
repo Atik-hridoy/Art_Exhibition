@@ -84,7 +84,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void savedToggle({required int index}) async {
+  void savedArtListToggle({required int index}) async {
     try {
       FeaturesArtCardModel? art = featureArtList?[index];
       if (art == null) return;
@@ -100,6 +100,30 @@ class HomeController extends GetxController {
         // Sync based on backend response
         bool isNowSaved = response.data["data"]["deletedCount"] == null;
         art.isOnFavorite = isNowSaved;
+        update();
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Could not toggle favorite');
+      update();
+    }
+  }
+
+  void savedExibitionListToggle({required int index}) async {
+    try {
+      ExhibitionCardModel? exibition = exhibitionList?[index];
+      if (exibition == null) return;
+
+      // // Optional: optimistic UI update (instant toggle before API)
+      // art.isOnFavorite = !(art.isOnFavorite ?? false);
+      // update();
+
+      Map<String, dynamic> body = {'type': 'Exhibition', 'item': exibition.id};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+
+      if (response.statusCode == 200) {
+        // Sync based on backend response
+        bool isNowSaved = response.data["data"]["deletedCount"] == null;
+        exibition.isOnFavorite = isNowSaved;
         update();
       }
     } catch (e) {

@@ -5,7 +5,7 @@ class ExhibitionCardModel {
   final DateTime? startDate;
   final DateTime? endDate;
   final String? venue;
-  final bool? isOnFavorite;
+  bool? isOnFavorite;
 
   ExhibitionCardModel({
     this.id,

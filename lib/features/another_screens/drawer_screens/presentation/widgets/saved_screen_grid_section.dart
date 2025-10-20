@@ -102,7 +102,7 @@ class SavedExibition extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 // SvgPicture.asset(AppIcons.noDataFoundIcon),
-                CommonText(text: AppString.nofeatureArts, color: Colors.grey),
+                CommonText(text: AppString.noSavedExibition, color: Colors.grey),
               ],
             ),
           )
@@ -128,6 +128,9 @@ class SavedExibition extends StatelessWidget {
                     controller.savedExibitionList?[index].startDate ?? DateTime.now(),
                 endDate:
                     controller.savedExibitionList?[index].startDate ?? DateTime.now(),
+                onTapSave: () {
+                  controller.savedExibitionListToggle(index: index);
+                },
               );
             },
           );
@@ -172,7 +175,7 @@ class SavedArt extends StatelessWidget {
                 },
                 child: ArtsItem(
                   imageUrl: controller.savedArtList?[index].image ?? '',
-                  price: controller.savedArtList![index].price as int,
+                  price: controller.savedArtList?[index].price ?? 0,
                   title: controller.savedArtList?[index].title ?? '',
                   isSaved: controller.savedArtList?[index].isOnFavorite ?? false,
                   onTapSave: () async {

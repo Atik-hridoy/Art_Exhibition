@@ -84,7 +84,7 @@ Future<List<SavedExibitionCardModel>?> getSavedExibitionItem({
 }) async {
   try {
     var response = await ApiService.get(
-      '${ApiEndPoint.savedItem}?page=$page&limit=$limit&type=Event',
+      '${ApiEndPoint.savedItem}?page=$page&limit=$limit&type=Exhibition',
     );
 
     if (response.statusCode == 200) {
