@@ -21,85 +21,90 @@ class ExhibitionDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        shadowColor: AppColors.transparent,
-        surfaceTintColor: AppColors.transparent,
-        leading: InkWell(
-          onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, size: 18.sp, color: AppColors.titleColor),
-        ),
-        title: CommonText(
-          text: AppString.exhibitionDetails,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: AppColors.titleColor,
-        ),
-        actions: [
-          title == "My Exhibition"
-              ? _moreActions(
-                  onEdit: () {
-                    Get.toNamed(
-                      AppRoutes.createNewExhibitionScreen,
-                      arguments: {"title": "Edit Exhibition"},
-                    );
-                  },
-                  onDelete: () => _confirmDelete(context),
-                )
-              : Icon(
-                  Icons.favorite_border_outlined,
-                  size: 18.sp,
-                  color: AppColors.titleColor,
-                ),
-          14.width,
-        ],
-      ),
-      body: SafeArea(
-        child: GetBuilder(
-          init: ExhibitionDetailsController(),
-          builder: (controller) {
-            String? formattedDate(DateTime? date) {
-              if (date == null) {
-                return null;
-              }
-              String formattedDate = DateFormat('d MMM yy').format(date);
-              return formattedDate;
-            }
+    return GetBuilder(
+      init: ExhibitionDetailsController(),
+      builder: (controller) {
+        String? formattedDate(DateTime? date) {
+          if (date == null) {
+            return null;
+          }
+          String formattedDate = DateFormat('d MMM yy').format(date);
+          return formattedDate;
+        }
 
-            String? calculateRemainingDays(DateTime? startDate, DateTime? endDate) {
-              if (startDate == null || endDate == null) {
-                return null;
-              }
-              // Remove the time part to make calculation purely date-based
-              DateTime start = DateTime(startDate.year, startDate.month, startDate.day);
-              DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
-              int remainingDays = end.difference(start).inDays;
-              remainingDays = remainingDays.isNegative ? 0 : remainingDays;
-              return remainingDays.toString();
-            }
+        String? calculateRemainingDays(DateTime? startDate, DateTime? endDate) {
+          if (startDate == null || endDate == null) {
+            return null;
+          }
+          // Remove the time part to make calculation purely date-based
+          DateTime start = DateTime(startDate.year, startDate.month, startDate.day);
+          DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+          int remainingDays = end.difference(start).inDays;
+          remainingDays = remainingDays.isNegative ? 0 : remainingDays;
+          return remainingDays.toString();
+        }
 
-            DateTime? startDate = controller.exibition?.startDate;
-            DateTime? endDate = controller.exibition?.endDate;
-            String image =
-                (controller.exibition?.images != null &&
-                    controller.exibition!.images!.isNotEmpty)
-                ? controller.exibition!.images![0]
-                : 'N/A';
-            String title = controller.exibition?.title ?? 'N/A';
-            String creatorName = controller.exibition?.creatorId?.name ?? 'N/A';
-            String about = controller.exibition?.description ?? 'N/A';
-            String formatterdStartDate = formattedDate(startDate) ?? 'N/A';
-            String formatterdEndDate = formattedDate(endDate) ?? 'N/A';
-            String deysRemaining =
-                calculateRemainingDays(DateTime.now(), startDate) ?? 'N/A';
-            String visitingHour = controller.exibition?.visitingHour ?? 'N/A';
-            String venue = controller.exibition?.venue ?? 'N/A';
-            String ticketPrice = controller.exibition?.ticketPrice.toString() ?? 'N/A';
-            List<Artist> artist = controller.exibition?.artists ?? [];
+        DateTime? startDate = controller.exibition?.startDate;
+        DateTime? endDate = controller.exibition?.endDate;
+        String image =
+            (controller.exibition?.images != null &&
+                controller.exibition!.images!.isNotEmpty)
+            ? controller.exibition!.images![0]
+            : 'N/A';
+        String title = controller.exibition?.title ?? 'N/A';
+        String creatorName = controller.exibition?.creatorId?.name ?? 'N/A';
+        String about = controller.exibition?.description ?? 'N/A';
+        String formatterdStartDate = formattedDate(startDate) ?? 'N/A';
+        String formatterdEndDate = formattedDate(endDate) ?? 'N/A';
+        String deysRemaining = calculateRemainingDays(DateTime.now(), startDate) ?? 'N/A';
+        String visitingHour = controller.exibition?.visitingHour ?? 'N/A';
+        String venue = controller.exibition?.venue ?? 'N/A';
+        String ticketPrice = controller.exibition?.ticketPrice.toString() ?? 'N/A';
+        List<Artist> artist = controller.exibition?.artists ?? [];
+        String buyTicketURL = controller.exibition?.bookingUrl ?? 'N/A';
 
-            return SingleChildScrollView(
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            backgroundColor: AppColors.white,
+            shadowColor: AppColors.transparent,
+            surfaceTintColor: AppColors.transparent,
+            leading: InkWell(
+              onTap: () => Get.back(),
+              child: Icon(Icons.arrow_back_ios, size: 18.sp, color: AppColors.titleColor),
+            ),
+            title: CommonText(
+              text: AppString.exhibitionDetails,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.titleColor,
+            ),
+            actions: [
+              title == "My Exhibition"
+                  ? _moreActions(
+                      onEdit: () {
+                        Get.toNamed(
+                          AppRoutes.createNewExhibitionScreen,
+                          arguments: {"title": "Edit Exhibition"},
+                        );
+                      },
+                      onDelete: () => _confirmDelete(context),
+                    )
+                  : GestureDetector(
+                      onTap: () => controller.saveToggle(),
+                      child: controller.isSaved
+                          ? Icon(Icons.favorite, size: 18.sp, color: AppColors.titleColor)
+                          : Icon(
+                              Icons.favorite_border,
+                              size: 18.sp,
+                              color: AppColors.titleColor,
+                            ),
+                    ),
+              14.width,
+            ],
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Column(
@@ -294,6 +299,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
                           return ArtistItem(
                             name: artist[index].name ?? 'N/A',
                             follower: artist[index].followers ?? 0,
+                            profileImage: artist[index].profileImage ?? '',
                           );
                         },
                       ),
@@ -303,16 +309,9 @@ class ExhibitionDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            );
-          },
-        ),
-      ),
-      bottomNavigationBar: GetBuilder(
-        init: ExhibitionDetailsController(),
-        builder: (controller) {
-          String buyTicketURL = controller.exibition?.bookingUrl ?? 'N/A';
-
-          return Container(
+            ),
+          ),
+          bottomNavigationBar: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -327,9 +326,9 @@ class ExhibitionDetailsScreen extends StatelessWidget {
               },
               titleText: AppString.getTickets,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

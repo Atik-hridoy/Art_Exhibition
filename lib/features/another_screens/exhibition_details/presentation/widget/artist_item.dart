@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
-import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class ArtistItem extends StatelessWidget {
+  final String profileImage;
   final String name;
   final int follower;
-  const ArtistItem({super.key, required this.name, required this.follower});
+  const ArtistItem({
+    super.key,
+    required this.name,
+    required this.follower,
+    required this.profileImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +27,9 @@ class ArtistItem extends StatelessWidget {
           child: CommonImage(
             height: 60,
             width: 60,
-            fill: BoxFit.fill,
-            imageSrc: AppImages.female,
+            fill: BoxFit.cover,
+            imageSrc: ApiEndPoint.imageUrl + profileImage,
+            //  AppImages.female,
           ),
         ),
 
