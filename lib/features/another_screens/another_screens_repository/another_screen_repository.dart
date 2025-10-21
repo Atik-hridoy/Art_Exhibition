@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/event_card_model.dart';
@@ -10,6 +12,7 @@ import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_event_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_exibition_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
+import 'package:tasaned_project/services/storage/storage_services.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/enum/enum.dart';
 
@@ -193,6 +196,24 @@ Future<List<ExhibitionCardModel>?> getExibition({int page = 1, int limit = 10}) 
 
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => ExhibitionCardModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    return null;
+  }
+}
+
+Future<List<ExhibitionCardModel>?> getMyExibition({int page = 1, int limit = 10}) async {
+  try {
+    var response = await ApiService.get('${ApiEndPoint.users}/${LocalStorage.userId}');
+    if (response.statusCode == 200) {
+      log('My Exibition data fetched');
+      log(LocalStorage.userId);
+      var responseBody = (response.data['data']["exhibitions"] as List<dynamic>? ?? [])
           .map((e) => ExhibitionCardModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return responseBody;

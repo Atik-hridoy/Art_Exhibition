@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
-import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class MyExhibitionsItem extends StatelessWidget {
-  const MyExhibitionsItem({super.key});
+  final String image;
+  final String title;
+  final String venue;
+  final DateTime startDate;
+  final DateTime endDate;
+  const MyExhibitionsItem({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.venue,
+    required this.startDate,
+    required this.endDate,
+  });
 
   @override
   Widget build(BuildContext context) {
+    String dateTimeFormat(DateTime date) {
+      String formattedDate = DateFormat('d MMM').format(date);
+      return formattedDate;
+    }
+
+    String formattedStartDate = dateTimeFormat(startDate);
+    String formattedEndDate = dateTimeFormat(endDate);
     return Container(
       //margin: EdgeInsets.only(right: 16.w),
       width: 165.w,
@@ -27,7 +47,8 @@ class MyExhibitionsItem extends StatelessWidget {
               width: 165.w,
               fill: BoxFit.fill,
               height: 112.h,
-              imageSrc: AppImages.eventImage,
+              imageSrc: ApiEndPoint.imageUrl + image,
+              //     AppImages.eventImage,
             ),
           ),
           CommonText(
@@ -38,7 +59,8 @@ class MyExhibitionsItem extends StatelessWidget {
             left: 6,
             right: 6,
             bottom: 8,
-            text: "Urban Abstractions",
+            text: title,
+            // "Urban Abstractions",
           ),
 
           Padding(
@@ -56,7 +78,7 @@ class MyExhibitionsItem extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: AppColors.bodyClr,
-                    text: "Classical Masters",
+                    text: venue, //"Classical Masters",
                   ),
                 ),
               ],
@@ -73,7 +95,7 @@ class MyExhibitionsItem extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: AppColors.bodyClr,
-                  text: "Jul 10 - Nov 20",
+                  text: '$formattedStartDate - $formattedEndDate', //"Jul 10 - Nov 20",
                 ),
               ],
             ),

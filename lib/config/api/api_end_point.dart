@@ -28,4 +28,5 @@ class ApiEndPoint {
   static const following = 'following';
   static const unFollowing = 'following/unfollow';
   static const saveToggle = 'save/toggle';
+  static const users = 'users';
 }
