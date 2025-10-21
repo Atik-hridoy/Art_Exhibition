@@ -1,6 +1,7 @@
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/event_card_model.dart';
+import 'package:tasaned_project/features/data_model/event_model.dart';
 import 'package:tasaned_project/features/data_model/exibition_card_model.dart';
 import 'package:tasaned_project/features/data_model/exibition_model.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
@@ -134,10 +135,37 @@ Future<ArtDetails?> getArtDetails({required String artId}) async {
     }
     return null;
   } catch (e) {
-    Utils.errorSnackBar(
-      'An error with repository',
-      'Please contact with developer art details',
-    );
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    return null;
+  }
+}
+
+Future<Exhibition?> getExibitionDetails({required String id}) async {
+  try {
+    var response = await ApiService.get('${ApiEndPoint.exhibition}/$id');
+
+    if (response.statusCode == 200) {
+      var responseBody = Exhibition.fromJson(response.data['data']);
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    return null;
+  }
+}
+
+Future<EventModel?> getEventDetails({required String eventId}) async {
+  try {
+    var response = await ApiService.get('${ApiEndPoint.events}/$eventId');
+
+    if (response.statusCode == 200) {
+      EventModel responseBody = EventModel.fromJson(response.data['data']);
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
     return null;
   }
 }
@@ -193,20 +221,7 @@ Future<List<EventCardModel>?> getEvents({int page = 1, int limit = 10}) async {
   }
 }
 
-Future<Exhibition?> getExibitionDetails({required String id}) async {
-  try {
-    var response = await ApiService.get('${ApiEndPoint.exhibition}/$id');
 
-    if (response.statusCode == 200) {
-      var responseBody = Exhibition.fromJson(response.data['data']);
-      return responseBody;
-    }
-    return null;
-  } catch (e) {
-    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
-    return null;
-  }
-}
 
 
 // Future<ArtsResponse?> getFeaturedArt({int page = 1}) async {
