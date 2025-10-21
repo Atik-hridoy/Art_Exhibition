@@ -21,34 +21,15 @@ class MyExhibitionsItem extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: CommonImage(
-                  width: 165.w,
-                  fill: BoxFit.fill,
-                  height: 112.h,
-                  imageSrc: AppImages.exhibition,
-                ),
-              ),
-
-              Positioned(
-                top: 7,
-                right: 7,
-                child: Container(
-                  padding: EdgeInsets.all(4),
-
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.white,
-                  ),
-                  child: Icon(size: 16.sp, Icons.favorite_border),
-                ),
-              ),
-            ],
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: CommonImage(
+              width: 165.w,
+              fill: BoxFit.fill,
+              height: 112.h,
+              imageSrc: AppImages.eventImage,
+            ),
           ),
-
           CommonText(
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -61,42 +42,39 @@ class MyExhibitionsItem extends StatelessWidget {
           ),
 
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 6),
+            padding: EdgeInsets.symmetric(horizontal: 6),
             child: Row(
               children: [
                 Icon(
-                    size: 18.sp,
-                    color: AppColors.bodyClr,
-                    Icons.account_balance_rounded),
+                  size: 18.sp,
+                  color: AppColors.bodyClr,
+                  Icons.account_balance_rounded,
+                ),
                 Flexible(
                   child: CommonText(
-                    
-                      left: 4,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.bodyClr,
-                      text: "Classical Masters"),
-                )
-               
+                    left: 4,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.bodyClr,
+                    text: "Classical Masters",
+                  ),
+                ),
               ],
             ),
           ),
           4.height,
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 6),
+            padding: EdgeInsets.symmetric(horizontal: 6),
             child: Row(
               children: [
-                Icon(
-                    size: 18.sp,
-                    color: AppColors.bodyClr,
-                    Icons.calendar_month),
+                Icon(size: 18.sp, color: AppColors.bodyClr, Icons.calendar_month),
                 CommonText(
-                    left: 4,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.bodyClr,
-                    text: "Jul 10 - Nov 20")
-
+                  left: 4,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.bodyClr,
+                  text: "Jul 10 - Nov 20",
+                ),
               ],
             ),
           ),

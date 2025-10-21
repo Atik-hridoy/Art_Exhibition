@@ -12,7 +12,7 @@ class EventDetailsController extends GetxController {
   EventModel? event;
   String? eventId;
 
-  void exibitionDetails() async {
+  Future<void> exibitionDetails() async {
     try {
       upComingEventIsLoading = true;
       // TODO: Need to change the  ID parameter
@@ -53,10 +53,16 @@ class EventDetailsController extends GetxController {
     }
   }
 
+  void initialFunction() async {
+    await exibitionDetails();
+    if (event != null) {
+      isSaved = event?.isOnFavorite ?? false;
+    }
+  }
+
   @override
   void onInit() {
-    exibitionDetails();
-    isSaved = event?.isOnFavorite ?? false;
+    initialFunction();
     super.onInit();
   }
 }

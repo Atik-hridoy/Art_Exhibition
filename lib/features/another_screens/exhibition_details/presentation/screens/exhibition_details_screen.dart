@@ -51,7 +51,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
                 controller.exibition!.images!.isNotEmpty)
             ? controller.exibition!.images![0]
             : 'N/A';
-        String title = controller.exibition?.title ?? 'N/A';
+        String exibitionTitle = controller.exibition?.title ?? 'N/A';
         String creatorName = controller.exibition?.creatorId?.name ?? 'N/A';
         String about = controller.exibition?.description ?? 'N/A';
         String formatterdStartDate = formattedDate(startDate) ?? 'N/A';
@@ -157,7 +157,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
 
                     // Title + Curated by
                     CommonText(
-                      text: title, // 'Modern Abstractions',
+                      text: exibitionTitle, // 'Modern Abstractions',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: AppColors.titleColor,

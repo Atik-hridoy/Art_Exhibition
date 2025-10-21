@@ -25,7 +25,7 @@ class EventController extends GetxController {
     }
   }
 
-  void savedEventsListToggle({required int index}) async {
+  Future<void> savedEventsListToggle({required int index}) async {
     try {
       EventCardModel? event = eventsList?[index];
       if (event == null) return;
