@@ -1,49 +1,17 @@
 class ArtsResponse {
   final bool success;
   final String? message;
-  final Pagination? pagination;
   final List<ArtDetails> data;
 
-  ArtsResponse({
-    required this.success,
-    this.message,
-    this.pagination,
-    required this.data,
-  });
+  ArtsResponse({required this.success, this.message, required this.data});
 
   factory ArtsResponse.fromJson(Map<String, dynamic> json) {
     return ArtsResponse(
       success: json['success'] == true,
       message: json['message'] as String?,
-      pagination: json['pagination'] == null
-          ? null
-          : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
       data: (json['data'] as List<dynamic>? ?? [])
           .map((e) => ArtDetails.fromJson(e as Map<String, dynamic>))
           .toList(),
-    );
-  }
-}
-
-class Pagination {
-  final int total;
-  final int limit;
-  final int page;
-  final int totalPage;
-
-  Pagination({
-    required this.total,
-    required this.limit,
-    required this.page,
-    required this.totalPage,
-  });
-
-  factory Pagination.fromJson(Map<String, dynamic> json) {
-    return Pagination(
-      total: (json['total'] ?? 0) as int,
-      limit: (json['limit'] ?? 0) as int,
-      page: (json['page'] ?? 0) as int,
-      totalPage: (json['totalPage'] ?? 0) as int,
     );
   }
 }

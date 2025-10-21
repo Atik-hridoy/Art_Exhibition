@@ -573,4 +573,5 @@ class AppString {
   static const String noEvent = 'No upcoming Event yet';
   static const String noSavedExibition = 'No saved exibition';
   static const String noSavedEvent = 'No saved event';
+  static const String noListing = 'No Listing';
 }

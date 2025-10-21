@@ -29,4 +29,5 @@ class ApiEndPoint {
   static const unFollowing = 'following/unfollow';
   static const saveToggle = 'save/toggle';
   static const users = 'users';
+  static const myList = 'art-collection';
 }

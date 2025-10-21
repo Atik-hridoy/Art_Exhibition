@@ -5,6 +5,7 @@ import 'package:tasaned_project/component/bottom_nav_bar/common_bottom_bar.dart'
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/component/button/common_button.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/my_listing_screen/presentation/controller/my_list_controller.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
@@ -33,8 +34,17 @@ class MyListScreen extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.filter_alt_outlined, color: AppColors.bodyClr, size: 18.sp),
-                      CommonText(text: AppString.filter, fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.bodyClr),
+                      Icon(
+                        Icons.filter_alt_outlined,
+                        color: AppColors.bodyClr,
+                        size: 18.sp,
+                      ),
+                      CommonText(
+                        text: AppString.filter,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.bodyClr,
+                      ),
                     ],
                   ),
                 ),
@@ -48,119 +58,150 @@ class MyListScreen extends StatelessWidget {
             ),
           ),
           backgroundColor: AppColors.background,
-          body: ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-            itemCount: controller.items.length,
-            separatorBuilder: (_, __) => 10.height,
-            itemBuilder: (context, index) {
-              final item = controller.items[index];
-              final String status = item['status'];
-              final bool isSold = status == AppString.sold;
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(AppRoutes.artDetailsScreen, arguments: {
-                    "screenType": "myListing",
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10.r),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: AppColors.stroke),
-                  ),
+          body: controller.myArtListIsLoading
+              ? CircularProgressIndicator()
+              : controller.myArtList == null || controller.myArtList?.length == 0
+              ? SizedBox(
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: CommonImage(
-                          height: 60.h,
-                          width: 80.h,
-                          fill: BoxFit.cover,
-                          imageSrc: item['image'],
+                      // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                      CommonText(text: AppString.noListing, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : ListView.separated(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  itemCount: controller.myArtList?.length ?? 0,
+                  separatorBuilder: (_, __) => 10.height,
+                  itemBuilder: (context, index) {
+                    final item = controller.myArtList?[index];
+                    // final String status = item['status'];
+                    // final bool isSold = status == AppString.sold;
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(
+                          AppRoutes.artDetailsScreen,
+                          arguments: {"screenType": "myListing"},
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10.r),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: AppColors.stroke),
                         ),
-                      ),
-                      16.width,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            CommonText(
-                              text: item['title'],
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.titleColor,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.r),
+                              child: CommonImage(
+                                height: 60.h,
+                                width: 80.h,
+                                fill: BoxFit.cover,
+                                imageSrc: ApiEndPoint.imageUrl + item!.image,
+                              ),
                             ),
-                            4.height,
-                            CommonText(
-                              text: '\$250',
-                              // Using static price per requirements
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: AppColors.primaryColor,
+                            16.width,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CommonText(
+                                    text: item.title, // item['title'],
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.titleColor,
+                                  ),
+                                  4.height,
+                                  CommonText(
+                                    text: '\$${item.price}', //
+                                    // Using static price per requirements
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                PopupMenuButton<String>(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  onSelected: (val) {
+                                    if (val == 'edit') {
+                                      Get.toNamed(AppRoutes.editArtWorkScreen);
+                                    }
+                                    if (val == 'delete') {
+                                      DeletePopUp.show(
+                                        onConfirm: () => controller.deleteItem(index),
+                                      );
+                                    }
+                                  },
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem<String>(
+                                      value: 'edit',
+                                      child: Row(
+                                        children: const [
+                                          Icon(
+                                            Icons.edit,
+                                            size: 18,
+                                            color: AppColors.titleColor,
+                                          ),
+                                          SizedBox(width: 8),
+                                          CommonText(text: AppString.edit),
+                                        ],
+                                      ),
+                                    ),
+                                    PopupMenuItem<String>(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: const [
+                                          Icon(
+                                            Icons.delete_outline,
+                                            size: 18,
+                                            color: AppColors.redClr,
+                                          ),
+                                          SizedBox(width: 8),
+                                          CommonText(
+                                            text: AppString.delete,
+                                            color: AppColors.redClr,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  child: const Icon(
+                                    Icons.more_vert,
+                                    color: AppColors.titleColor,
+                                  ),
+                                ),
+                                6.height,
+                                CommonText(
+                                  text: item.sold == true ? 'Sold' : 'Available',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: item.sold == true
+                                      ? AppColors.redClr
+                                      : Colors.green,
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                      
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          PopupMenuButton<String>(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            onSelected: (val) {
-                              if (val == 'edit') {
-                                Get.toNamed(AppRoutes.editArtWorkScreen);
-                              }
-                              if (val == 'delete') {
-                                DeletePopUp.show(onConfirm: () => controller.deleteItem(index));
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem<String>(
-                                value: 'edit',
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.edit, size: 18, color: AppColors.titleColor),
-                                    SizedBox(width: 8),
-                                    CommonText(text: AppString.edit),
-                                  ],
-                                ),
-                              ),
-                              PopupMenuItem<String>(
-                                value: 'delete',
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.delete_outline, size: 18, color: AppColors.redClr),
-                                    SizedBox(width: 8),
-                                    CommonText(text: AppString.delete, color: AppColors.redClr),
-                                  ],
-                                ),
-                              ),
-                            ],
-                            child: const Icon(Icons.more_vert, color: AppColors.titleColor),
-                          ),
-                          6.height,
-                          CommonText(
-                            text: status,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: isSold ? AppColors.redClr : Colors.green,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
 
-           bottomNavigationBar: CommonBottomNavBar(currentIndex: 1),
+          bottomNavigationBar: CommonBottomNavBar(currentIndex: 1),
         );
       },
     );
@@ -168,7 +209,7 @@ class MyListScreen extends StatelessWidget {
 }
 
 void _openFilterSheet(MyListController controller) {
-  String tempSelected = controller.selectedFilter;
+  bool tempSelected = controller.selectedFilter;
   Get.bottomSheet(
     StatefulBuilder(
       builder: (context, setState) {
@@ -219,14 +260,14 @@ void _openFilterSheet(MyListController controller) {
                 16.height,
                 _filterTile(
                   label: AppString.available,
-                  selected: tempSelected == AppString.available,
-                  onTap: () => setState(() => tempSelected = AppString.available),
+                  selected: tempSelected == true,
+                  onTap: () => setState(() => tempSelected = true),
                 ),
                 12.height,
                 _filterTile(
                   label: AppString.sold,
-                  selected: tempSelected == AppString.sold,
-                  onTap: () => setState(() => tempSelected = AppString.sold),
+                  selected: tempSelected == false,
+                  onTap: () => setState(() => tempSelected = false),
                 ),
                 20.height,
                 CommonButton(
@@ -248,7 +289,11 @@ void _openFilterSheet(MyListController controller) {
   );
 }
 
-Widget _filterTile({required String label, required bool selected, required VoidCallback onTap}) {
+Widget _filterTile({
+  required String label,
+  required bool selected,
+  required VoidCallback onTap,
+}) {
   return InkWell(
     onTap: onTap,
     child: Container(
@@ -274,14 +319,20 @@ Widget _filterTile({required String label, required bool selected, required Void
             width: 22,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: selected ? AppColors.primaryColor : AppColors.stroke, width: 2),
+              border: Border.all(
+                color: selected ? AppColors.primaryColor : AppColors.stroke,
+                width: 2,
+              ),
             ),
             child: selected
                 ? Center(
                     child: Container(
                       height: 10,
                       width: 10,
-                      decoration: BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   )
                 : null,

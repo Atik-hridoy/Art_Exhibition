@@ -8,6 +8,11 @@ import '../../../../../utils/constants/app_colors.dart';
 import '../../../../../utils/constants/app_images.dart';
 
 class MyListItem extends StatelessWidget {
+  // final String image;
+  // final String artTitle;
+  // final String price;
+  // final bool isSold;
+
   const MyListItem({super.key});
 
   @override
@@ -22,13 +27,7 @@ class MyListItem extends StatelessWidget {
 
       child: Row(
         children: [
-          CommonImage(
-            height: 80,
-            width: 100,
-            borderRadius: 8,
-
-            imageSrc: AppImages.arts,
-          ),
+          CommonImage(height: 80, width: 100, borderRadius: 8, imageSrc: AppImages.arts),
 
           6.width,
 
@@ -36,8 +35,7 @@ class MyListItem extends StatelessWidget {
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CommonText(
                       fontSize: 14,
@@ -46,18 +44,13 @@ class MyListItem extends StatelessWidget {
                       text: "Whispers of the Forest",
                     ),
 
-                    Icon(
-                      color: AppColors.titleColor,
-                      Icons.more_vert,
-                    ),
+                    Icon(color: AppColors.titleColor, Icons.more_vert),
                   ],
                 ),
 
                 6.height,
 
                 Row(
-
-
                   children: [
                     ClipOval(
                       child: CommonImage(
@@ -69,11 +62,12 @@ class MyListItem extends StatelessWidget {
                     ),
 
                     CommonText(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.bodyClr,
-                        left: 5,
-                        text: "John Doe")
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.bodyClr,
+                      left: 5,
+                      text: "John Doe",
+                    ),
                   ],
                 ),
 
@@ -82,31 +76,28 @@ class MyListItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-
                   children: [
-
-
                     CommonText(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primaryColor,
-                        left: 5,
-                        text: "\$450"),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor,
+                      left: 5,
+                      text: "\$450",
+                    ),
 
                     Container(
                       decoration: BoxDecoration(
-                          color: Colors.green.shade50,
-                          borderRadius: BorderRadius.circular(20.r)
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 15.w, vertical: 5.h
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                       child: CommonText(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.green,
-                          text: "Available"),
-                    )
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.green,
+                        text: "Available",
+                      ),
+                    ),
                   ],
                 ),
               ],

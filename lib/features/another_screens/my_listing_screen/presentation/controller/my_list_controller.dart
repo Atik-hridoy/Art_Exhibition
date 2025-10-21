@@ -1,62 +1,63 @@
 import 'package:get/get.dart';
-import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/resale_art_screen.dart';
-import 'package:tasaned_project/utils/constants/app_images.dart';
-import 'package:tasaned_project/utils/constants/app_string.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
+import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
+import 'package:tasaned_project/features/data_model/my_list_model.dart';
+import 'package:tasaned_project/services/api/api_service.dart';
+import 'package:tasaned_project/utils/app_utils.dart';
 
 class MyListController extends GetxController {
-  // Master data (immutable for filtering)
-  final List<Map<String, dynamic>> _allItems = [
-    {
-      'title': 'Whispers of the Forest',
-      'price': 250,
-      'status': AppString.sold,
-      'image': AppImages.arts,
-    },
-    {
-      'title': 'Whispers of the Forest',
-      'price': 250,
-      'status': AppString.available,
-      'image': AppImages.arts,
-    },
-    {
-      'title': 'Whispers of the Forest',
-      'price': 250,
-      'status': AppString.available,
-      'image': AppImages.arts,
-    },
-  ];
-
-  // Visible items (filtered)
-  final List<Map<String, dynamic>> items = [];
+  bool myArtListIsLoading = false;
+  List<CollectionData>? collectionList;
+  List<MyArtListing>? myArtList;
 
   // Current selected filter
-  String selectedFilter = AppString.available; // default to Available
+  bool selectedFilter = true; // default to Available
+
+  Future<void> myListing() async {
+    try {
+      myArtListIsLoading = true;
+      var response = await getMyListing();
+      if (response != null) {
+        collectionList = response;
+        myArtList = collectionList?[0].arts.where((e) => e.id == e.id).toList();
+        // myArtList = collectionList?[0];
+        myArtListIsLoading = false;
+      }
+      update();
+    } catch (error) {
+      myArtListIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
+  // void onEdit(int index) {
+  //   final item = items[index];
+  //   Get.to(() => ResaleArtScreen(order: item));
+  // }
+
+  void deleteItem(int index) async {
+    String artId = collectionList?[0].arts[index].id ?? '';
+    var reponse = await ApiService.delete('${ApiEndPoint.featuresArt}/$artId');
+
+    if (reponse.statusCode == 200 || reponse.statusCode == 201) {
+      var temp = collectionList?[0].arts.where((e) => e.id != artId).toList();
+      myArtList = temp;
+      update();
+    }
+  }
+
+  void applyFilter(bool filter) {
+    selectedFilter = filter;
+    var temp = collectionList?[0].arts.where((e) => e.sold != filter).toList();
+    myArtList = temp;
+    update();
+  }
 
   @override
   void onInit() {
     super.onInit();
-    applyFilter(selectedFilter);
-  }
-
-  void onEdit(int index) {
-    final item = items[index];
-    Get.to(() => ResaleArtScreen(order: item));
-  }
-
-  void deleteItem(int index) {
-    // Remove from visible list and master list by a simple match
-    final toRemove = items[index];
-    items.removeAt(index);
-    final masterIndex = _allItems.indexWhere((e) => e['title'] == toRemove['title'] && e['status'] == toRemove['status']);
-    if (masterIndex != -1) _allItems.removeAt(masterIndex);
-    update();
-  }
-
-  void applyFilter(String filter) {
-    selectedFilter = filter;
-    items
-      ..clear()
-      ..addAll(_allItems.where((e) => e['status'] == filter));
-    update();
+    myListing();
+    // applyFilter(selectedFilter);
   }
 }

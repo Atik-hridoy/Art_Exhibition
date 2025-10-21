@@ -26,14 +26,10 @@ class MyListingScreen extends StatelessWidget {
           text: AppString.myListing,
         ),
         leading: InkWell(
-          onTap: (){
+          onTap: () {
             Get.back();
           },
-          child: Icon(
-            Icons.arrow_back_ios,
-            size: 23.sp,
-            color: AppColors.titleColor,
-          ),
+          child: Icon(Icons.arrow_back_ios, size: 23.sp, color: AppColors.titleColor),
         ),
       ),
 
@@ -69,11 +65,7 @@ class MyListingScreen extends StatelessWidget {
                     text: AppString.filter,
                   ),
 
-                  Icon(
-                    size: 20.sp,
-                    color: AppColors.titleColor,
-                    Icons.sort_outlined,
-                  ),
+                  Icon(size: 20.sp, color: AppColors.titleColor, Icons.sort_outlined),
                 ],
               ),
 
