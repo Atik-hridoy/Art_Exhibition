@@ -225,6 +225,24 @@ Future<List<ExhibitionCardModel>?> getMyExibition({int page = 1, int limit = 10}
   }
 }
 
+Future<List<EventCardModel>?> getMyEvent({int page = 1, int limit = 10}) async {
+  try {
+    var response = await ApiService.get('${ApiEndPoint.users}/${LocalStorage.userId}');
+    if (response.statusCode == 200) {
+      log('My Exibition data fetched');
+      log(LocalStorage.userId);
+      var responseBody = (response.data['data']["events"] as List<dynamic>? ?? [])
+          .map((e) => EventCardModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    return null;
+  }
+}
+
 Future<List<EventCardModel>?> getEvents({int page = 1, int limit = 10}) async {
   try {
     var response = await ApiService.get(ApiEndPoint.events);

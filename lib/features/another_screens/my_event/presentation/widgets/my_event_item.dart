@@ -2,12 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
-import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class MyEventItem extends StatelessWidget {
-  const MyEventItem({super.key});
+  final String cover;
+  final String title;
+  final String date; // e.g. "01"
+  final String month; // e.g. "Oct"
+  final String venue;
+  const MyEventItem({
+    super.key,
+    required this.cover,
+    required this.title,
+    required this.date,
+    required this.month,
+    required this.venue,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,32 +33,15 @@ class MyEventItem extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: CommonImage(
-                  width: 158.w,
-                  fill: BoxFit.fill,
-                  height: 112.h,
-                  imageSrc: AppImages.eventImage,
-                ),
-              ),
-
-              Positioned(
-                top: 7,
-                right: 7,
-                child: Container(
-                  padding: EdgeInsets.all(4),
-
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.white,
-                  ),
-                  child: Icon(size: 16.sp, Icons.favorite_border),
-                ),
-              ),
-            ],
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: CommonImage(
+              width: 158.w,
+              fill: BoxFit.fill,
+              height: 112.h,
+              imageSrc: ApiEndPoint.imageUrl + cover,
+              // AppImages.eventImage,
+            ),
           ),
           // Content below image
           Padding(
@@ -68,13 +63,13 @@ class MyEventItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CommonText(
-                            text: "17",
+                            text: date, // "17",
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primaryColor,
                           ),
                           CommonText(
-                            text: "Aug",
+                            text: month, // "Aug",
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.titleColor,
@@ -90,7 +85,7 @@ class MyEventItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CommonText(
-                            text: "Colors of the Unseen",
+                            text: title, // "Colors of the Unseen",
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.titleColor,
@@ -98,6 +93,7 @@ class MyEventItem extends StatelessWidget {
                           ),
                           5.height,
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(
                                 Icons.location_on_outlined,
@@ -106,12 +102,13 @@ class MyEventItem extends StatelessWidget {
                               ),
                               Expanded(
                                 child: CommonText(
-                                  left: 6,
-                                  text: "Metus Street, CA",
+                                  left: 2,
+                                  text: venue, // "Metus Street, CA",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.bodyClr,
-                                  maxLines: 1,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.left,
                                 ),
                               ),
                             ],
