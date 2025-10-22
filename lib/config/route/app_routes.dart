@@ -6,7 +6,7 @@ import 'package:tasaned_project/features/another_screens/art_details/presentatio
 import 'package:tasaned_project/features/another_screens/artist_details/presentation/screens/artist_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/category/presentation/screens/category_Screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_event/presentation/screens/create_new_event_ticket_booking_screen.dart';
-import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_exhibition_screen.dart';
+import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_art_work_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_gallery_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_feature_artist_screen.dart';
@@ -122,7 +122,7 @@ class AppRoutes {
   static const String availabilityScreen = "/availabilityScreen";
   static const String rescheduleBooking = "/rescheduleBooking";
   static const String eventDetailsScreen = "/eventDetailsScreen";
-  static const String createExhibitionScreen = "/createExhibitionScreen";
+  static const String createArtWorkScreen = "/createArtWorkScreen";
   static const String createNewExhibitionScreen = "/createNewExhibitionScreen";
   static const String createNewExhibitionGalleryScreen =
       "/createNewExhibitionGalleryScreen";
@@ -217,7 +217,7 @@ class AppRoutes {
     GetPage(name: artistDetailsScreen, page: () => ArtistDetailsScreen()),
     //TODO:  GetPage(name: exhibitionScreen, page: () => ExhibitionScreen()),
     GetPage(name: exhibitionDetailsScreen, page: () => ExhibitionDetailsScreen()),
-    GetPage(name: createExhibitionScreen, page: () => CreateExhibitionScreen()),
+    GetPage(name: createArtWorkScreen, page: () => CreateArtWorkScreen()),
     GetPage(name: createNewExhibitionScreen, page: () => CreateNewExhibitionScreen()),
     GetPage(
       name: createNewExhibitionGalleryScreen,

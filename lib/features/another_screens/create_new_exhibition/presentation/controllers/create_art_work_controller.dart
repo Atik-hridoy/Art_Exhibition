@@ -3,16 +3,12 @@ import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
-import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/helpers/other_helper.dart';
 import 'package:tasaned_project/component/pop_up/create_exhibition_success_popup.dart';
 
-class EditArtWorkController extends GetxController {
-  List<CategoryModel>? categoryList;
-  bool categoryIsLoading = false;
-  bool isArtDataLoading = false;
+class CreateArtWorkController extends GetxController {
   // Text controllers
   final titleCtrl = TextEditingController();
   final descriptionCtrl = TextEditingController();
@@ -20,12 +16,9 @@ class EditArtWorkController extends GetxController {
   final heightCtrl = TextEditingController();
   final priceCtrl = TextEditingController();
 
-  int selectedCategoryIndex = 0;
-  int selectedAuthIndex = 0;
-  bool acceptOffers = true; // Toggles
   final List<String> imagePaths = []; // Images
-  ArtDetails? artData;
-  late String artId;
+  List<CategoryModel>? categoryList;
+  bool categoryIsLoading = false;
 
   Future<void> category() async {
     try {
@@ -43,26 +36,7 @@ class EditArtWorkController extends GetxController {
     }
   }
 
-  Future<void> artDetails({required String artId}) async {
-    try {
-      isArtDataLoading = true;
-      var response = await getArtDetails(artId: artId);
-      if (response != null) {
-        artData = response;
-        titleCtrl.text = artData!.title;
-        descriptionCtrl.text = artData!.description!;
-        widthCtrl.text = artData!.dimensions!.width.toString();
-        heightCtrl.text = artData!.dimensions!.height.toString();
-        priceCtrl.text = artData!.price.toString();
-        isArtDataLoading = false;
-      }
-      update();
-    } catch (error) {
-      isArtDataLoading = false;
-      Utils.errorSnackBar('Error', error.toString());
-      update();
-    }
-  }
+  int selectedCategoryIndex = 0;
 
   final List<String> authentications = [
     'Hand Sign by Artist',
@@ -70,6 +44,10 @@ class EditArtWorkController extends GetxController {
     'Gallery Verified',
     'None',
   ];
+  int selectedAuthIndex = 0;
+
+  // Toggles
+  bool acceptOffers = true;
 
   int get photosCount => imagePaths.length;
 
@@ -105,7 +83,7 @@ class EditArtWorkController extends GetxController {
     }
   }
 
-  Map<String, dynamic> get editArtWorkBody => {
+  Map<String, dynamic> get artWorkBody => {
     "title": titleCtrl.value.text, // "Echoes of Light",
     "category": categoryList![selectedCategoryIndex].id, //"68c6aeefb9190bc121d417b5",
     "price": num.tryParse(priceCtrl.value.text), // 6000,
@@ -124,14 +102,12 @@ class EditArtWorkController extends GetxController {
   };
 
   void submit() {
-    ApiService.patch('${ApiEndPoint.featuresArt}/$artId', body: editArtWorkBody);
+    ApiService.post(ApiEndPoint.featuresArt, body: artWorkBody);
     CreateExhibitionSuccessPopup.show();
   }
 
   @override
   void onInit() {
-    artId = Get.arguments as String;
-    artDetails(artId: artId);
     category();
     super.onInit();
   }

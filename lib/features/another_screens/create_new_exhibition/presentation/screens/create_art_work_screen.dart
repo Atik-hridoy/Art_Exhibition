@@ -11,15 +11,15 @@ import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
-import '../controllers/create_exhibition_controller.dart';
+import '../controllers/create_art_work_controller.dart';
 
-class CreateExhibitionScreen extends StatelessWidget {
-  const CreateExhibitionScreen({super.key});
+class CreateArtWorkScreen extends StatelessWidget {
+  const CreateArtWorkScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<CreateExhibitionController>(
-      init: CreateExhibitionController(),
+    return GetBuilder<CreateArtWorkController>(
+      init: CreateArtWorkController(),
       builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -189,7 +189,7 @@ class CreateExhibitionScreen extends StatelessWidget {
 
                 24.height,
                 CommonButton(
-                  titleText: AppString.createExhibition,
+                  titleText: AppString.createArtwork,
                   buttonRadius: 60,
                   onTap: controller.submit,
                 ),
@@ -211,7 +211,7 @@ class CreateExhibitionScreen extends StatelessWidget {
     );
   }
 
-  Widget _imagesGrid(CreateExhibitionController c) {
+  Widget _imagesGrid(CreateArtWorkController c) {
     final canAddMore = c.imagePaths.length < 5;
     final tiles = <Widget>[];
 
@@ -294,7 +294,7 @@ class CreateExhibitionScreen extends StatelessWidget {
     );
   }
 
-  Widget _categorySelector(CreateExhibitionController c) {
+  Widget _categorySelector(CreateArtWorkController c) {
     return InkWell(
       onTap: () async {
         // Close keyboard first
@@ -318,7 +318,7 @@ class CreateExhibitionScreen extends StatelessWidget {
           children: [
             Expanded(
               child: CommonText(
-                text: c.categories[c.selectedCategoryIndex],
+                text: c.categoryList?[c.selectedCategoryIndex].title ?? '',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: AppColors.bodyClr,
@@ -341,16 +341,16 @@ class CreateExhibitionScreen extends StatelessWidget {
 
   void _showCategorySheet() {
     Get.bottomSheet(
-      GetBuilder<CreateExhibitionController>(
+      GetBuilder<CreateArtWorkController>(
         builder: (c) {
           return _sheetContainer(
             title: 'Select Category',
             child: Column(
               children: List.generate(
-                c.categories.length,
+                c.categoryList?.length ?? 0,
                 (i) => Padding(
                   padding: EdgeInsets.only(bottom: 12.h),
-                  child: _categoryTile(c, i, c.categories[i]),
+                  child: _categoryTile(c, i, c.categoryList?[i].title ?? ''),
                 ),
               ),
             ),
@@ -362,7 +362,7 @@ class CreateExhibitionScreen extends StatelessWidget {
     );
   }
 
-  Widget _categoryTile(CreateExhibitionController c, int index, String label) {
+  Widget _categoryTile(CreateArtWorkController c, int index, String label) {
     final bool selected = c.selectedCategoryIndex == index;
     return InkWell(
       onTap: () {
@@ -416,7 +416,7 @@ class CreateExhibitionScreen extends StatelessWidget {
     );
   }
 
-  Widget _authSelector(CreateExhibitionController c) {
+  Widget _authSelector(CreateArtWorkController c) {
     return InkWell(
       onTap: () async {
         // Close keyboard first
@@ -460,7 +460,7 @@ class CreateExhibitionScreen extends StatelessWidget {
 
   void _showAuthSheet() {
     Get.bottomSheet(
-      GetBuilder<CreateExhibitionController>(
+      GetBuilder<CreateArtWorkController>(
         builder: (c) {
           return _sheetContainer(
             title: 'Select Authenticity',
@@ -483,7 +483,7 @@ class CreateExhibitionScreen extends StatelessWidget {
     );
   }
 
-  Widget _authTile(CreateExhibitionController c, int index, String label) {
+  Widget _authTile(CreateArtWorkController c, int index, String label) {
     final bool selected = c.selectedAuthIndex == index;
     return InkWell(
       onTap: () {

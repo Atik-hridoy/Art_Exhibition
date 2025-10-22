@@ -186,7 +186,7 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
                   label: 'Upload Artwork',
                   onTap: () {
                     Get.back();
-                    Get.toNamed(AppRoutes.createExhibitionScreen);
+                    Get.toNamed(AppRoutes.createArtWorkScreen);
                   },
                 ),
                 SizedBox(height: 12.h),
