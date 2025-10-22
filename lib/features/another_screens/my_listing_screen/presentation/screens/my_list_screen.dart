@@ -137,7 +137,10 @@ class MyListScreen extends StatelessWidget {
                                   ),
                                   onSelected: (val) {
                                     if (val == 'edit') {
-                                      Get.toNamed(AppRoutes.editArtWorkScreen);
+                                      Get.toNamed(
+                                        AppRoutes.editArtWorkScreen,
+                                        arguments: controller.myArtList?[index].id ?? '',
+                                      );
                                     }
                                     if (val == 'delete') {
                                       DeletePopUp.show(

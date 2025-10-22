@@ -71,7 +71,6 @@ class CreateExhibitionController extends GetxController {
   }
 
   void submit() {
-
     CreateExhibitionSuccessPopup.show();
   }
 

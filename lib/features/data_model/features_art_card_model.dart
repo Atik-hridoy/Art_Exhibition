@@ -3,7 +3,7 @@ class FeaturesArtCardModel {
   final Artist? artist;
   final String image; // keep single image string
   final String title;
-  final String? category;
+  final Category? category;
   final num? price;
   bool isOnFavorite;
 
@@ -30,21 +30,11 @@ class FeaturesArtCardModel {
       artist: json['artist'] != null ? Artist.fromJson(json['artist']) : null,
       image: imagePath,
       title: json['title'] ?? '',
-      category: json['category'],
+      category: json['category'] != null ? Category.fromJson(json['category']) : null,
       price: json['price'],
       isOnFavorite: json['isOnFavorite'] ?? false,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    '_id': id,
-    'artist': artist?.toJson(),
-    'image': image,
-    'title': title,
-    'category': category,
-    'price': price,
-    'isOnFavorite': isOnFavorite,
-  };
 }
 
 class Artist {
@@ -67,5 +57,32 @@ class Artist {
     'name': name,
     'role': role,
     'profileImage': profileImage,
+  };
+}
+
+//  Category model added
+class Category {
+  final String id;
+  final String? title;
+  final String? image;
+  final String? createdAt;
+  final String? updatedAt;
+
+  Category({required this.id, this.title, this.image, this.createdAt, this.updatedAt});
+
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+    id: json['_id'] ?? '',
+    title: json['title'],
+    image: json['image'],
+    createdAt: json['createdAt'],
+    updatedAt: json['updatedAt'],
+  );
+
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'title': title,
+    'image': image,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
   };
 }

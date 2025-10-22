@@ -22,7 +22,7 @@ class ArtDetails {
   final List<String> images; // all images (new addition)
   final String? seller;
   final String title;
-  final String? category;
+  final Category? category;
   final num? price;
   final String? description;
   final Dimensions? dimensions;
@@ -88,7 +88,7 @@ class ArtDetails {
           : [],
       seller: json['seller'] as String?,
       title: (json['title'] ?? '') as String,
-      category: json['category'] as String?,
+      category: json['category'] != null ? Category.fromJson(json['category']) : null,
       price: json['price'] as num?,
       description: json['description'] as String?,
       dimensions: json['daimentions'] == null
@@ -194,4 +194,31 @@ class ResaleInfo {
     originalPrice: json['originalPrice'] as num?,
     resalerId: json['resalerId'] as String?,
   );
+}
+
+//  Category model added
+class Category {
+  final String id;
+  final String? title;
+  final String? image;
+  final String? createdAt;
+  final String? updatedAt;
+
+  Category({required this.id, this.title, this.image, this.createdAt, this.updatedAt});
+
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+    id: json['_id'] ?? '',
+    title: json['title'],
+    image: json['image'],
+    createdAt: json['createdAt'],
+    updatedAt: json['updatedAt'],
+  );
+
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'title': title,
+    'image': image,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
+  };
 }

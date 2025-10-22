@@ -5,19 +5,18 @@ import 'package:get/get.dart';
 import 'package:tasaned_project/component/button/common_button.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/component/text_field/common_text_field.dart';
-import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/controllers/create_exhibition_controller.dart';
+import 'package:tasaned_project/features/another_screens/my_listing_screen/presentation/controller/edit_art_work_controller.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
-
 
 class EditArtWorkScreen extends StatelessWidget {
   const EditArtWorkScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<CreateExhibitionController>(
-      init: CreateExhibitionController(),
+    return GetBuilder<EditArtWorkController>(
+      init: EditArtWorkController(),
       builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -51,12 +50,15 @@ class EditArtWorkScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.searchBg,
                         borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: AppColors.stroke, style: BorderStyle.solid),
+                        border: Border.all(
+                          color: AppColors.stroke,
+                          style: BorderStyle.solid,
+                        ),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                         Icon(Icons.photo, size: 24.sp),
+                          Icon(Icons.photo, size: 24.sp),
                           8.height,
                           CommonText(
                             text: AppString.tapToUploadImage,
@@ -66,7 +68,8 @@ class EditArtWorkScreen extends StatelessWidget {
                           ),
                           4.height,
                           CommonText(
-                            text: '${AppString.photos}: ${controller.photosCount.toString().padLeft(1, '0')}/05 : ${AppString.chooseYourMainPhotoFirstShort}',
+                            text:
+                                '${AppString.photos}: ${controller.photosCount.toString().padLeft(1, '0')}/05 : ${AppString.chooseYourMainPhotoFirstShort}',
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.bodyClr,
@@ -175,7 +178,7 @@ class EditArtWorkScreen extends StatelessWidget {
 
                 24.height,
                 CommonButton(
-                  titleText: AppString.createExhibition,
+                  titleText: AppString.update,
                   buttonRadius: 60,
                   onTap: controller.submit,
                 ),
@@ -197,8 +200,7 @@ class EditArtWorkScreen extends StatelessWidget {
     );
   }
 
- 
-  Widget _imagesGrid(CreateExhibitionController c) {
+  Widget _imagesGrid(EditArtWorkController c) {
     final canAddMore = c.imagePaths.length < 5;
     final tiles = <Widget>[];
 
@@ -281,7 +283,7 @@ class EditArtWorkScreen extends StatelessWidget {
     );
   }
 
-  Widget _categorySelector(CreateExhibitionController c) {
+  Widget _categorySelector(EditArtWorkController c) {
     return InkWell(
       onTap: _showCategorySheet,
       child: Container(
@@ -295,7 +297,7 @@ class EditArtWorkScreen extends StatelessWidget {
           children: [
             Expanded(
               child: CommonText(
-                text: c.categories[c.selectedCategoryIndex],
+                text: c.categoryList?[c.selectedCategoryIndex].title ?? '',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: AppColors.bodyClr,
@@ -305,7 +307,7 @@ class EditArtWorkScreen extends StatelessWidget {
             InkWell(
               onTap: _showCategorySheet,
               child: Icon(Icons.arrow_drop_down, color: AppColors.bodyClr),
-            )
+            ),
           ],
         ),
       ),
@@ -314,16 +316,17 @@ class EditArtWorkScreen extends StatelessWidget {
 
   void _showCategorySheet() {
     Get.bottomSheet(
-      GetBuilder<CreateExhibitionController>(
+      GetBuilder<EditArtWorkController>(
+        init: EditArtWorkController(),
         builder: (c) {
           return _sheetContainer(
             title: 'Select Category',
             child: Column(
               children: List.generate(
-                c.categories.length,
+                c.categoryList?.length ?? 0,
                 (i) => Padding(
                   padding: EdgeInsets.only(bottom: 12.h),
-                  child: _categoryTile(c, i, c.categories[i]),
+                  child: _categoryTile(c, i, c.categoryList?[i].title ?? ''),
                 ),
               ),
             ),
@@ -335,7 +338,7 @@ class EditArtWorkScreen extends StatelessWidget {
     );
   }
 
-  Widget _categoryTile(CreateExhibitionController c, int index, String label) {
+  Widget _categoryTile(EditArtWorkController c, int index, String label) {
     final bool selected = c.selectedCategoryIndex == index;
     return InkWell(
       onTap: () {
@@ -365,7 +368,10 @@ class EditArtWorkScreen extends StatelessWidget {
               width: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: selected ? AppColors.primaryColor : AppColors.stroke, width: 2),
+                border: Border.all(
+                  color: selected ? AppColors.primaryColor : AppColors.stroke,
+                  width: 2,
+                ),
               ),
               child: selected
                   ? Center(
@@ -379,14 +385,14 @@ class EditArtWorkScreen extends StatelessWidget {
                       ),
                     )
                   : null,
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _authSelector(CreateExhibitionController c) {
+  Widget _authSelector(EditArtWorkController c) {
     return InkWell(
       onTap: _showAuthSheet,
       child: Container(
@@ -410,7 +416,7 @@ class EditArtWorkScreen extends StatelessWidget {
             InkWell(
               onTap: _showAuthSheet,
               child: Icon(Icons.arrow_drop_down, color: AppColors.bodyClr),
-            )
+            ),
           ],
         ),
       ),
@@ -419,7 +425,8 @@ class EditArtWorkScreen extends StatelessWidget {
 
   void _showAuthSheet() {
     Get.bottomSheet(
-      GetBuilder<CreateExhibitionController>(
+      GetBuilder<EditArtWorkController>(
+        init: EditArtWorkController(),
         builder: (c) {
           return _sheetContainer(
             title: 'Select Authenticity',
@@ -442,7 +449,7 @@ class EditArtWorkScreen extends StatelessWidget {
     );
   }
 
-  Widget _authTile(CreateExhibitionController c, int index, String label) {
+  Widget _authTile(EditArtWorkController c, int index, String label) {
     final bool selected = c.selectedAuthIndex == index;
     return InkWell(
       onTap: () {
@@ -472,7 +479,10 @@ class EditArtWorkScreen extends StatelessWidget {
               width: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: selected ? AppColors.primaryColor : AppColors.stroke, width: 2),
+                border: Border.all(
+                  color: selected ? AppColors.primaryColor : AppColors.stroke,
+                  width: 2,
+                ),
               ),
               child: selected
                   ? Center(
@@ -486,7 +496,7 @@ class EditArtWorkScreen extends StatelessWidget {
                       ),
                     )
                   : null,
-            )
+            ),
           ],
         ),
       ),
@@ -495,10 +505,18 @@ class EditArtWorkScreen extends StatelessWidget {
 
   Widget _sheetContainer({required String title, required Widget child}) {
     return Container(
-      padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h, bottom: 24.h + MediaQuery.of(Get.context!).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        left: 16.w,
+        right: 16.w,
+        top: 16.h,
+        bottom: 24.h + MediaQuery.of(Get.context!).viewInsets.bottom,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -531,14 +549,10 @@ class EditArtWorkScreen extends StatelessWidget {
               ],
             ),
             16.height,
-            Container(width: double.infinity,
-            
-            height: 1,
-            color: AppColors.stroke,
-            ),
+            Container(width: double.infinity, height: 1, color: AppColors.stroke),
 
             22.height,
-           
+
             child,
             20.height,
             CommonButton(

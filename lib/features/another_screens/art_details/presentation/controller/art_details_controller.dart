@@ -110,7 +110,7 @@ class ArtDetailsController extends GetxController {
       );
       if (response != null) {
         artData = response;
-        category = artData?.category ?? '';
+        category = artData?.category?.id ?? '';
         isArtDataLoading = false;
       }
       update();

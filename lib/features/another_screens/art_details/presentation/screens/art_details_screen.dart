@@ -46,7 +46,7 @@ class ArtDetailsScreen extends StatelessWidget {
         builder: (controller) {
           List<String>? images = controller.artData?.images;
           String? title = controller.artData?.title;
-          String? category = controller.artData?.category;
+          String? category = controller.artData?.category?.title;
           num? price = controller.artData?.price ?? 0;
           String? description = controller.artData?.description;
           Dimensions? dimensions = controller.artData?.dimensions;
