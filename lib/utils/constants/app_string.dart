@@ -568,6 +568,7 @@ class AppString {
   static const String noCategory = 'No Arts Category Currently Available';
   static const String noRelatedArts = 'No Related Arts Currently Available';
   static const String noRecommendedArts = 'No Recommended Arts Curretly Available';
+  static const String noPopularArtist = 'No Popular Artist ';
   static const String noSavedArts = 'No Saved Arts Curretly Available';
   static const String noExibition = 'No upcoming exibition yet';
   static const String noEvent = 'No upcoming Event yet';

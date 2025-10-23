@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tasaned_project/utils/constants/app_loader.dart';
 import '../../utils/constants/app_images.dart';
 import '../../utils/log/error_log.dart';
 
@@ -56,10 +57,10 @@ class CommonImage extends StatelessWidget {
           image: DecorationImage(image: imageProvider, fit: fill),
         ),
       ),
-      progressIndicatorBuilder: (context, url, downloadProgress) => Transform.scale(
-        scaleY: .23,
-        scaleX: .2,
-        child: CircularProgressIndicator(value: downloadProgress.progress),
+      progressIndicatorBuilder: (context, url, downloadProgress) => AppLoader(
+        loaderChild: SizedBox(height: size ?? height, width: size ?? width),
+        isLoading: true,
+        child: const SizedBox.shrink(),
       ),
       errorWidget: (context, url, error) {
         errorLog(error, source: "Common Image");

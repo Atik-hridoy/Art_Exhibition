@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:tasaned_project/config/api/api_end_point.dart';
+import 'package:tasaned_project/features/data_model/artist_card_model.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/event_card_model.dart';
 import 'package:tasaned_project/features/data_model/event_model.dart';
@@ -30,6 +31,23 @@ Future<List<FeaturesArtCardModel>?> getFeaturedArt({
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
           .map((e) => FeaturesArtCardModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
+    return null;
+  }
+}
+
+Future<List<ArtistCardModel>?> getPopularArtist({int page = 1, int limit = 10}) async {
+  try {
+    var response = await ApiService.get('${ApiEndPoint.users}?role=ARTIST');
+
+    if (response.statusCode == 200) {
+      var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => ArtistCardModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return responseBody;
     }

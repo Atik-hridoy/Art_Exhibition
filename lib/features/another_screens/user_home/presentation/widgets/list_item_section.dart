@@ -9,11 +9,17 @@ import 'package:tasaned_project/features/another_screens/drawer_screens/presenta
 import 'package:tasaned_project/features/another_screens/user_home/presentation/controllers/home_controller.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/arts_item.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/category_item.dart';
+import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/home_loading_widgets/categories_loading.dart';
+import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/home_loading_widgets/feature_art_loading.dart';
+import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/home_loading_widgets/popular_artist_loading.dart';
+import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/home_loading_widgets/recommended_art_loading.dart';
+import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/home_loading_widgets/upcoming_events_loading.dart';
+import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/home_loading_widgets/upcoming_exibition_loading.dart';
 import 'package:tasaned_project/features/another_screens/user_home/presentation/widgets/popular_artist_item.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
+import 'package:tasaned_project/utils/constants/app_loader.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
-
 import 'exhibition_item.dart';
 
 class ListItemSection extends StatelessWidget {
@@ -149,50 +155,53 @@ class UpcomingEvents extends StatelessWidget {
 
         16.height,
 
-        controller.featureArtIsLoading
-            ? CircularProgressIndicator()
-            : controller.eventsList?.length == null || controller.eventsList?.length == 0
-            ? SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
-                    CommonText(text: AppString.noEvent, color: Colors.grey),
-                  ],
-                ),
-              )
-            : SizedBox(
-                height: 200.h,
-                child: ListView.separated(
-                  padding: EdgeInsets.only(right: 16.w),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.eventsList!.length < 5
-                      ? controller.eventsList!.length
-                      : 5,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.toNamed(
-                          AppRoutes.eventDetailsScreen,
-                          arguments: {"title": "User Home"},
-                        );
-                      },
-                      child: EventItem(
-                        cover: controller.eventsList?[index].cover ?? '',
-                        title: controller.eventsList?[index].title ?? '',
-                        date: controller.eventsList?[index].date ?? '',
-                        month: controller.eventsList?[index].month ?? '',
-                        venue: controller.eventsList?[index].venue ?? '',
-                        isSaved: controller.eventsList?[index].isOnFavorite ?? false,
-                        onTapSave: () async {
-                          controller.savedEventsListToggle(index: index);
+        AppLoader(
+          isLoading: controller.featureArtIsLoading,
+          loaderChild: UpcomingEventsLoading(),
+          child:
+              controller.eventsList?.length == null || controller.eventsList?.length == 0
+              ? SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                      CommonText(text: AppString.noEvent, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 200.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(right: 16.w),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.eventsList!.length < 5
+                        ? controller.eventsList!.length
+                        : 5,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.eventDetailsScreen,
+                            arguments: {"title": "User Home"},
+                          );
                         },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                        child: EventItem(
+                          cover: controller.eventsList?[index].cover ?? '',
+                          title: controller.eventsList?[index].title ?? '',
+                          date: controller.eventsList?[index].date ?? '',
+                          month: controller.eventsList?[index].month ?? '',
+                          venue: controller.eventsList?[index].venue ?? '',
+                          isSaved: controller.eventsList?[index].isOnFavorite ?? false,
+                          onTapSave: () async {
+                            controller.savedEventsListToggle(index: index);
+                          },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                  ),
                 ),
-              ),
+        ),
       ],
     );
   }
@@ -232,53 +241,59 @@ class UpComingExibition extends StatelessWidget {
 
         16.height,
 
-        controller.upComingExibitionIsLoading
-            ? CircularProgressIndicator()
-            : controller.exhibitionList?.length == null ||
+        AppLoader(
+          isLoading: controller.upComingExibitionIsLoading,
+          loaderChild: UpcomingExibitionLoading(),
+          child:
+              controller.exhibitionList?.length == null ||
                   controller.exhibitionList?.length == 0
-            ? SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
-                    CommonText(text: AppString.nofeatureArts, color: Colors.grey),
-                  ],
-                ),
-              )
-            : SizedBox(
-                height: 200.h,
-                child: ListView.separated(
-                  padding: EdgeInsets.only(right: 16.w),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.exhibitionList!.length < 5
-                      ? controller.exhibitionList!.length
-                      : 5,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.toNamed(
-                          AppRoutes.exhibitionDetailsScreen,
-                          arguments: {"title": "User Home"},
-                        );
-                      },
-                      child: ExhibitionItem(
-                        image: controller.exhibitionList?[index].image ?? '',
-                        title: controller.exhibitionList?[index].title ?? 'N/A',
-                        venue: controller.exhibitionList?[index].venue ?? 'N/A',
-                        isSaved: controller.exhibitionList?[index].isOnFavorite ?? false,
-                        startDate:
-                            controller.exhibitionList?[index].startDate ?? DateTime.now(),
-                        endDate:
-                            controller.exhibitionList?[index].startDate ?? DateTime.now(),
-                        onTapSave: () {
-                          controller.savedExibitionListToggle(index: index);
+              ? SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                      CommonText(text: AppString.nofeatureArts, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 200.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(right: 16.w),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.exhibitionList!.length < 5
+                        ? controller.exhibitionList!.length
+                        : 5,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.exhibitionDetailsScreen,
+                            arguments: {"title": "User Home"},
+                          );
                         },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                        child: ExhibitionItem(
+                          image: controller.exhibitionList?[index].image ?? '',
+                          title: controller.exhibitionList?[index].title ?? 'N/A',
+                          venue: controller.exhibitionList?[index].venue ?? 'N/A',
+                          isSaved:
+                              controller.exhibitionList?[index].isOnFavorite ?? false,
+                          startDate:
+                              controller.exhibitionList?[index].startDate ??
+                              DateTime.now(),
+                          endDate:
+                              controller.exhibitionList?[index].startDate ??
+                              DateTime.now(),
+                          onTapSave: () {
+                            controller.savedExibitionListToggle(index: index);
+                          },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                  ),
                 ),
-              ),
+        ),
       ],
     );
   }
@@ -306,48 +321,53 @@ class RecomendedArts extends StatelessWidget {
 
         16.height,
 
-        controller.featureArtIsLoading
-            ? CircularProgressIndicator()
-            : controller.recommendedArtList?.length == null ||
+        AppLoader(
+          isLoading: controller.recommendedArtIsLoading,
+          loaderChild: RecommendedArtLoading(),
+          child:
+              controller.recommendedArtList?.length == null ||
                   controller.recommendedArtList?.length == 0
-            ? SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
-                    CommonText(text: AppString.noRecommendedArts, color: Colors.grey),
-                  ],
-                ),
-              )
-            : SizedBox(
-                height: 182.h,
-                child: ListView.separated(
-                  padding: EdgeInsets.only(right: 16.w),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.toNamed(
-                          AppRoutes.artDetailsScreen,
-                          arguments: {"screenType": "userHome"},
-                        );
-                      },
-                      child: ArtsItem(
-                        imageUrl: controller.recommendedArtList?[index].image ?? '',
-                        price: controller.recommendedArtList?[index].price ?? 0,
-                        title: controller.recommendedArtList?[index].title ?? '',
-                        isSaved:
-                            controller.recommendedArtList?[index].isOnFavorite ?? false,
-                        onTapSave: () {
-                          controller.savedArtListToggle(index: index);
+              ? SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                      CommonText(text: AppString.noRecommendedArts, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 182.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(right: 16.w),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.recommendedArtList!.length < 5
+                        ? controller.recommendedArtList!.length
+                        : 5,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.artDetailsScreen,
+                            arguments: {"screenType": "userHome"},
+                          );
                         },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                        child: ArtsItem(
+                          imageUrl: controller.recommendedArtList?[index].image ?? '',
+                          price: controller.recommendedArtList?[index].price ?? 0,
+                          title: controller.recommendedArtList?[index].title ?? '',
+                          isSaved:
+                              controller.recommendedArtList?[index].isOnFavorite ?? false,
+                          onTapSave: () {
+                            controller.savedArtListToggle(index: index);
+                          },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                  ),
                 ),
-              ),
+        ),
       ],
     );
   }
@@ -387,22 +407,45 @@ class PopularArtist extends StatelessWidget {
 
         16.height,
 
-        SizedBox(
-          height: 120.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(AppRoutes.artistDetailsScreen);
-                },
-                child: PopularArtistItem(),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
-          ),
+        AppLoader(
+          isLoading: controller.populartArtistIsLoading,
+          loaderChild: PopularArtistLoading(),
+          child:
+              controller.popularArtistList?.length == null ||
+                  controller.popularArtistList?.length == 0
+              ? SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                      CommonText(text: AppString.noPopularArtist, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 120.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(right: 16.w),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.popularArtistList!.length < 5
+                        ? controller.popularArtistList!.length
+                        : 5,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(AppRoutes.artistDetailsScreen);
+                        },
+                        child: PopularArtistItem(
+                          name: controller.popularArtistList?[index].name ?? 'N/A',
+                          profileImage:
+                              controller.popularArtistList?[index].profileImage ?? 'N/A',
+                          followers: controller.popularArtistList?[index].followers ?? 0,
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                  ),
+                ),
         ),
       ],
     );
@@ -443,45 +486,48 @@ class CategorySection extends StatelessWidget {
 
         16.height,
 
-        controller.categoryIsLoading
-            ? CircularProgressIndicator()
-            : controller.categoryList?.length == null ||
+        AppLoader(
+          isLoading: controller.categoryIsLoading,
+          loaderChild: CategoriesLoading(),
+          child:
+              controller.categoryList?.length == null ||
                   controller.categoryList?.length == 0
-            ? SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
-                    CommonText(text: AppString.noCategory, color: Colors.grey),
-                  ],
+              ? SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                      CommonText(text: AppString.noCategory, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 130.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(right: 8.w),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.categoryList!.length < 5
+                        ? controller.categoryList!.length
+                        : 5,
+                    itemBuilder: (context, index) {
+                      final item = controller.categoryList?[index];
+                      return InkWell(
+                        onTap: () => Get.toNamed(
+                          AppRoutes.featureArtsScreen,
+                          arguments: {"title": AppString.featureArts},
+                        ),
+                        child: CategoryItem(
+                          title: item?.title ?? 'N/A',
+                          imageSrc: item?.title != null
+                              ? ApiEndPoint.imageUrl + (item?.image ?? '')
+                              : '',
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 6.w),
+                  ),
                 ),
-              )
-            : SizedBox(
-                height: 130.h,
-                child: ListView.separated(
-                  padding: EdgeInsets.only(right: 8.w),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.categoryList!.length < 5
-                      ? controller.categoryList!.length
-                      : 5,
-                  itemBuilder: (context, index) {
-                    final item = controller.categoryList?[index];
-                    return InkWell(
-                      onTap: () => Get.toNamed(
-                        AppRoutes.featureArtsScreen,
-                        arguments: {"title": AppString.featureArts},
-                      ),
-                      child: CategoryItem(
-                        title: item?.title ?? 'N/A',
-                        imageSrc: item?.title != null
-                            ? ApiEndPoint.imageUrl + (item?.image ?? '')
-                            : '',
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => SizedBox(width: 6.w),
-                ),
-              ),
+        ),
       ],
     );
   }
@@ -524,49 +570,53 @@ class FeatureArtSection extends StatelessWidget {
 
         16.height,
 
-        controller.featureArtIsLoading
-            ? CircularProgressIndicator()
-            : controller.featureArtList?.length == null ||
+        AppLoader(
+          isLoading: controller.featureArtIsLoading,
+          loaderChild: FeatureArtLoading(),
+          child:
+              controller.featureArtList?.length == null ||
                   controller.featureArtList?.length == 0
-            ? SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // SvgPicture.asset(AppIcons.noDataFoundIcon),
-                    CommonText(text: AppString.nofeatureArts, color: Colors.grey),
-                  ],
-                ),
-              )
-            : SizedBox(
-                height: 182.h,
-                child: ListView.separated(
-                  padding: EdgeInsets.only(right: 16.w),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.featureArtList!.length < 5
-                      ? controller.featureArtList!.length
-                      : 5,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.toNamed(
-                          AppRoutes.artDetailsScreen,
-                          arguments: {"screenType": "userHome"},
-                        );
-                      },
-                      child: ArtsItem(
-                        imageUrl: controller.featureArtList?[index].image ?? '',
-                        price: controller.featureArtList?[index].price as int,
-                        title: controller.featureArtList?[index].title ?? '',
-                        isSaved: controller.featureArtList?[index].isOnFavorite ?? false,
-                        onTapSave: () async {
-                          controller.savedArtListToggle(index: index);
+              ? SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // SvgPicture.asset(AppIcons.noDataFoundIcon),
+                      CommonText(text: AppString.nofeatureArts, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 182.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(right: 16.w),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.featureArtList!.length < 5
+                        ? controller.featureArtList!.length
+                        : 5,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.artDetailsScreen,
+                            arguments: {"screenType": "userHome"},
+                          );
                         },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                        child: ArtsItem(
+                          imageUrl: controller.featureArtList?[index].image ?? '',
+                          price: controller.featureArtList?[index].price as int,
+                          title: controller.featureArtList?[index].title ?? '',
+                          isSaved:
+                              controller.featureArtList?[index].isOnFavorite ?? false,
+                          onTapSave: () async {
+                            controller.savedArtListToggle(index: index);
+                          },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                  ),
                 ),
-              ),
+        ),
       ],
     );
   }

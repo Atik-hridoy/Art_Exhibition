@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
+import 'package:tasaned_project/features/data_model/artist_card_model.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/event_card_model.dart';
 import 'package:tasaned_project/features/data_model/exibition_card_model.dart';
@@ -10,6 +11,7 @@ import 'package:tasaned_project/utils/app_utils.dart';
 
 class HomeController extends GetxController {
   List<FeaturesArtCardModel>? featureArtList;
+  List<ArtistCardModel>? popularArtistList;
   List<FeaturesArtCardModel>? recommendedArtList;
   List<CategoryModel>? categoryList;
   List<ExhibitionCardModel>? exhibitionList;
@@ -33,6 +35,22 @@ class HomeController extends GetxController {
       update();
     } catch (error) {
       featureArtIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
+  Future<void> popuparArtist() async {
+    try {
+      populartArtistIsLoading = true;
+      var response = await getPopularArtist();
+      if (response != null) {
+        popularArtistList = response;
+        populartArtistIsLoading = false;
+      }
+      update();
+    } catch (error) {
+      populartArtistIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
       update();
     }
@@ -178,6 +196,7 @@ class HomeController extends GetxController {
   void onInit() {
     featuredArt();
     recommendedArt();
+    popuparArtist();
     category();
     exhibition();
     events();
