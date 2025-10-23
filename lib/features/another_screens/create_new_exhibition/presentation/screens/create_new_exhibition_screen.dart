@@ -12,7 +12,7 @@ import 'package:tasaned_project/utils/extensions/extension.dart';
 import '../controllers/create_new_exhibition_controller.dart';
 
 class CreateNewExhibitionScreen extends StatelessWidget {
-   CreateNewExhibitionScreen({super.key});
+  CreateNewExhibitionScreen({super.key});
 
   final String title = Get.arguments["title"];
 
@@ -20,7 +20,7 @@ class CreateNewExhibitionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<CreateNewExhibitionController>(
       init: CreateNewExhibitionController(),
-      builder: (c) {
+      builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppBar(
@@ -28,7 +28,9 @@ class CreateNewExhibitionScreen extends StatelessWidget {
             shadowColor: AppColors.transparent,
             surfaceTintColor: AppColors.transparent,
             title: CommonText(
-              text: title=="Edit Exhibition"? AppString.editExhibition: AppString.createExhibition,
+              text: title == "Edit Exhibition"
+                  ? AppString.editExhibition
+                  : AppString.createExhibition,
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.titleColor,
@@ -39,11 +41,10 @@ class CreateNewExhibitionScreen extends StatelessWidget {
             ),
           ),
           body: SingleChildScrollView(
-          
             child: Column(
               children: [
                 Padding(
-               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -66,7 +67,7 @@ class CreateNewExhibitionScreen extends StatelessWidget {
                           _stepBar(active: false),
                         ],
                       ),
-                  
+
                       16.height,
                       _label(AppString.exhibitionTitle),
                       8.height,
@@ -74,9 +75,9 @@ class CreateNewExhibitionScreen extends StatelessWidget {
                         hintText: AppString.enterExhibitionTitle,
                         borderColor: AppColors.stroke,
                         fillColor: AppColors.white,
-                        controller: c.titleCtrl,
+                        controller: controller.titleCtrl,
                       ),
-                  
+
                       15.height,
                       _label(AppString.description),
                       8.height,
@@ -85,72 +86,77 @@ class CreateNewExhibitionScreen extends StatelessWidget {
                         maxline: 4,
                         borderColor: AppColors.stroke,
                         fillColor: AppColors.white,
-                        controller: c.descriptionCtrl,
+                        controller: controller.descriptionCtrl,
                       ),
-                  
+
                       12.height,
                       _label(AppString.startDate),
                       8.height,
                       CommonTextField(
                         hintText: AppString.mmDdYyyy,
-                        controller: c.startDateCtrl,
+                        controller: controller.startDateCtrl,
                         borderColor: AppColors.stroke,
                         fillColor: AppColors.white,
-                        onTap: c.pickStartDate,
+                        onTap: controller.pickStartDate,
                         textInputAction: TextInputAction.next,
-                        suffixIcon: Icon(Icons.calendar_today_rounded, color: AppColors.bodyClr, size: 18.sp),
+                        suffixIcon: Icon(
+                          Icons.calendar_today_rounded,
+                          color: AppColors.bodyClr,
+                          size: 18.sp,
+                        ),
                       ),
-                  
+
                       12.height,
                       _label(AppString.endDate),
                       8.height,
                       CommonTextField(
                         hintText: AppString.mmDdYyyy,
-                        controller: c.endDateCtrl,
+                        controller: controller.endDateCtrl,
                         borderColor: AppColors.stroke,
                         fillColor: AppColors.white,
-                        onTap: c.pickEndDate,
+                        onTap: controller.pickEndDate,
                         textInputAction: TextInputAction.next,
-                        suffixIcon: Icon(Icons.calendar_today_rounded, color: AppColors.bodyClr, size: 18.sp),
+                        suffixIcon: Icon(
+                          Icons.calendar_today_rounded,
+                          color: AppColors.bodyClr,
+                          size: 18.sp,
+                        ),
                       ),
-                  
+
                       12.height,
                       _label(AppString.visitingHours),
                       8.height,
                       CommonTextField(
                         hintText: AppString.visitingHoursHint,
-                        controller: c.visitingHoursCtrl,
+                        controller: controller.visitingHoursCtrl,
                         borderColor: AppColors.stroke,
                         fillColor: AppColors.white,
                       ),
-                  
+
                       12.height,
                       _label(AppString.venue),
                       8.height,
                       CommonTextField(
                         hintText: AppString.egNewYork,
-                        controller: c.venueCtrl,
+                        controller: controller.venueCtrl,
                         borderColor: AppColors.stroke,
                         fillColor: AppColors.white,
                       ),
-                  
+
                       12.height,
                       _label(AppString.gallery),
                       8.height,
                       CommonTextField(
                         hintText: AppString.searchGallery,
-                        controller: c.galleryCtrl,
+                        controller: controller.galleryCtrl,
                         borderColor: AppColors.stroke,
                         fillColor: AppColors.white,
                         suffixIcon: Icon(Icons.search, color: AppColors.bodyClr),
                       ),
-                  
-                             
                     ],
                   ),
                 ),
-           
-           
+
                 24.height,
                 // Bottom Buttons
                 Container(
@@ -160,11 +166,7 @@ class CreateNewExhibitionScreen extends StatelessWidget {
                       topLeft: Radius.circular(20.r),
                       topRight: Radius.circular(20.r),
                     ),
-                    border: Border(
-                      top: BorderSide(
-                        color: AppColors.stroke,
-                      ),
-                    ),
+                    border: Border(top: BorderSide(color: AppColors.stroke)),
                   ),
                   child: Column(
                     children: [
@@ -174,16 +176,21 @@ class CreateNewExhibitionScreen extends StatelessWidget {
                         titleColor: AppColors.primaryColor,
                         borderColor: AppColors.primaryColor,
                         buttonColor: AppColors.white,
-                        titleText: AppString.saveAsDraft),
+                        titleText: AppString.saveAsDraft,
+                      ),
                       12.height,
                       CommonButton(
                         titleText: 'Next',
                         buttonRadius: 60,
-                        onTap: (){
-                          Get.toNamed(AppRoutes.createNewExhibitionGalleryScreen,
-                          arguments: {
-                            "title": title=="Edit Exhibition"? "Edit Exhibition": "Create New Exhibition"
-                          });
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.createNewExhibitionGalleryScreen,
+                            arguments: {
+                              "title": title == "Edit Exhibition"
+                                  ? "Edit Exhibition"
+                                  : "Create New Exhibition",
+                            },
+                          );
                         },
                       ),
                     ],
