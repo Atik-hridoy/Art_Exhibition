@@ -16,7 +16,7 @@ class ExhibitionDetailsController extends GetxController {
     try {
       upComingExibitionIsLoading = true;
       // TODO: Need to change the  ID parameter
-      var response = await getExibitionDetails(id: '68e12f1fd5ba5404c6134dce');
+      var response = await getExibitionDetails(id: '68fa0e5cdb0dd5f1b948a6c0');
       if (response != null) {
         exibition = response;
         exibitionId = exibition!.id;

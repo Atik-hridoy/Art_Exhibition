@@ -11,6 +11,7 @@ import 'package:tasaned_project/features/another_screens/create_new_exhibition/p
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_gallery_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_feature_artist_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_ticket_booking_screen.dart';
+import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/nasim/create_exibition_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/order_history_screen.dart';
 import 'package:tasaned_project/features/another_screens/event_details/presentation/screens/event_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_collection/presentation/screens/my_collections_screen.dart';
@@ -218,19 +219,21 @@ class AppRoutes {
     //TODO:  GetPage(name: exhibitionScreen, page: () => ExhibitionScreen()),
     GetPage(name: exhibitionDetailsScreen, page: () => ExhibitionDetailsScreen()),
     GetPage(name: createArtWorkScreen, page: () => CreateArtWorkScreen()),
-    GetPage(name: createNewExhibitionScreen, page: () => CreateNewExhibitionScreen()),
-    GetPage(
-      name: createNewExhibitionGalleryScreen,
-      page: () => CreateNewExhibitionGalleryScreen(),
-    ),
-    GetPage(
-      name: createNewExhibitionFeatureArtistScreen,
-      page: () => CreateNewExhibitionFeatureArtistScreen(),
-    ),
-    GetPage(
-      name: createNewExhibitionTicketBookingScreen,
-      page: () => CreateNewExhibitionTicketBookingScreen(),
-    ),
+    // TODO: ucommented for testing
+    GetPage(name: createNewExhibitionScreen, page: () => CreateExhibitionScreen()),
+    // GetPage(name: createNewExhibitionScreen, page: () => CreateNewExhibitionScreen()),
+    // GetPage(
+    //   name: createNewExhibitionGalleryScreen,
+    //   page: () => CreateNewExhibitionGalleryScreen(),
+    // ),
+    // GetPage(
+    //   name: createNewExhibitionFeatureArtistScreen,
+    //   page: () => CreateNewExhibitionFeatureArtistScreen(),
+    // ),
+    // GetPage(
+    //   name: createNewExhibitionTicketBookingScreen,
+    //   page: () => CreateNewExhibitionTicketBookingScreen(),
+    // ),
     GetPage(name: createNewEventScreen, page: () => CreateNewEventScreen()),
     GetPage(name: createNewEventGalleryScreen, page: () => CreateNewEventGalleryScreen()),
     GetPage(

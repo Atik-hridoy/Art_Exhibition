@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:mime/mime.dart';
 import '../../config/api/api_end_point.dart';
-import '../../utils/constants/app_config.dart';
 import '../../utils/constants/app_string.dart';
 import '../../utils/log/api_log.dart';
 import '../storage/storage_services.dart';
