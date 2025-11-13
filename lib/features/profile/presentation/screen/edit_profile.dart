@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../../../component/button/common_button.dart';
 import '../../../../component/image/common_image.dart';
 import '../../../../component/text/common_text.dart';
+import '../../../../utils/helpers/image_helper.dart';
 import '../controller/profile_controller.dart';
 import '../../../../utils/constants/app_images.dart';
 import '../../../../utils/constants/app_string.dart';
@@ -60,23 +61,7 @@ class EditProfile extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: AppColors.white
                           ),
-                          child: controller.image != null
-                              ? ClipOval(
-                                child: Image.file(
-                                  File(controller.image!),
-                                  width: 100.h,
-                                  height: 100.h,
-                                  fit: BoxFit.fill,
-                                ),
-                              )
-                              :  ClipOval(
-                                child: CommonImage(
-                                  imageSrc: AppImages.female,
-                                  height: 100,
-                                  fill: BoxFit.fill,
-                                  width: 100,
-                                ),
-                              ),
+                          child: _buildProfileImage(controller),
                         ),
                       ),
 
@@ -107,7 +92,7 @@ class EditProfile extends StatelessWidget {
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
                       color: AppColors.titleColor,
-                      text: "Sazzad Chowdhury"),
+                      text: controller.getUserName()),
 
                   25.height,
 
@@ -119,9 +104,7 @@ class EditProfile extends StatelessWidget {
                   CommonButton(
                     titleText: AppString.update,
                     isLoading: controller.isLoading,
-                    onTap:(){
-                      Get.back();
-                    },
+                    onTap: controller.editProfileRepo,
                   ),
                 ],
               ),
@@ -129,6 +112,43 @@ class EditProfile extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  /// Build profile image with current/selected image
+  Widget _buildProfileImage(ProfileController controller) {
+    // If user selected a new image, show it
+    if (controller.image != null) {
+      return ClipOval(
+        child: Image.file(
+          File(controller.image!),
+          width: 100.h,
+          height: 100.h,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
+    
+    // If user has profile image from API, show it
+    if (controller.getProfileImageUrl().isNotEmpty) {
+      return ClipOval(
+        child: CommonImage(
+          imageSrc: ImageHelper.buildImageUrl(controller.getProfileImageUrl()),
+          height: 100,
+          width: 100,
+          fill: BoxFit.fill,
+        ),
+      );
+    }
+    
+    // Show default image
+    return ClipOval(
+      child: CommonImage(
+        imageSrc: AppImages.female,
+        height: 100,
+        fill: BoxFit.fill,
+        width: 100,
+      ),
     );
   }
 }

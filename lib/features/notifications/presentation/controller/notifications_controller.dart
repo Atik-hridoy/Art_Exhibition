@@ -4,73 +4,124 @@ import '../../data/model/notification_model.dart';
 import '../../repository/notification_repository.dart';
 
 class NotificationsController extends GetxController {
-  /// Notification List
-  List notifications = [];
-
-  /// Notification Loading Bar
+  // State variables
+  List<NotificationModel> notifications = [];
   bool isLoading = false;
-
-  /// Notification more Data Loading Bar
   bool isLoadingMore = false;
-
-  /// No more notification data
   bool hasNoData = false;
-
-  /// page no here
-  int page = 0;
-
-  /// Notification Scroll Controller
+  int currentPage = 0;
+  
+  // UI Controllers
   ScrollController scrollController = ScrollController();
 
-  /// Notification More data Loading function
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeScrollListener();
+    loadNotifications();
+  }
 
-  void moreNotification() {
-    scrollController.addListener(() async {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        if (isLoadingMore || hasNoData) return;
-        isLoadingMore = true;
-        update();
-        page++;
-        List<NotificationModel> list = await notificationRepository(page);
-        if (list.isEmpty) {
-          hasNoData = true;
-        } else {
-          notifications.addAll(list);
-        }
-        isLoadingMore = false;
-        update();
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  /// Initialize scroll listener for pagination
+  void _initializeScrollListener() {
+    scrollController.addListener(() {
+      if (_shouldLoadMore()) {
+        loadMoreNotifications();
       }
     });
   }
 
-  /// Notification data Loading function
-  getNotificationsRepo() async {
-    return;
-    if (isLoading || hasNoData) return;
-    isLoading = true;
-    update();
+  /// Check if should load more notifications
+  bool _shouldLoadMore() {
+    return scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200 &&
+        !isLoadingMore &&
+        !hasNoData;
+  }
 
-    page++;
-    List<NotificationModel> list = await notificationRepository(page);
-    if (list.isEmpty) {
+  /// Load initial notifications
+  Future<void> loadNotifications() async {
+    if (isLoading) return;
+    
+    try {
+      isLoading = true;
+      currentPage = 1;
+      hasNoData = false;
+      update();
+
+      // For now, simulate loading since repository might not be implemented
+      await Future.delayed(const Duration(seconds: 1));
+      
+      // TODO: Uncomment when repository is ready
+      // List<NotificationModel> list = await notificationRepository(currentPage);
+      List<NotificationModel> list = []; // Temporary empty list
+      
+      notifications = list;
+      hasNoData = list.isEmpty;
+      
+    } catch (e) {
+      // Handle error
+      notifications = [];
       hasNoData = true;
-    } else {
-      notifications.addAll(list);
+    } finally {
+      isLoading = false;
+      update();
     }
-    isLoading = false;
+  }
+
+  /// Load more notifications for pagination
+  Future<void> loadMoreNotifications() async {
+    if (isLoadingMore || hasNoData) return;
+
+    try {
+      isLoadingMore = true;
+      update();
+
+      currentPage++;
+      
+      // TODO: Uncomment when repository is ready
+      // List<NotificationModel> newNotifications = await notificationRepository(currentPage);
+      List<NotificationModel> newNotifications = []; // Temporary empty list
+
+      if (newNotifications.isEmpty) {
+        hasNoData = true;
+      } else {
+        notifications.addAll(newNotifications);
+      }
+
+    } catch (e) {
+      // Handle error
+      currentPage--; // Revert page increment on error
+    } finally {
+      isLoadingMore = false;
+      update();
+    }
+  }
+
+  /// Refresh notifications
+  Future<void> refreshNotifications() async {
+    notifications.clear();
+    hasNoData = false;
+    currentPage = 0;
+    await loadNotifications();
+  }
+
+  /// Mark notification as read
+  void markAsRead(int notificationId) {
+    // TODO: Implement mark as read functionality
+    // Update local state and call API
     update();
   }
 
-  /// Notification Controller Instance create here
-  static NotificationsController get instance =>
-      Get.put(NotificationsController());
-
-  /// Controller on Init
-  @override
-  void onInit() {
-    getNotificationsRepo();
-    moreNotification();
-    super.onInit();
+  /// Clear all notifications
+  void clearAllNotifications() {
+    notifications.clear();
+    hasNoData = true;
+    update();
   }
 }

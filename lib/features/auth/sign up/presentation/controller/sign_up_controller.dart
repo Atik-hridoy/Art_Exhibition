@@ -102,7 +102,36 @@ class SignUpController extends GetxController {
     var response = await ApiService.post(ApiEndPoint.verifyEmail, body: body);
 
     if (response.statusCode == 200) {
-      Get.toNamed(AppRoutes.accountVerifiedScreen);
+      // Check if response contains login data (token, user info)
+      var data = response.data;
+      
+      if (data['data'] != null && data['data']['token'] != null) {
+        // Auto-login after successful signup verification
+        await LocalStorage.saveLoginSession(
+          token: data['data']['token'] ?? '',
+          userId: data['data']["user"]["_id"] ?? '',
+          userImage: data['data']["user"]["profileImage"] ?? '',
+          userName: data['data']["user"]["name"] ?? nameController.text,
+          userEmail: data['data']["user"]["email"] ?? emailController.text,
+          userRole: data['data']["user"]["role"] ?? selectRole,
+          enableAutoLogin: true,
+        );
+
+        // Save credentials for remember me (default enabled for new users)
+        await LocalStorage.saveRememberMeCredentials(
+          email: emailController.text,
+          password: passwordController.text,
+          rememberMe: true,
+        );
+
+        Utils.successSnackBar('Success', 'Account verified! Welcome to Tasaneed.');
+        
+        // Navigate directly to home screen
+        Get.offAllNamed(AppRoutes.userHomeScreen);
+      } else {
+        // If no auto-login data, go to account verified screen
+        Get.toNamed(AppRoutes.accountVerifiedScreen);
+      }
     } else {
       Get.snackbar(response.statusCode.toString(), response.message);
     }

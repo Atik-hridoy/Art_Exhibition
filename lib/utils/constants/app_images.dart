@@ -74,4 +74,7 @@ class AppImages {
   static const String generalUserCollector = "$baseurl/general.png";
   static const String artistCurator = "$baseurl/artist.png";
   static const String museumEdu = "$baseurl/museum.png";
+
+
+  
 }
