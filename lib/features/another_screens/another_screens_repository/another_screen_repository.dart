@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/data_model/artist_card_model.dart';
+import 'package:tasaned_project/features/data_model/artist_details_model.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/event_card_model.dart';
 import 'package:tasaned_project/features/data_model/event_model.dart';
@@ -41,9 +42,42 @@ Future<List<FeaturesArtCardModel>?> getFeaturedArt({
   }
 }
 
-Future<List<ArtistCardModel>?> getPopularArtist({int page = 1, int limit = 10}) async {
+Future<ArtistDetailsModel?> getArtistDetails(String artistId) async {
   try {
-    var response = await ApiService.get('${ApiEndPoint.users}?role=ARTIST');
+    final response = await ApiService.get('${ApiEndPoint.users}/$artistId');
+
+    if (response.statusCode == 200) {
+      return ArtistDetailsModel.fromJson(response.data['data'] as Map<String, dynamic>);
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
+    return null;
+  }
+}
+
+Future<List<ArtistCardModel>?> getPopularArtist({
+  int page = 1,
+  int limit = 10,
+  String role = 'ARTIST',
+  String status = 'ACTIVE',
+  String sort = '-followers',
+  String? searchTerm,
+}) async {
+  try {
+    final queryParameters = {
+      'role': role,
+      'status': status,
+      'sort': sort,
+      'page': '$page',
+      'limit': '$limit',
+      if (searchTerm != null && searchTerm.isNotEmpty) 'searchTerm': searchTerm,
+    };
+
+    final queryString = Uri(queryParameters: queryParameters).query;
+    final url = '${ApiEndPoint.users}?$queryString';
+
+    var response = await ApiService.get(url);
 
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])

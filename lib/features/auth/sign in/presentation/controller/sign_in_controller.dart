@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
-import 'package:tasaned_project/services/storage/storage_keys.dart';
 import 'package:tasaned_project/services/storage/storage_services.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/log/app_log.dart';
@@ -19,12 +17,25 @@ class SignInController extends GetxController {
   final formKey = GlobalKey<FormState>();
 
   /// email and password Controller here
-  TextEditingController emailController = TextEditingController(
-    text: kDebugMode ? 'ssmd.bayzid1998@gmail.com' : '',
-  );
-  TextEditingController passwordController = TextEditingController(
-    text: kDebugMode ? '@bc12345' : "",
-  );
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadRememberedCredentials();
+  }
+
+  /// Load remembered credentials if available
+  void _loadRememberedCredentials() {
+    if (LocalStorage.rememberMe) {
+      final credentials = LocalStorage.getRememberedCredentials();
+      emailController.text = credentials['email'] ?? '';
+      passwordController.text = credentials['password'] ?? '';
+      isRemember = LocalStorage.rememberMe;
+      update();
+    }
+  }
 
   //================isRemember Toggle============
 
@@ -56,26 +67,35 @@ class SignInController extends GetxController {
       if (response.statusCode == 200) {
         var data = response.data;
 
-        LocalStorage.token = data['data']['token'];
-        LocalStorage.userId = data['data']["user"]["_id"];
-        LocalStorage.myImage = data['data']["user"]["profileImage"];
-        LocalStorage.myName = data['data']["user"]["name"];
-        LocalStorage.myRoll = data['data']["user"]["role"];
-        LocalStorage.myEmail = data['data']["user"]["email"];
-        LocalStorage.isLogIn = true;
+        // Save remember me credentials if enabled
+        await LocalStorage.saveRememberMeCredentials(
+          email: emailController.text,
+          password: passwordController.text,
+          rememberMe: isRemember,
+        );
 
-        LocalStorage.setBool(LocalStorageKeys.isLogIn, LocalStorage.isLogIn);
-        LocalStorage.setString(LocalStorageKeys.token, LocalStorage.token);
-        LocalStorage.setString(LocalStorageKeys.userId, LocalStorage.userId);
-        LocalStorage.setString(LocalStorageKeys.myRoll, LocalStorage.myRoll);
-        LocalStorage.setString(LocalStorageKeys.myImage, LocalStorage.myImage);
-        LocalStorage.setString(LocalStorageKeys.myName, LocalStorage.myName);
-        LocalStorage.setString(LocalStorageKeys.myEmail, LocalStorage.myEmail);
+        // Save login session with all user data
+        await LocalStorage.saveLoginSession(
+          token: data['data']['token'] ?? '',
+          userId: data['data']["user"]["_id"] ?? '',
+          userImage: data['data']["user"]["profileImage"] ?? '',
+          userName: data['data']["user"]["name"] ?? '',
+          userEmail: data['data']["user"]["email"] ?? '',
+          userRole: data['data']["user"]["role"] ?? '',
+          enableAutoLogin: true,
+        );
 
+        // Show success message
+        Utils.successSnackBar('Success', 'Login successful! Welcome back.');
+
+        // Navigate to home screen
         Get.offAllNamed(AppRoutes.userHomeScreen);
 
-        emailController.clear();
-        passwordController.clear();
+        // Clear form only if not remembering credentials
+        if (!isRemember) {
+          emailController.clear();
+          passwordController.clear();
+        }
       } else {
         appLog("❤️ Value OF Response ${response.data}");
         Get.snackbar(response.statusCode.toString(), response.message);

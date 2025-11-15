@@ -3,20 +3,33 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/features/data_model/artist_details_model.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
+import 'package:tasaned_project/utils/helpers/image_helper.dart';
 import '../../../../../config/route/app_routes.dart';
 
 class ArtistExhibitionSection extends StatelessWidget {
-  const ArtistExhibitionSection({super.key});
+  final List<ArtistExhibitionItem> exhibitions;
+  const ArtistExhibitionSection({super.key, required this.exhibitions});
 
   @override
   Widget build(BuildContext context) {
+    if (exhibitions.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: CommonText(
+          text: 'No exhibitions available.',
+          color: AppColors.bodyClr,
+        ),
+      );
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: GridView.builder(
-        itemCount: 8,
+        itemCount: exhibitions.length,
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -26,12 +39,13 @@ class ArtistExhibitionSection extends StatelessWidget {
           mainAxisExtent: 210.h,
         ),
         itemBuilder: (context, index) {
+          final item = exhibitions[index];
           return InkWell(
             onTap: () => Get.toNamed(
               AppRoutes.exhibitionDetailsScreen,
-              arguments: {'title': 'Exibition'},
+              arguments: {'exhibitionId': item.id},
             ),
-            child: const _ExhibitionItem(),
+            child: _ExhibitionItem(item: item),
           );
         },
       ),
@@ -40,10 +54,18 @@ class ArtistExhibitionSection extends StatelessWidget {
 }
 
 class _ExhibitionItem extends StatelessWidget {
-  const _ExhibitionItem();
+  final ArtistExhibitionItem item;
+  const _ExhibitionItem({required this.item});
 
   @override
   Widget build(BuildContext context) {
+    final cover = item.images.isNotEmpty
+        ? ImageHelper.buildImageUrl(item.images.first)
+        : AppImages.exhibition;
+    final dateRange = item.startDate.isNotEmpty && item.endDate.isNotEmpty
+        ? '${item.startDate.split('T').first} - ${item.endDate.split('T').first}'
+        : '';
+
     return Container(
       //margin: EdgeInsets.only(right: 16.w),
       width: 165.w,
@@ -60,9 +82,9 @@ class _ExhibitionItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
                 child: CommonImage(
                   width: 165.w,
-                  fill: BoxFit.fill,
+                  fill: BoxFit.cover,
                   height: 112.h,
-                  imageSrc: AppImages.exhibition,
+                  imageSrc: cover,
                 ),
               ),
 
@@ -90,7 +112,7 @@ class _ExhibitionItem extends StatelessWidget {
             left: 6,
             right: 6,
             bottom: 8,
-            text: "Urban Abstractions",
+            text: item.title,
           ),
 
           Padding(
@@ -108,7 +130,7 @@ class _ExhibitionItem extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: AppColors.bodyClr,
-                    text: "Classical Masters",
+                    text: item.venue,
                   ),
                 ),
               ],
@@ -125,7 +147,7 @@ class _ExhibitionItem extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: AppColors.bodyClr,
-                  text: "Jul 10 - Nov 20",
+                  text: dateRange,
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tasaned_project/utils/constants/app_loader.dart';
+import '../../config/api/api_end_point.dart';
 import '../../utils/constants/app_images.dart';
 import '../../utils/log/error_log.dart';
 
@@ -32,8 +33,10 @@ class CommonImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (imageSrc.contains("assets/icons")) {
+    if (imageSrc.contains("assets/icons") && imageSrc.endsWith(".svg")) {
       return _buildSvgImage();
+    } else if (imageSrc.contains("assets/icons") && (imageSrc.endsWith(".png") || imageSrc.endsWith(".jpg") || imageSrc.endsWith(".jpeg"))) {
+      return _buildPngImage();
     } else if (imageSrc.contains("assets/images")) {
       return _buildPngImage();
     } else {
@@ -46,6 +49,13 @@ class CommonImage extends StatelessWidget {
   }
 
   Widget _buildNetworkImage() {
+    // Validate image URL before loading
+    if (imageSrc.isEmpty || 
+        imageSrc == ApiEndPoint.imageUrl || 
+        Uri.tryParse(imageSrc)?.hasAbsolutePath != true) {
+      return _buildErrorWidget();
+    }
+    
     return CachedNetworkImage(
       height: size ?? height,
       width: size ?? width,

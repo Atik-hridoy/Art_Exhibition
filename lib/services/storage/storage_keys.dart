@@ -7,4 +7,11 @@ class LocalStorageKeys {
   static const String myName = "myName";
   static const String myEmail = "myEmail";
   static const String myRoll = "myRoll";
+  
+  // Remember Me functionality
+  static const String rememberMe = "rememberMe";
+  static const String rememberedEmail = "rememberedEmail";
+  static const String rememberedPassword = "rememberedPassword";
+  static const String lastLoginTime = "lastLoginTime";
+  static const String autoLoginEnabled = "autoLoginEnabled";
 }

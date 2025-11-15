@@ -41,7 +41,7 @@ class ApiService {
 
   static Future<ApiResponseModel> multipart(
     String url, {
-    Map<String, String> header = const {},
+    Map<String, String>? header,
     Map<String, String> body = const {},
     String method = "POST",
     String imageName = 'image',
@@ -71,9 +71,10 @@ class ApiService {
       formData.fields.add(MapEntry(key, value));
     });
 
-    header['Content-Type'] = "multipart/form-data";
+    final requestHeader = <String, String>{...?(header)};
+    requestHeader['Content-Type'] = "multipart/form-data";
 
-    return _request(url, method, body: formData, header: header);
+    return _request(url, method, body: formData, header: requestHeader);
   }
 
   /// ========== [ API REQUEST HANDLER ] ========== ///

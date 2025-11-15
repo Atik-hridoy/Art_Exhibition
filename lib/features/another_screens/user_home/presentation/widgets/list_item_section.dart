@@ -433,7 +433,13 @@ class PopularArtist extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          Get.toNamed(AppRoutes.artistDetailsScreen);
+                          final artist = controller.popularArtistList?[index];
+                          if (artist != null) {
+                            Get.toNamed(
+                              AppRoutes.artistDetailsScreen,
+                              arguments: {'artistId': artist.id},
+                            );
+                          }
                         },
                         child: PopularArtistItem(
                           name: controller.popularArtistList?[index].name ?? 'N/A',

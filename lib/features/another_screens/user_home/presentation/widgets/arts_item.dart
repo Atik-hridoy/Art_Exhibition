@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
-import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
+import 'package:tasaned_project/utils/helpers/image_helper.dart';
 
 class ArtsItem extends StatelessWidget {
   final double itemWidth;
@@ -49,7 +49,7 @@ class ArtsItem extends StatelessWidget {
                         width: double.infinity,
                         fill: BoxFit.fill,
                         height: 107.h,
-                        imageSrc: ApiEndPoint.imageUrl + imageUrl,
+                        imageSrc: ImageHelper.buildImageUrl(imageUrl),
 
                         // AppImages.arts,
                       ),

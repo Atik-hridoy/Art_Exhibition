@@ -3,20 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/features/data_model/artist_details_model.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
+import 'package:tasaned_project/utils/helpers/image_helper.dart';
 import '../../../../../config/route/app_routes.dart';
 
 class ArtistEventSection extends StatelessWidget {
-  const ArtistEventSection({super.key});
+  final List<ArtistEventItem> events;
+  const ArtistEventSection({super.key, required this.events});
 
   @override
   Widget build(BuildContext context) {
+    if (events.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: const Text('No events available.'),
+      );
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: GridView.builder(
-          itemCount: 8,
+          itemCount: events.length,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -27,8 +37,11 @@ class ArtistEventSection extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             return InkWell(
-              onTap: () => Get.toNamed(AppRoutes.eventDetailsScreen),
-              child: const _EventItem(),
+              onTap: () => Get.toNamed(
+                AppRoutes.eventDetailsScreen,
+                arguments: {'eventId': events[index].id},
+              ),
+              child: _EventItem(item: events[index]),
             );
           }),
     );
@@ -36,10 +49,18 @@ class ArtistEventSection extends StatelessWidget {
 }
 
 class _EventItem extends StatelessWidget {
-  const _EventItem();
+  final ArtistEventItem item;
+  const _EventItem({required this.item});
 
   @override
   Widget build(BuildContext context) {
+    final imageSrc = item.images.isNotEmpty
+        ? ImageHelper.buildImageUrl(item.images.first)
+        : AppImages.eventImage;
+    final startDate = item.startDate.split('T').first;
+    final day = startDate.isNotEmpty ? startDate.split('-').last : '--';
+    final month = startDate.isNotEmpty ? startDate.split('-')[1] : '--';
+
     return Container(
       // margin: EdgeInsets.only(right: 16.w),
       width: 158.w,
@@ -56,9 +77,9 @@ class _EventItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
                 child: CommonImage(
                   width: 158.w,
-                  fill: BoxFit.fill,
+                  fill: BoxFit.cover,
                   height: 112.h,
-                  imageSrc: AppImages.eventImage,
+                  imageSrc: imageSrc,
                 ),
               ),
 
@@ -97,13 +118,13 @@ class _EventItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CommonText(
-                            text: "17",
+                            text: day,
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primaryColor,
                           ),
                           CommonText(
-                            text: "Aug",
+                            text: month,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.titleColor,
@@ -119,7 +140,7 @@ class _EventItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CommonText(
-                            text: "Colors of the Unseen",
+                            text: item.title,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.titleColor,
@@ -136,7 +157,7 @@ class _EventItem extends StatelessWidget {
                               Expanded(
                                 child: CommonText(
                                   left: 6,
-                                  text: "Metus Street, CA",
+                                  text: item.venue,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.bodyClr,
