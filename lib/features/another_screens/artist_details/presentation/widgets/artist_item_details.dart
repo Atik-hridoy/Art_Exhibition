@@ -4,12 +4,23 @@ import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
+import 'package:tasaned_project/utils/helpers/image_helper.dart';
 
 class ArtistItemDetails extends StatelessWidget {
   final double itemWidth;
   final double itemHeight;
+  final String title;
+  final String imagePath;
+  final num price;
 
-  const ArtistItemDetails({super.key, this.itemWidth = 158, this.itemHeight = 210});
+  const ArtistItemDetails({
+    super.key,
+    this.itemWidth = 158,
+    this.itemHeight = 210,
+    this.title = '',
+    this.imagePath = '',
+    this.price = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +42,11 @@ class ArtistItemDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                   child: CommonImage(
                     width: double.infinity,
-                    fill: BoxFit.fill,
+                    fill: BoxFit.cover,
                     height: 107.h,
-                    imageSrc: AppImages.arts,
+                    imageSrc: imagePath.isNotEmpty
+                        ? ImageHelper.buildImageUrl(imagePath)
+                        : AppImages.arts,
                   ),
                 ),
 
@@ -62,7 +75,7 @@ class ArtistItemDetails extends StatelessWidget {
               right: 6,
               bottom: 8,
               maxLines: 1,
-              text: "Whispers of the Forest",
+              text: title.isNotEmpty ? title : "Untitled",
             ),
 
             CommonText(
@@ -70,7 +83,7 @@ class ArtistItemDetails extends StatelessWidget {
               color: AppColors.primaryColor,
               left: 6,
               fontWeight: FontWeight.w600,
-              text: "\$250",
+              text: price > 0 ? "\$${price.toString()}" : "-",
             ),
           ],
         ),

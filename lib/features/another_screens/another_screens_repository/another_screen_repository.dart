@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/data_model/artist_card_model.dart';
+import 'package:tasaned_project/features/data_model/artist_details_model.dart';
 import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/event_card_model.dart';
 import 'package:tasaned_project/features/data_model/event_model.dart';
@@ -33,6 +34,20 @@ Future<List<FeaturesArtCardModel>?> getFeaturedArt({
           .map((e) => FeaturesArtCardModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
+    return null;
+  }
+}
+
+Future<ArtistDetailsModel?> getArtistDetails(String artistId) async {
+  try {
+    final response = await ApiService.get('${ApiEndPoint.users}/$artistId');
+
+    if (response.statusCode == 200) {
+      return ArtistDetailsModel.fromJson(response.data['data'] as Map<String, dynamic>);
     }
     return null;
   } catch (e) {

@@ -8,7 +8,9 @@ import 'package:tasaned_project/utils/extensions/extension.dart';
 import '../../../../../component/text/common_text.dart';
 
 class ArtistAboutUsSection extends StatelessWidget {
-  const ArtistAboutUsSection({super.key});
+  final String about;
+  final String keyAchievements;
+  const ArtistAboutUsSection({super.key, required this.about, required this.keyAchievements});
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +32,11 @@ CommonText(
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: AppColors.bodyClr,
-
-              maxLines: 4,
               textAlign: TextAlign.start,
               bottom: 32,
-              text: "John Henry is a contemporary abstract artist based in New York City. Her journey into the world of art began at an early age when she was inspired by the colors and forms of nature surrounding her childhood home in the Hudson"),
+              text: about.isNotEmpty
+                  ? about
+                  : "Biography information will be available soon."),
 
 
           CommonText(
@@ -48,12 +50,10 @@ CommonText(
           16.height,
 
           customItem(
-
-              title: " Featured in Art World Journal 2022 for “Art in the 21st Century."),
-
-
-          6.height,
-          customItem(title: "Known for its dynamic exhibitions and innovative curation of contemporary art."),
+            title: keyAchievements.isNotEmpty
+                ? keyAchievements
+                : "Key achievements will be added soon.",
+          ),
 
         ],
       ),

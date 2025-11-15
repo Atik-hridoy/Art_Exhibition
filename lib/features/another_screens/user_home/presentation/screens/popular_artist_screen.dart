@@ -65,7 +65,10 @@ class PopularArtistScreen extends StatelessWidget {
                           final artist = artists[index];
                           return InkWell(
                             onTap: () {
-                              Get.toNamed(AppRoutes.artistDetailsScreen);
+                              Get.toNamed(
+                                AppRoutes.artistDetailsScreen,
+                                arguments: {'artistId': artist.id},
+                              );
                             },
                             child: PopularArtistItem(
                               name: artist.name,
