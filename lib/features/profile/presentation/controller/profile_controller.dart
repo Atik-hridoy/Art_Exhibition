@@ -56,6 +56,12 @@ class ProfileController extends GetxController {
         nameController.text = profileData?.name ?? '';
         emailController.text = profileData?.email ?? '';
         
+        // Update existing controllers with shipping address data
+        if (profileData?.shippingAddress != null) {
+          numberController.text = profileData!.shippingAddress!.phone;
+          addressController.text = profileData!.shippingAddress!.address;
+        }
+        
         Utils.successSnackBar('Success', 'Profile loaded successfully');
       } else {
         Utils.errorSnackBar('Error', 'Failed to load profile data');
@@ -75,14 +81,20 @@ class ProfileController extends GetxController {
 
   /// Get profile image URL with fallback
   String getProfileImageUrl() {
+    print("Profile image from API: '${profileData?.profileImage}'");
+    print("Has profile image: ${profileData?.hasProfileImage}");
+    
     if (profileData?.hasProfileImage == true) {
       // Add cache busting parameter to force refresh
       final imageUrl = profileData!.profileImage;
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      return imageUrl.contains('?') 
+      final fullUrl = imageUrl.contains('?') 
           ? '$imageUrl&t=$timestamp' 
           : '$imageUrl?t=$timestamp';
+      print("Built image URL: $fullUrl");
+      return fullUrl;
     }
+    print("Using default image - no profile image available");
     return ''; // Will use default image from CommonImage
   }
 
@@ -180,11 +192,28 @@ class ProfileController extends GetxController {
       isLoading = true;
       update();
 
-      // Prepare body data with name, phone, and address
-      Map<String, String> bodyData = <String, String>{};
-      bodyData["name"] = nameController.text.trim();
-      bodyData["phone"] = numberController.text.trim();
-      bodyData["address"] = addressController.text.trim();
+      // Use the main name field
+      String profileName = nameController.text.trim();
+      String phoneNumber = numberController.text.trim();
+      String fullAddress = addressController.text.trim();
+
+      final Map<String, dynamic> shippingAddressData = {
+        "name": profileName,
+        "phone": phoneNumber,
+        "address": fullAddress,
+      };
+
+      // Prepare body data according to API structure
+      Map<String, dynamic> bodyData = {
+        "name": profileName,
+        "phone": phoneNumber,
+        "shippingAddress": shippingAddressData,
+      };
+
+      // Include current profile image URL if no new image is selected
+      if (image == null && profileData?.profileImage != null && profileData!.profileImage.isNotEmpty) {
+        bodyData["profileImage"] = profileData!.profileImage;
+      }
 
       // Debug: Print the data being sent
       print("Updating profile with data: $bodyData");
@@ -228,10 +257,21 @@ class ProfileController extends GetxController {
           print("Temp file exists: ${await tempFile.exists()}");
           print("Temp file size: ${await tempFile.length()} bytes");
           
+          // Convert to Map<String, String> for multipart request (use field nesting)
+          Map<String, String> multipartBody = {
+            "name": profileName,
+            "phone": phoneNumber,
+            "shippingAddress[name]": profileName,
+            "shippingAddress[phone]": phoneNumber,
+            "shippingAddress[address]": fullAddress,
+          };
+          
+          // Note: profileImage will be sent as file, not in body for multipart requests
+          
           response = await ApiService.multipart(
             ApiEndPoint.getProfile,
             method: 'PATCH',
-            body: bodyData,
+            body: multipartBody,
             imagePath: tempFile.path,
             imageName: "profileImage",
           );
@@ -250,7 +290,14 @@ class ProfileController extends GetxController {
           // Check if the response contains a new image URL
           if (response.data != null && response.data['data'] != null) {
             final newImageUrl = response.data['data']['profileImage'];
-            print("New profile image URL from server: $newImageUrl");
+            print("New profile image URL from server: '$newImageUrl'");
+            
+            // Check if server actually returned an image URL
+            if (newImageUrl == null || newImageUrl.toString().isEmpty) {
+              print("WARNING: Server returned empty profile image URL!");
+            }
+          } else {
+            print("WARNING: No data in response or missing data field");
           }
           
         } catch (imageError) {

@@ -18,6 +18,34 @@ class ProfileResponse {
   }
 }
 
+class ShippingAddress {
+  final String name;
+  final String phone;
+  final String address;
+
+  ShippingAddress({
+    required this.name,
+    required this.phone,
+    required this.address,
+  });
+
+  factory ShippingAddress.fromJson(Map<String, dynamic> json) {
+    return ShippingAddress(
+      name: json['name'] ?? '',
+      phone: json['phone'] ?? '',
+      address: json['address'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'phone': phone,
+      'address': address,
+    };
+  }
+}
+
 class ProfileData {
   final String id;
   final String name;
@@ -25,7 +53,12 @@ class ProfileData {
   final String email;
   final String profileImage;
   final String cover;
+  final int followers;
   final String status;
+  final bool verified;
+  final String createdAt;
+  final String updatedAt;
+  final ShippingAddress? shippingAddress;
 
   ProfileData({
     required this.id,
@@ -34,7 +67,12 @@ class ProfileData {
     required this.email,
     required this.profileImage,
     required this.cover,
+    required this.followers,
     required this.status,
+    required this.verified,
+    required this.createdAt,
+    required this.updatedAt,
+    this.shippingAddress,
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
@@ -45,7 +83,14 @@ class ProfileData {
       email: json['email'] ?? '',
       profileImage: json['profileImage'] ?? '',
       cover: json['cover'] ?? '',
+      followers: json['followers'] ?? 0,
       status: json['status'] ?? '',
+      verified: json['verified'] ?? false,
+      createdAt: json['createdAt'] ?? '',
+      updatedAt: json['updatedAt'] ?? '',
+      shippingAddress: json['shippingAddress'] != null 
+          ? ShippingAddress.fromJson(json['shippingAddress'] as Map<String, dynamic>) 
+          : null,
     );
   }
 
@@ -57,8 +102,26 @@ class ProfileData {
       'email': email,
       'profileImage': profileImage,
       'cover': cover,
+      'followers': followers,
       'status': status,
+      'verified': verified,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'shippingAddress': shippingAddress?.toJson(),
     };
+  }
+
+  /// Create update payload for PATCH request
+  Map<String, dynamic> toUpdateJson() {
+    Map<String, dynamic> data = {
+      'name': name,
+    };
+
+    if (shippingAddress != null) {
+      data['shippingAddress'] = shippingAddress!.toJson();
+    }
+
+    return data;
   }
 
   /// Get formatted role display text
@@ -79,7 +142,7 @@ class ProfileData {
 
   /// Check if profile image is available
   bool get hasProfileImage {
-    return profileImage.isNotEmpty;
+    return profileImage.isNotEmpty && profileImage != "";
   }
 
   /// Check if cover image is available

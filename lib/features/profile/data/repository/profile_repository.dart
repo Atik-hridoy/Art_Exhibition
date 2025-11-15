@@ -24,27 +24,20 @@ class ProfileRepository {
     }
   }
 
-  /// Update user profile
-  static Future<bool> updateProfile({
+  /// Update user profile with complete data structure
+  static Future<ProfileResponse?> updateProfile({
     required String name,
-    required String email,
-    String? profileImage,
-    String? cover,
+    Map<String, String>? shippingAddress,
   }) async {
     try {
       appLog("Updating user profile...", source: "ProfileRepository");
       
       Map<String, dynamic> body = {
         'name': name,
-        'email': email,
       };
 
-      if (profileImage != null && profileImage.isNotEmpty) {
-        body['profileImage'] = profileImage;
-      }
-
-      if (cover != null && cover.isNotEmpty) {
-        body['cover'] = cover;
+      if (shippingAddress != null) {
+        body['shippingAddress'] = shippingAddress;
       }
 
       final response = await ApiService.patch(
@@ -54,14 +47,14 @@ class ProfileRepository {
       
       if (response.statusCode == 200) {
         appLog("Profile updated successfully", source: "ProfileRepository");
-        return true;
+        return ProfileResponse.fromJson(response.data as Map<String, dynamic>);
       } else {
         appLog("Failed to update profile: ${response.statusCode}", source: "ProfileRepository");
-        return false;
+        return null;
       }
     } catch (e) {
       appLog("Error updating profile: $e", source: "ProfileRepository");
-      return false;
+      return null;
     }
   }
 
