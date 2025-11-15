@@ -8,20 +8,30 @@ import 'package:tasaned_project/component/pop_up/common_pop_menu.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/controller/order_history_controller.dart';
+import 'package:tasaned_project/features/profile/presentation/controller/profile_controller.dart';
 import 'package:tasaned_project/services/storage/storage_services.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/enum/enum.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
+import 'package:tasaned_project/utils/helpers/image_helper.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: AppColors.background,
+      child: GetBuilder<ProfileController>(
+        init: ProfileController(),
+        builder: (profileController) {
+          final profile = profileController.profileData;
+          final profileImage = (profile?.profileImage.isNotEmpty ?? false)
+              ? ImageHelper.buildImageUrl(profile!.profileImage)
+              : AppImages.female;
+          final followerText = '${profile?.followers ?? 0} Followers';
 
-      child: Column(
+          return Column(
         children: [
           // Header Section with profile image, name, and email
           SafeArea(
@@ -39,12 +49,14 @@ class CustomDrawer extends StatelessWidget {
                       border: Border.all(color: AppColors.primaryColor, width: 2),
                     ),
                     child: ClipOval(
-                      child: CommonImage(fill: BoxFit.cover, imageSrc: AppImages.female),
+                      child: profileController.isLoadingProfile && profile == null
+                          ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
+                          : CommonImage(fill: BoxFit.cover, imageSrc: profileImage),
                     ),
                   ),
                   10.height,
                   CommonText(
-                    text: "Jack Henry",
+                    text: profile?.name.isNotEmpty == true ? profile!.name : 'Guest User',
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.titleColor,
@@ -89,7 +101,7 @@ class CustomDrawer extends StatelessWidget {
                                       Get.toNamed(AppRoutes.followersScreen);
                                     },
                                     child: CommonText(
-                                      text: "1.2k Followers",
+                                      text: followerText,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,
                                       color: AppColors.primaryColor,
@@ -291,6 +303,8 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
         ],
+      );
+        },
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:tasaned_project/features/data_model/category_model.dart';
 import 'package:tasaned_project/features/data_model/event_card_model.dart';
 import 'package:tasaned_project/features/data_model/exibition_card_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
+import 'package:tasaned_project/features/data_model/learning_material_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 
@@ -16,6 +17,7 @@ class HomeController extends GetxController {
   List<CategoryModel>? categoryList;
   List<ExhibitionCardModel>? exhibitionList;
   List<EventCardModel>? eventsList;
+  List<LearningMaterialModel>? learningMaterials;
   bool featureArtIsLoading = false;
   bool categoryIsLoading = false;
   bool populartArtistIsLoading = false;
@@ -120,6 +122,23 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> fetchLearningMaterials() async {
+    try {
+      learningMaterialIsLoading = true;
+      update();
+      final response = await getLearningMaterials(limit: 10);
+      if (response != null) {
+        learningMaterials = response;
+      }
+      learningMaterialIsLoading = false;
+      update();
+    } catch (error) {
+      learningMaterialIsLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
   void savedArtListToggle({required int index}) async {
     try {
       FeaturesArtCardModel? art = featureArtList?[index];
@@ -200,6 +219,7 @@ class HomeController extends GetxController {
     category();
     exhibition();
     events();
+    fetchLearningMaterials();
     super.onInit();
   }
 }

@@ -7,16 +7,28 @@ import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
+import 'package:tasaned_project/utils/helpers/image_helper.dart';
 
 class LearningMedarialsItem extends StatelessWidget {
-  const LearningMedarialsItem({super.key});
+  final String title;
+  final String description;
+  final String imageUrl;
+  final VoidCallback? onTap;
+  final bool showDescription;
+
+  const LearningMedarialsItem({
+    super.key,
+    this.title = '',
+    this.description = '',
+    this.imageUrl = '',
+    this.onTap,
+    this.showDescription = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Get.toNamed(AppRoutes.learningMaterialsDetailsScreen);
-      },
+      onTap: onTap ?? () => Get.toNamed(AppRoutes.learningMaterialsDetailsScreen),
       child: Container(
         //margin: EdgeInsets.only(right: 16.w),
         width: 158.w,
@@ -36,7 +48,9 @@ class LearningMedarialsItem extends StatelessWidget {
                     width: 158.w,
                     fill: BoxFit.cover,
                     height: 112.h,
-                    imageSrc: AppImages.learning,
+                    imageSrc: imageUrl.isNotEmpty
+                        ? ImageHelper.buildImageUrl(imageUrl)
+                        : AppImages.learning,
                   ),
                 ),
 
@@ -66,18 +80,23 @@ class LearningMedarialsItem extends StatelessWidget {
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                   color: AppColors.titleColor,
-                  text: "6-Week Acrylic "),
+                  maxLines: 1,
+                  text: title.isNotEmpty ? title : "Learning material"),
             ),
             4.height,
-            Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 6),
-              child: CommonText(
-                  left: 4,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.titleColor,
-                  text: "Painting Workshop Kit"),
-            ),
+            if (showDescription) ...[
+              4.height,
+              Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 6),
+                child: CommonText(
+                    left: 4,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.titleColor,
+                    maxLines: 2,
+                    text: description.isNotEmpty ? description : "Details coming soon"),
+              ),
+            ]
           ],
         ),
       ),

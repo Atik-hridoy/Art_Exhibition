@@ -44,6 +44,14 @@ class ApiEndPoint {
   // get all users. using on the populer artist view 
 
   static const getAllUsers = 'users';
+
+
+
+
+  // get learning matrials 
+
+
+  static const getLearningMatrials = 'learning';
   
 
 
