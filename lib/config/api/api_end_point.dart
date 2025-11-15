@@ -34,7 +34,17 @@ class ApiEndPoint {
   static const users = 'users';
   static const myList = 'art-collection';
 
+
+//  ==================================== hridoy ==================================
+
   // profile 
 
   static const getProfile = 'users/profile';
+
+  // get all users. using on the populer artist view 
+
+  static const getAllUsers = 'users';
+  
+
+
 }

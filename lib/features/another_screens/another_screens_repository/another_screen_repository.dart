@@ -41,9 +41,28 @@ Future<List<FeaturesArtCardModel>?> getFeaturedArt({
   }
 }
 
-Future<List<ArtistCardModel>?> getPopularArtist({int page = 1, int limit = 10}) async {
+Future<List<ArtistCardModel>?> getPopularArtist({
+  int page = 1,
+  int limit = 10,
+  String role = 'ARTIST',
+  String status = 'ACTIVE',
+  String sort = '-followers',
+  String? searchTerm,
+}) async {
   try {
-    var response = await ApiService.get('${ApiEndPoint.users}?role=ARTIST');
+    final queryParameters = {
+      'role': role,
+      'status': status,
+      'sort': sort,
+      'page': '$page',
+      'limit': '$limit',
+      if (searchTerm != null && searchTerm.isNotEmpty) 'searchTerm': searchTerm,
+    };
+
+    final queryString = Uri(queryParameters: queryParameters).query;
+    final url = '${ApiEndPoint.users}?$queryString';
+
+    var response = await ApiService.get(url);
 
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
