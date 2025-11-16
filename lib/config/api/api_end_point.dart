@@ -25,6 +25,7 @@ class ApiEndPoint {
   static const featuresArt = 'arts';
   static const recommendedArt = 'arts/recommended';
   static const savedItem = 'save';
+
   static const category = 'category';
   static const exhibition = 'exhibition';
   static const events = 'events';
@@ -48,10 +49,14 @@ class ApiEndPoint {
 
 
 
-  // get learning matrials 
+  //  learning matrials 
 
 
-  static const getLearningMatrials = 'learning';
+  static const  getLearningMatrials = 'learning';
+  static const String getLearningDetails = 'learning';
+  static const postLearningMatrials = 'learning';
+
+  static const String uoloadVideo = 'upload';
   
 
 

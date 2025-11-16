@@ -62,7 +62,6 @@ class ProfileController extends GetxController {
           addressController.text = profileData!.shippingAddress!.address;
         }
         
-        Utils.successSnackBar('Success', 'Profile loaded successfully');
       } else {
         Utils.errorSnackBar('Error', 'Failed to load profile data');
       }

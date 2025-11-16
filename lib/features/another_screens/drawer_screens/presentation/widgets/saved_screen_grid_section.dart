@@ -30,7 +30,7 @@ class SavedScreenGridSection extends StatelessWidget {
                   ? SavedExibition(controller: controller)
                   : controller.isSelected == SaveType.event.value
                   ? SavedEvent(controller: controller)
-                  : SavedLearning(),
+                  : SavedLearning(controller: controller),
             ],
           ),
         );
@@ -40,26 +40,43 @@ class SavedScreenGridSection extends StatelessWidget {
 }
 
 class SavedLearning extends StatelessWidget {
-  const SavedLearning({super.key});
+  final SavedController controller;
+  const SavedLearning({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: 20,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Number of columns
-        crossAxisSpacing: 15, // Horizontal space between items
-        mainAxisSpacing: 20,
-
-        mainAxisExtent: 175.h,
-        // Vertical space between items
-      ),
-      itemBuilder: (context, index) {
-        return LearningMedarialsItem();
-      },
-    );
+    return controller.savedLearningIsLoading
+        ? CircularProgressIndicator()
+        : controller.savedLearningList == null || controller.savedLearningList!.isEmpty
+            ? SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    CommonText(text: AppString.noSavedLearning, color: Colors.grey),
+                  ],
+                ),
+              )
+            : GridView.builder(
+                itemCount: controller.savedLearningList?.length ?? 0,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 20,
+                  mainAxisExtent: 175.h,
+                ),
+                itemBuilder: (context, index) {
+                  final item = controller.savedLearningList?[index];
+                  return LearningMedarialsItem(
+                    title: item?.title ?? '',
+                    description: item?.description ?? '',
+                    imageUrl: item?.image ?? '',
+                    isSaved: item?.isOnFavorite ?? false,
+                    onTapSave: () => controller.savedLearningListToggle(index: index),
+                  );
+                },
+              );
   }
 }
 

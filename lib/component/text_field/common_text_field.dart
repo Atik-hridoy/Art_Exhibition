@@ -30,6 +30,7 @@ class CommonTextField extends StatefulWidget {
     this.borderColor = AppColors.transparent,
     this.onSubmitted,
     this.onTap,
+    this.onChanged,
     this.suffixIcon,
   });
 
@@ -51,6 +52,7 @@ class CommonTextField extends StatefulWidget {
   final bool isPassword;
   final Function(String)? onSubmitted;
   final VoidCallback? onTap;
+  final ValueChanged<String>? onChanged;
   final TextEditingController? controller;
   final TextInputAction textInputAction;
   final FormFieldValidator? validator;
@@ -80,6 +82,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
       onFieldSubmitted: widget.onSubmitted,
       onTap: widget.onTap,
       validator: widget.validator,
+      onChanged: widget.onChanged,
       decoration: InputDecoration(
         errorMaxLines: 2,
         filled: true,

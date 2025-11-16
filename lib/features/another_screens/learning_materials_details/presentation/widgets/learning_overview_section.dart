@@ -1,16 +1,29 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
+import 'package:tasaned_project/features/data_model/learning_material_model.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class LearningOverviewSection extends StatelessWidget {
-  const LearningOverviewSection({super.key});
+  final LearningMaterialModel detail;
+
+  const LearningOverviewSection({super.key, required this.detail});
 
   @override
   Widget build(BuildContext context) {
+    final description = detail.description.isNotEmpty
+        ? detail.description
+        : "A concise explanation of the lesson’s content: \n“In this first week, we’ll introduce you to acrylic painting. Learn about essential materials like acrylic paints, brushes, and canvases.”";
+    final learningPoints = detail.tutorials.isNotEmpty
+        ? detail.tutorials.map((e) => e.title).where((title) => title.isNotEmpty).toList()
+        : [
+            "Understand acrylic painting materials: Get to know the different types of brushes, paints, and canvases used in acrylic painting.",
+            "Brush Techniques: Learn dry brushing and wet blending techniques to create smooth, blended transitions in your work.",
+            "Complete your first project: Create a gradient background using the techniques learned in this lesson."
+          ];
+
     return Padding(
       padding:  EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -22,7 +35,7 @@ class LearningOverviewSection extends StatelessWidget {
               color: AppColors.bodyClr,
               bottom: 11,
               textAlign: TextAlign.justify,
-              text: "A concise explanation of the lesson’s content: “In this first week, we’ll introduce you to acrylic painting. Learn about essential materials like acrylic paints, brushes, and canvases. See more"),
+              text: description),
           
           
           CommonText(
@@ -43,14 +56,11 @@ class LearningOverviewSection extends StatelessWidget {
             child: Column(
 
               children: [
-                5.height,
-                pointItem(title: "Understand acrylic painting materials: Get to know the different types of brushes, paints, and canvases used in acrylic painting.")
-                 ,  5.height,
-                pointItem(title: "Brush Techniques: Learn dry brushing and wet blending techniques to create smooth, blended transitions in your work.")                 ,  5.height,
-                pointItem(title: "Complete your first project: Create a gradient background using the techniques learned in this lesson.")
-
-          ,
-            30.height
+                for (var i = 0; i < learningPoints.length; i++) ...[
+                  if (i == 0) 5.height else 10.height,
+                  pointItem(title: learningPoints[i]),
+                ],
+                30.height
 
               ],
             ),
@@ -61,7 +71,7 @@ class LearningOverviewSection extends StatelessWidget {
     );
   }
 
-  Widget pointItem({title}){
+  Widget pointItem({required String title}){
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start
       ,

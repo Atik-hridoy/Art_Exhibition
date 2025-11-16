@@ -4,6 +4,7 @@ import 'package:tasaned_project/features/another_screens/another_screens_reposit
 import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_event_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_exibition_card_model.dart';
+import 'package:tasaned_project/features/data_model/saved_learning_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/enum/enum.dart';
@@ -13,9 +14,11 @@ class SavedController extends GetxController {
   bool savedArtIsLoading = false;
   bool upComingExibitionIsLoading = false;
   bool upComingEventLoading = false;
+  bool savedLearningIsLoading = false;
   List<SavedArtCardModel>? savedArtList;
   List<SavedExibitionCardModel>? savedExibitionList;
   List<SavedEventCardModel>? savedEventList;
+  List<SavedLearningCardModel>? savedLearningList;
 
   Future<void> savedArt() async {
     try {
@@ -30,6 +33,25 @@ class SavedController extends GetxController {
     } catch (error) {
       savedArtIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
+  void savedLearningListToggle({required int index}) async {
+    try {
+      SavedLearningCardModel? learning = savedLearningList?[index];
+      if (learning == null) return;
+
+      Map<String, dynamic> body = {'type': 'Learning', 'item': learning.id};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+
+      if (response.statusCode == 200) {
+        bool isNowSaved = response.data["data"]["deletedCount"] == null;
+        learning.isOnFavorite = isNowSaved;
+        update();
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Could not toggle favorite');
       update();
     }
   }
@@ -63,6 +85,23 @@ class SavedController extends GetxController {
       update();
     } catch (error) {
       upComingEventLoading = false;
+      Utils.errorSnackBar('Error', error.toString());
+      update();
+    }
+  }
+
+  Future<void> savedLearning() async {
+    try {
+      savedLearningIsLoading = true;
+      var response = await getSavedLearningItem();
+      if (response != null) {
+        savedLearningList = response;
+        savedLearningIsLoading = false;
+      }
+      savedLearningIsLoading = false;
+      update();
+    } catch (error) {
+      savedLearningIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
       update();
     }
@@ -150,6 +189,7 @@ class SavedController extends GetxController {
     savedArt();
     savedExibition();
     savedEvent();
+    savedLearning();
     super.onInit();
   }
 }

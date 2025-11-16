@@ -86,6 +86,16 @@ class LocalStorage {
     await localStorage.setString(key, value);
   }
 
+  static Future<String?> getString(String key) async {
+    final localStorage = await _getStorage();
+    return localStorage.getString(key);
+  }
+
+  static Future<void> remove(String key) async {
+    final localStorage = await _getStorage();
+    await localStorage.remove(key);
+  }
+
   static Future<void> setBool(String key, bool value) async {
     final localStorage = await _getStorage();
     await localStorage.setBool(key, value);
