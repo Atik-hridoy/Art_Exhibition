@@ -126,7 +126,9 @@ class LearningMaterials extends StatelessWidget {
                       return LearningMedarialsItem(
                         title: item.title,
                         imageUrl: item.image,
+                        isSaved: item.isOnFavorite,
                         showDescription: false,
+                        onTapSave: () => controller.savedLearningListToggle(index: index),
                         onTap: () {
                           Get.toNamed(
                             AppRoutes.learningMaterialsDetailsScreen,

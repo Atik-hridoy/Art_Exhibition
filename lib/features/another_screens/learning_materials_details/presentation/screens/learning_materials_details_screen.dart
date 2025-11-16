@@ -57,24 +57,49 @@ class LearningMaterialsDetailsScreen extends StatelessWidget {
             text: AppString.learningMaterials),
       ),
 
-      body: SingleChildScrollView(
-        child: GetBuilder(
-          init: LearningMaterialDetailsController(),
-          builder: (controller) {
-            return Column(
-              children: [
-
-                LearningHeadingSection(),
-
-                24.height,
-
-                controller.isType=="overview"?LearningOverviewSection():LearningLesionsSection()
-
-
-              ],
-            );
-          }
-        ),
+      body: GetBuilder<LearningMaterialDetailsController>(
+        init: LearningMaterialDetailsController(),
+        global: false,
+        builder: (controller) {
+          final detail = controller.learningDetail;
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 24.h),
+              child: Column(
+                children: [
+                  if (controller.isLoading && detail == null)
+                    Padding(
+                      padding: EdgeInsets.only(top: 120.h),
+                      child: const CircularProgressIndicator(),
+                    )
+                  else if (detail == null)
+                    Padding(
+                      padding: EdgeInsets.only(top: 120.h),
+                      child: CommonText(
+                        text: AppString.dataEmpty,
+                        color: AppColors.bodyClr,
+                      ),
+                    )
+                  else ...[
+                    LearningHeadingSection(
+                      detail: detail,
+                      currentTab: controller.isType,
+                      onTabChange: (type) => controller.updateType(type: type),
+                    ),
+                    24.height,
+                    if (controller.isType == "overview")
+                      LearningOverviewSection(detail: detail)
+                    else
+                      LearningLesionsSection(
+                        tutorials: detail.tutorials,
+                        learningId: detail.id,
+                      ),
+                  ],
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -15,6 +15,7 @@ import 'package:tasaned_project/features/data_model/my_list_model.dart';
 import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_event_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_exibition_card_model.dart';
+import 'package:tasaned_project/features/data_model/saved_learning_card_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/services/storage/storage_services.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
@@ -39,6 +40,49 @@ Future<List<FeaturesArtCardModel>?> getFeaturedArt({
     return null;
   } catch (e) {
     Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
+    return null;
+  }
+}
+
+Future<LearningMaterialModel?> getLearningDetail(String learningId) async {
+  try {
+    final endpoint = '${ApiEndPoint.getLearningDetails}/$learningId';
+    log('Fetching learning detail => $endpoint');
+    final response = await ApiService.get(endpoint);
+    log('Learning detail status => ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      final data = (response.data['data'] ?? response.data) as Map<String, dynamic>;
+      log('Learning detail fetched for id $learningId, title: ${data['title']}');
+      return LearningMaterialModel.fromJson(data);
+    }
+
+    return null;
+  } catch (e) {
+    log('Error fetching learning detail: $e');
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer $e');
+    return null;
+  }
+}
+
+Future<List<SavedLearningCardModel>?> getSavedLearningItem({
+  int page = 1,
+  int limit = 10,
+}) async {
+  try {
+    var response = await ApiService.get(
+      '${ApiEndPoint.savedItem}?page=$page&limit=$limit&type=Learning',
+    );
+
+    if (response.statusCode == 200) {
+      var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => SavedLearningCardModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
     return null;
   }
 }

@@ -5,6 +5,7 @@ import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/component/text_field/common_text_field.dart';
 import 'package:tasaned_project/features/another_screens/my_courses/presentation/controller/upload_new_lesson_controller.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
+import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class UploadNewLessonScreen extends StatelessWidget {
@@ -91,6 +92,85 @@ class UploadNewLessonScreen extends StatelessWidget {
                       color: AppColors.bodyClr,
                     ),
                   ],
+                  if (controller.isUploadingVideo) ...[
+                    12.height,
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 18.w,
+                          height: 18.w,
+                          child: const CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        10.width,
+                        Expanded(
+                          child: CommonText(
+                            text: 'Uploading video... ${(controller.uploadProgress * 100).toStringAsFixed(0)}%',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (controller.chunkSummaries.isNotEmpty) ...[
+                    12.height,
+                    Builder(builder: (_) {
+                      final completedChunks = controller.chunkSummaries
+                          .where((chunk) => chunk.isUploaded)
+                          .length;
+                      final totalChunks = controller.chunkSummaries.length;
+                      return Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: AppColors.stroke),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CommonText(
+                                  text: 'Chunk Upload Progress',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.titleColor,
+                                ),
+                                CommonText(
+                                  text:
+                                      '${(controller.uploadProgress * 100).toStringAsFixed(0)}%',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ],
+                            ),
+                            8.height,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(6.r),
+                              child: LinearProgressIndicator(
+                                value: controller.uploadProgress,
+                                minHeight: 8.h,
+                                backgroundColor: AppColors.background,
+                                valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
+                              ),
+                            ),
+                            8.height,
+                            CommonText(
+                              text: 'Chunks uploaded: $completedChunks / $totalChunks',
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.bodyClr,
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
 
                   18.height,
                   CommonText(
@@ -119,17 +199,16 @@ class UploadNewLessonScreen extends StatelessWidget {
                   24.height,
                   _OutlinedActionButton(
                     text: title=="Edit Lesson"?"Cancel":"Save as draft",
-                    onTap: () {
-                      // TODO: draft flow
-                    },
+                    onTap: title=="Edit Lesson"
+                        ? () => Get.back()
+                        : controller.saveDraft,
                   ),
 
                   12.height,
                   _FilledActionButton(
-                    text: 'Publish',
-                    onTap: () {
-                      // TODO: publish flow
-                    },
+                    text: controller.isPublishing ? AppString.loading : 'Publish',
+                    isLoading: controller.isPublishing,
+                    onTap: controller.isPublishing ? null : controller.publishLesson,
                   ),
                 ],
               ),
@@ -220,8 +299,9 @@ class _OutlinedActionButton extends StatelessWidget {
 
 class _FilledActionButton extends StatelessWidget {
   final String text;
-  final VoidCallback onTap;
-  const _FilledActionButton({required this.text, required this.onTap});
+  final VoidCallback? onTap;
+  final bool isLoading;
+  const _FilledActionButton({required this.text, required this.onTap, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -235,12 +315,21 @@ class _FilledActionButton extends StatelessWidget {
           elevation: 0,
         ),
         onPressed: onTap,
-        child: CommonText(
-          text: text,
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.white,
-        ),
+        child: isLoading
+            ? SizedBox(
+                width: 18.w,
+                height: 18.w,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                ),
+              )
+            : CommonText(
+                text: text,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.white,
+              ),
       ),
     );
   }

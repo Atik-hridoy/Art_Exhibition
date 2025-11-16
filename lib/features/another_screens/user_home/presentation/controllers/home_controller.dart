@@ -42,6 +42,25 @@ class HomeController extends GetxController {
     }
   }
 
+  void savedLearningListToggle({required int index}) async {
+    try {
+      LearningMaterialModel? learning = learningMaterials?[index];
+      if (learning == null) return;
+
+      Map<String, dynamic> body = {'type': 'Learning', 'item': learning.id};
+      var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
+
+      if (response.statusCode == 200) {
+        bool isNowSaved = response.data["data"]["deletedCount"] == null;
+        learning.isOnFavorite = isNowSaved;
+        update();
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Could not toggle favorite');
+      update();
+    }
+  }
+
   Future<void> popuparArtist() async {
     try {
       populartArtistIsLoading = true;

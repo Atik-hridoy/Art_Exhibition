@@ -1,6 +1,7 @@
 class LearningMaterialModel {
   final String id;
   final String creatorId;
+  final CreatorInfo? creator;
   final String title;
   final String description;
   final List<LearningTutorial> tutorials;
@@ -8,11 +9,12 @@ class LearningMaterialModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String image;
-  final bool isOnFavorite;
+  bool isOnFavorite;
 
-  const LearningMaterialModel({
+  LearningMaterialModel({
     required this.id,
     required this.creatorId,
+    this.creator,
     required this.title,
     required this.description,
     required this.tutorials,
@@ -24,9 +26,21 @@ class LearningMaterialModel {
   });
 
   factory LearningMaterialModel.fromJson(Map<String, dynamic> json) {
+    final creatorData = json['creatorId'];
+    CreatorInfo? creator;
+    String parsedCreatorId = '';
+
+    if (creatorData is Map<String, dynamic>) {
+      creator = CreatorInfo.fromJson(creatorData);
+      parsedCreatorId = creator.id;
+    } else {
+      parsedCreatorId = creatorData?.toString() ?? '';
+    }
+
     return LearningMaterialModel(
       id: json['_id']?.toString() ?? '',
-      creatorId: json['creatorId']?.toString() ?? '',
+      creatorId: parsedCreatorId,
+      creator: creator,
       title: json['title']?.toString() ?? '',
       description: json['description']?.toString() ?? '',
       tutorials: (json['tutorials'] as List<dynamic>? ?? [])
@@ -41,6 +55,32 @@ class LearningMaterialModel {
           : null,
       image: json['image']?.toString() ?? '',
       isOnFavorite: json['isOnFavorite'] as bool? ?? false,
+    );
+  }
+}
+
+class CreatorInfo {
+  final String id;
+  final String name;
+  final String email;
+  final String profileImage;
+  final String about;
+
+  const CreatorInfo({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.profileImage,
+    required this.about,
+  });
+
+  factory CreatorInfo.fromJson(Map<String, dynamic> json) {
+    return CreatorInfo(
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      profileImage: json['profileImage']?.toString() ?? '',
+      about: json['about']?.toString() ?? '',
     );
   }
 }

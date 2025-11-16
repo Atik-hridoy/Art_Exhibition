@@ -1,5 +1,6 @@
 class AppString {
   static const String dataEmpty = "Data Empty";
+  static const String loading = "Loading...";
   static const String noInternet = "No Internet";
   static const String checkInternet = "Check Internet";
   static const String back = "Back";
@@ -574,5 +575,6 @@ class AppString {
   static const String noEvent = 'No upcoming Event yet';
   static const String noSavedExibition = 'No saved exibition';
   static const String noSavedEvent = 'No saved event';
+  static const String noSavedLearning = 'No saved learning materials yet';
   static const String noListing = 'No Listing';
 }
