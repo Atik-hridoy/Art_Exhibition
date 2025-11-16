@@ -10,6 +10,7 @@ import 'package:tasaned_project/features/data_model/exibition_card_model.dart';
 import 'package:tasaned_project/features/data_model/exibition_model.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
+import 'package:tasaned_project/features/data_model/learning_material_model.dart';
 import 'package:tasaned_project/features/data_model/my_list_model.dart';
 import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_event_card_model.dart';
@@ -32,6 +33,28 @@ Future<List<FeaturesArtCardModel>?> getFeaturedArt({
     if (response.statusCode == 200) {
       var responseBody = (response.data['data'] as List<dynamic>? ?? [])
           .map((e) => FeaturesArtCardModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return responseBody;
+    }
+    return null;
+  } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
+    return null;
+  }
+}
+
+Future<List<LearningMaterialModel>?> getLearningMaterials({
+  int page = 1,
+  int limit = 10,
+}) async {
+  try {
+    final response = await ApiService.get(
+      '${ApiEndPoint.getLearningMatrials}?page=$page&limit=$limit',
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => LearningMaterialModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return responseBody;
     }

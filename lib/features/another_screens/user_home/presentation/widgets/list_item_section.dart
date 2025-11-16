@@ -71,6 +71,7 @@ class LearningMaterials extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final materials = controller.learningMaterials ?? [];
     return Column(
       children: [
         Row(
@@ -99,22 +100,44 @@ class LearningMaterials extends StatelessWidget {
 
         16.height,
 
-        SizedBox(
-          height: 182.h,
-          child: ListView.separated(
-            padding: EdgeInsets.only(right: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(AppRoutes.artDetailsScreen);
-                },
-                child: LearningMedarialsItem(),
-              );
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 16.w),
+        AppLoader(
+          isLoading: controller.learningMaterialIsLoading,
+          loaderChild: SizedBox(
+            height: 182.h,
+            child: const Center(child: CircularProgressIndicator()),
           ),
+          child: materials.isEmpty
+              ? SizedBox(
+                  height: 50.h,
+                  child: Row(
+                    children: [
+                      CommonText(text: AppString.dataEmpty, color: Colors.grey),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: 182.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(right: 16.w),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: materials.length < 5 ? materials.length : 5,
+                    itemBuilder: (context, index) {
+                      final item = materials[index];
+                      return LearningMedarialsItem(
+                        title: item.title,
+                        imageUrl: item.image,
+                        showDescription: false,
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.learningMaterialsDetailsScreen,
+                            arguments: {'learningId': item.id},
+                          );
+                        },
+                      );
+                    },
+                    separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                  ),
+                ),
         ),
       ],
     );
