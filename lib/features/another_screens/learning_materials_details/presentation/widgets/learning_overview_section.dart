@@ -13,11 +13,11 @@ class LearningOverviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final description = detail.description.isNotEmpty
-        ? detail.description
+    final description = detail.overview.isNotEmpty
+        ? detail.overview
         : "A concise explanation of the lesson’s content: \n“In this first week, we’ll introduce you to acrylic painting. Learn about essential materials like acrylic paints, brushes, and canvases.”";
-    final learningPoints = detail.tutorials.isNotEmpty
-        ? detail.tutorials.map((e) => e.title).where((title) => title.isNotEmpty).toList()
+    final learningPoints = detail.lessons.isNotEmpty
+        ? detail.lessons.map((e) => e.title).where((title) => title.isNotEmpty).toList()
         : [
             "Understand acrylic painting materials: Get to know the different types of brushes, paints, and canvases used in acrylic painting.",
             "Brush Techniques: Learn dry brushing and wet blending techniques to create smooth, blended transitions in your work.",

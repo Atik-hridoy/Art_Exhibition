@@ -9,8 +9,12 @@ import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class UploadNewLessonScreen extends StatelessWidget {
-   UploadNewLessonScreen({super.key});
-  final String title=Get.arguments["title"];
+  UploadNewLessonScreen({super.key});
+
+  final Map<String, dynamic> _args = Get.arguments ?? {};
+
+  String get title => _args['title']?.toString() ?? 'Upload Lesson';
+  String? get courseId => _args['courseId']?.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,7 @@ class UploadNewLessonScreen extends StatelessWidget {
         ),
       ),
       body: GetBuilder<UploadNewLessonController>(
-        init: UploadNewLessonController(),
+        init: UploadNewLessonController(courseId: courseId),
         builder: (controller) {
           return SingleChildScrollView(
             child: Padding(

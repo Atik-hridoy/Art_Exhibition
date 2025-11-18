@@ -43,7 +43,7 @@ class LearningMaterialsController extends GetxController {
       filteredMaterials = _materials
           .where(
             (item) => item.title.toLowerCase().contains(keyword) ||
-                item.description.toLowerCase().contains(keyword),
+                item.overview.toLowerCase().contains(keyword),
           )
           .toList();
     }

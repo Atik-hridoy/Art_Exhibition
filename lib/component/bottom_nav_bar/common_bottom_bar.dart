@@ -104,10 +104,7 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
                 LocalStorage.myRoll == Role.museum.role)) {
           _showAddNewSheet();
         } else if (index == 1 && LocalStorage.myRoll == Role.educational.role) {
-          Get.toNamed(
-            AppRoutes.uploadNewLessonScreen,
-            arguments: {"title": "Upload New Lesson"},
-          );
+          _showAddNewSheet();
         } else {
           if (widget.currentIndex == 1 && LocalStorage.myRoll == Role.user.role) {
             OrderHistoryController.instance!.comeFrom("bottom");
@@ -243,13 +240,22 @@ class _CommonBottomNavBarState extends State<CommonBottomNavBar> {
               ] else if (LocalStorage.myRoll == Role.educational.role) ...[
                 _actionTile(
                   iconPath: AppImages.createNewEvent,
-                  label: 'Upload new Learning Materials',
+                  label: 'Upload New Course',
                   onTap: () {
                     Get.back();
-                    // Get.toNamed(
-                    //   AppRoutes.createNewEventScreen,
-                    //   arguments: {"title": "Create New Event"},
-                    // );
+                    Get.toNamed(AppRoutes.uploadNewCourseScreen);
+                  },
+                ),
+                SizedBox(height: 12.h),
+                _actionTile(
+                  iconPath: AppImages.createNewEvent,
+                  label: 'Upload New Lesson',
+                  onTap: () {
+                    Get.back();
+                    Get.toNamed(
+                      AppRoutes.uploadNewLessonScreen,
+                      arguments: {"title": "Upload New Lesson"},
+                    );
                   },
                 ),
               ],

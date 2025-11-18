@@ -26,6 +26,7 @@ import 'package:tasaned_project/features/another_screens/learning_materials_deta
 import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/my_courses_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/my_courses_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/my_courses_video_screen.dart';
+import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/upload_new_course_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_courses/presentation/screens/upload_new_lesson_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_event/presentation/screens/my_event_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_exhibitions/presentation/screens/my_exhibitions_screen.dart';
@@ -172,6 +173,7 @@ class AppRoutes {
   static const String myCourses = "/myCoursesItem";
   static const String myCoursesDetailsScreen = "/myCoursesDetailsScreen";
   static const String myCoursesVideoScreen = "/myCoursesVideoScreen";
+  static const String uploadNewCourseScreen = "/uploadNewCourseScreen";
 
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => const SplashScreen()),
@@ -265,5 +267,6 @@ class AppRoutes {
     GetPage(name: myCoursesDetailsScreen, page: () => MyCoursesDetailsScreen()),
     GetPage(name: myCoursesVideoScreen, page: () => MyCoursesVideoScreen()),
     GetPage(name: uploadNewLessonScreen, page: () => UploadNewLessonScreen()),
+    GetPage(name: uploadNewCourseScreen, page: () =>  UploadNewCourseScreen()),
   ];
 }

@@ -91,7 +91,7 @@ class LearningMaterialsDetailsScreen extends StatelessWidget {
                       LearningOverviewSection(detail: detail)
                     else
                       LearningLesionsSection(
-                        tutorials: detail.tutorials,
+                        tutorials: detail.lessons,
                         learningId: detail.id,
                       ),
                   ],
