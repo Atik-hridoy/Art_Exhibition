@@ -125,7 +125,7 @@ class LearningMaterials extends StatelessWidget {
                       final item = materials[index];
                       return LearningMedarialsItem(
                         title: item.title,
-                        imageUrl: item.image,
+                        imageUrl: item.displayThumbnail,
                         isSaved: item.isOnFavorite,
                         showDescription: false,
                         onTapSave: () => controller.savedLearningListToggle(index: index),

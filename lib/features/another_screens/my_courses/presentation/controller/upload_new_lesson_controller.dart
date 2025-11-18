@@ -14,6 +14,10 @@ import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/helpers/other_helper.dart';
 
 class UploadNewLessonController extends GetxController {
+  UploadNewLessonController({String? courseId}) : _initialCourseId = courseId;
+
+  final String? _initialCourseId;
+  String? courseId;
   final TextEditingController titleCtrl = TextEditingController();
   final TextEditingController descriptionCtrl = TextEditingController();
 
@@ -49,6 +53,7 @@ class UploadNewLessonController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    courseId = _initialCourseId;
     _loadDraft();
   }
 
@@ -144,6 +149,11 @@ class UploadNewLessonController extends GetxController {
       return;
     }
 
+    if (courseId == null || courseId!.isEmpty) {
+      Utils.errorSnackBar('Missing course', 'Course information not found.');
+      return;
+    }
+
     if (isUploadingVideo) {
       Utils.errorSnackBar('Please wait', 'Video upload still in progress.');
       return;
@@ -154,49 +164,38 @@ class UploadNewLessonController extends GetxController {
       return;
     }
 
-    if (LocalStorage.userId.isEmpty) {
-      await LocalStorage.getAllPrefData();
-    }
-
-    if (LocalStorage.userId.isEmpty) {
-      Utils.errorSnackBar('Unauthorized', 'User information not found.');
+    if (imagePath == null || imagePath!.isEmpty) {
+      Utils.errorSnackBar('Thumbnail required', 'Upload a lesson thumbnail.');
       return;
     }
-
-    final tutorials = [
-      {
-        'title': 'Basics of Abstract Shapes',
-        'description': 'Learn how to paint basic abstract shapes using acrylics.',
-        'videoUrl': uploadedVideoUrl,
-        if (videoDuration != null) 'duration': videoDuration,
-      },
-      {
-        'title': 'Color Theory in Abstract',
-        'description': 'Understanding color mixing and contrasts in abstract painting.',
-      },
-      {
-        'title': 'Final Composition Project',
-        'description': 'Put your skills together to create a complete abstract painting.',
-      },
-    ];
-
-    final body = {
-      'creatorId': LocalStorage.userId,
-      'title': title,
-      'description': description,
-      'tutorials': tutorials,
-    };
 
     try {
       isPublishing = true;
       update();
 
-      final response = await ApiService.post(ApiEndPoint.postLearningMatrials, body: body);
-      debugPrint('Publish response => ${response.data}');
+      final requestBody = {
+        'title': title,
+        'description': description,
+        'courseId': courseId!,
+        'videoUrl': uploadedVideoUrl!,
+        if (videoDuration != null) 'duration': videoDuration!.toString(),
+      };
+      debugPrint('Lesson publish request => $requestBody');
+      debugPrint('Lesson thumbnail path => $imagePath');
+
+      final response = await ApiService.multipart(
+        ApiEndPoint.postLearningMatrials,
+        body: requestBody,
+        imageName: 'thumbnail',
+        imagePath: imagePath,
+      );
+      debugPrint('Lesson publish status => ${response.statusCode}');
+      debugPrint('Lesson publish response => ${response.data}');
 
       if (response.statusCode == 200) {
         Utils.successSnackBar('Success', response.message);
         await LocalStorage.remove(LocalStorageKeys.uploadLessonDraft);
+        _resetForm();
       } else {
         Utils.errorSnackBar('Failed', response.message);
       }
@@ -206,6 +205,18 @@ class UploadNewLessonController extends GetxController {
       isPublishing = false;
       update();
     }
+  }
+
+  void _resetForm() {
+    titleCtrl.clear();
+    descriptionCtrl.clear();
+    videoPath = null;
+    imagePath = null;
+    uploadedVideoUrl = null;
+    videoDuration = null;
+    chunkSummaries = [];
+    uploadProgress = 0;
+    update();
   }
 
   String _normalizeVideoUrl(String url) {
@@ -224,6 +235,7 @@ class UploadNewLessonController extends GetxController {
       'uploadedVideoUrl': uploadedVideoUrl,
       'videoDuration': videoDuration,
       'imagePath': imagePath,
+      'courseId': courseId,
     };
 
     try {
@@ -254,6 +266,7 @@ class UploadNewLessonController extends GetxController {
         videoDuration = durationValue.toDouble();
       }
       imagePath = decoded['imagePath']?.toString();
+      courseId ??= decoded['courseId']?.toString();
       update();
     } catch (e) {
       debugPrint('Failed to load draft => $e');

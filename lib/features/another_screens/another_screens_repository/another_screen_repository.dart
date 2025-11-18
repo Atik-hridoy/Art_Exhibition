@@ -16,6 +16,7 @@ import 'package:tasaned_project/features/data_model/saved_art_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_event_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_exibition_card_model.dart';
 import 'package:tasaned_project/features/data_model/saved_learning_card_model.dart';
+import 'package:tasaned_project/services/api/api_response_model.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/services/storage/storage_services.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
@@ -39,6 +40,39 @@ Future<List<FeaturesArtCardModel>?> getFeaturedArt({
     }
     return null;
   } catch (e) {
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
+    return null;
+  }
+}
+
+Future<ApiResponseModel?> addCourse({
+  required String title,
+  required String overview,
+  required String learningObject,
+  required String thumbnailPath,
+}) async {
+  try {
+    final response = await ApiService.multipart(
+      ApiEndPoint.addCourse,
+      body: {
+        'title': title,
+        'overview': overview,
+        'learningObject': learningObject,
+      },
+      imageName: 'thumbnail',
+      imagePath: thumbnailPath,
+    );
+
+    log('Add course status => ${response.statusCode}');
+    log('Add course data => ${response.data}');
+
+    if (response.statusCode != 200) {
+      Utils.errorSnackBar('Failed', response.message);
+    }
+
+    return response;
+  } catch (e) {
+    log('Error adding course: $e');
     Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
     return null;
   }

@@ -15,4 +15,5 @@ class LocalStorageKeys {
   static const String lastLoginTime = "lastLoginTime";
   static const String autoLoginEnabled = "autoLoginEnabled";
   static const String uploadLessonDraft = "uploadLessonDraft";
+  static const String uploadCourseDraft = "uploadCourseDraft";
 }

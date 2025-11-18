@@ -69,26 +69,6 @@ class UploadNewCourseScreen extends StatelessWidget {
                   fileName: ctrl.thumbnailPath,
                 ),
                 18.height,
-                _UploadSlot(
-                  title: 'Upload Lesson Video',
-                  actionLabel: 'Upload Lesson Video',
-                  helperText: 'Video up to 500MB',
-                  icon: Icons.video_library_outlined,
-                  onTap: ctrl.pickLessonVideo,
-                  fileName: ctrl.lessonVideoPath,
-                ),
-                18.height,
-                _CourseTextField(
-                  label: 'Lesson Title',
-                  hint: 'Enter lesson title',
-                  controller: ctrl.lessonTitleCtrl,
-                ),
-                _CourseTextField(
-                  label: 'Lesson Description',
-                  hint: 'Enter lesson Description',
-                  controller: ctrl.lessonDescriptionCtrl,
-                  maxLines: 3,
-                ),
                 24.height,
                 _PublishActions(
                   onDraft: ctrl.saveDraft,
@@ -269,7 +249,7 @@ class _PublishActions extends StatelessWidget {
                   ),
                 )
               : CommonText(
-                  text: 'Publish',
+                  text: 'Save and Continue',
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: AppColors.white,

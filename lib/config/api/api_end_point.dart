@@ -53,8 +53,10 @@ class ApiEndPoint {
 
 
   static const  getLearningMatrials = 'learning';
-  static const String getLearningDetails = 'learning';
-  static const postLearningMatrials = 'learning';
+  static const  getLearningDetails = 'learning';
+  static const postLearningMatrials = 'lessons';
+
+  static const  addCourse = 'learning';
 
   static const String uoloadVideo = 'upload';
   

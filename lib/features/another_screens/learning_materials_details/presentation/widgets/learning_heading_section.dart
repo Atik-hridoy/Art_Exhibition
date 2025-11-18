@@ -23,10 +23,11 @@ class LearningHeadingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final banner = detail.image.isNotEmpty
-        ? ImageHelper.buildImageUrl(detail.image)
+    final bannerPath = detail.displayThumbnail;
+    final banner = bannerPath.isNotEmpty
+        ? ImageHelper.buildImageUrl(bannerPath)
         : AppImages.learningBanner;
-    final totalVideos = detail.tutorials.length;
+    final totalVideos = detail.lessons.length;
 
     return Column(
       children: [
@@ -79,7 +80,9 @@ class LearningHeadingSection extends StatelessWidget {
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                           color: AppColors.bodyClr,
-                          text: detail.tutorials.isNotEmpty ? 'Approx. 5 min each' : 'Duration: N/A',
+                          text: detail.lessons.isNotEmpty
+                              ? 'Approx. 5 min each'
+                              : 'Duration: N/A',
                         ),
                       ],
                     ),

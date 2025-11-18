@@ -103,8 +103,8 @@ class LearningMetarialScreen extends StatelessWidget {
                               final item = materials[index];
                               return LearningMedarialsItem(
                                 title: item.title,
-                                description: item.description,
-                                imageUrl: item.image,
+                                description: item.overview,
+                                imageUrl: item.displayThumbnail,
                                 isSaved: item.isOnFavorite,
                                 onTapSave: () => controller.toggleFavorite(index: index),
                                 onTap: () {
