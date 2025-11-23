@@ -87,9 +87,6 @@ class UploadNewCourseController extends GetxController {
         return;
       }
 
-      log('Add course status (controller) => ${response.statusCode}');
-      log('Add course payload (controller) => ${response.data}');
-
       if (response.statusCode == 200) {
         final payload = response.data['data'] ?? response.data;
         String? courseId;

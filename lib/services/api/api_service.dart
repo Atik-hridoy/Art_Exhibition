@@ -49,16 +49,19 @@ class ApiService {
   }) async {
     FormData formData = FormData();
     if (imagePath != null && imagePath.isNotEmpty) {
-      File file = File(imagePath);
-      String extension = file.path.split('.').last.toLowerCase();
-      String? mimeType = lookupMimeType(imagePath);
+      final file = File(imagePath);
+      final extension = file.path.split('.').last.toLowerCase();
+      final originalName = file.uri.pathSegments.isNotEmpty
+          ? file.uri.pathSegments.last
+          : "$imageName.$extension";
+      final mimeType = lookupMimeType(imagePath);
 
       formData.files.add(
         MapEntry(
           imageName,
           await MultipartFile.fromFile(
             imagePath,
-            filename: "$imageName.$extension",
+            filename: originalName,
             contentType: mimeType != null
                 ? DioMediaType.parse(mimeType)
                 : DioMediaType.parse("image/jpeg"),

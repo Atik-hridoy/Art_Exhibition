@@ -22,21 +22,20 @@ class CategoryItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Image top
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12.r),
-              topRight: Radius.circular(12.r),
-            ),
-            child: CommonImage(
-              height: 92,
-              width: 110,
-              fill: BoxFit.cover,
-              imageSrc: imageSrc,
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12.r),
+                topRight: Radius.circular(12.r),
+              ),
+              child: CommonImage(
+                height: double.infinity,
+                width: double.infinity,
+                fill: BoxFit.cover,
+                imageSrc: imageSrc,
+              ),
             ),
           ),
-
-          // Caption area
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
             decoration: BoxDecoration(

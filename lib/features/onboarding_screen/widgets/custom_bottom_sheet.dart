@@ -37,51 +37,48 @@ class CustomBottomSheet extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 51.h),
-
-          child: Column(
-            children: [
-              SizedBox(
-                height: 120,
-                child: Column(
-                  children: [
-                    CommonText(
-                      fontSize: 20,
-                      maxLines: 1,
-                      fontWeight: FontWeight.w700,
-                      text: titleList[index],
-                    ),
-                    5.height,
-                    CommonText(
-                      fontSize: 12,
-
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.bodyClr,
-                      maxLines: 4,
-
-                      text: desList[index],
-                    ),
-                  ],
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 32.h),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 120,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CommonText(
+                        fontSize: 20,
+                        maxLines: 1,
+                        fontWeight: FontWeight.w700,
+                        text: titleList[index],
+                      ),
+                      5.height,
+                      CommonText(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.bodyClr,
+                        maxLines: 4,
+                        text: desList[index],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-
-              26.height,
-              // Wrap only DotIndicator with Obx
-              DotIndicator(selectIndex: index),
-
-              10.height,
-
-              const Spacer(),
-              CommonButton(onTap: signUp, titleText: AppString.signUp),
-              12.height,
-              CommonButton(
-                borderColor: AppColors.primaryColor,
-                titleColor: AppColors.primaryColor,
-                buttonColor: AppColors.transparent,
-                onTap: signIn,
-                titleText: AppString.logIn,
-              ),
-            ],
+                26.height,
+                DotIndicator(selectIndex: index),
+                16.height,
+                CommonButton(onTap: signUp, titleText: AppString.signUp),
+                12.height,
+                CommonButton(
+                  borderColor: AppColors.primaryColor,
+                  titleColor: AppColors.primaryColor,
+                  buttonColor: AppColors.transparent,
+                  onTap: signIn,
+                  titleText: AppString.logIn,
+                ),
+              ],
+            ),
           ),
         ),
       ),
