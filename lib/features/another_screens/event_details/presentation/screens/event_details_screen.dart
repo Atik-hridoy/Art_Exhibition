@@ -142,11 +142,15 @@ class EventDetailsScreen extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               color: AppColors.bodyClr,
                             ),
-                            CommonText(
-                              text: creatorName, // 'Mark Cena',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.primaryColor,
+                            Expanded(
+                              child: CommonText(
+                                text: creatorName, // 'Mark Cena',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primaryColor,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),

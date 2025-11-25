@@ -201,7 +201,7 @@ class AllTextFiledSection extends StatelessWidget {
                   height: 24.h,width: 24.w,
                   child: Switch(
 
-                      activeColor: AppColors.primaryColor,
+                      activeThumbColor: AppColors.primaryColor,
                       value: controller.isFrameToggle, onChanged: (v){
 
                     controller.updateFrameToggle();
@@ -243,7 +243,7 @@ class AllTextFiledSection extends StatelessWidget {
                   height: 24.h,width: 24.w,
                   child: Switch(
 
-                      activeColor: AppColors.primaryColor,
+                      activeThumbColor: AppColors.primaryColor,
                       value: controller.isAcceptToggle, onChanged: (v){
 
                     controller.updateAcceptToggle();

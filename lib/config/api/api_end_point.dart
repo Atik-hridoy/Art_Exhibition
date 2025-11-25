@@ -1,7 +1,7 @@
 class ApiEndPoint {
-  static const baseUrl = "http://10.10.7.48:5009/api/v1/";
-  static const imageUrl = "http://10.10.7.48:5009";
-  static const socketUrl = "http://10.10.7.48:5009";
+  static const baseUrl = "http://10.10.7.46:5009/api/v1/";
+  static const imageUrl = "http://10.10.7.46:5009";
+  static const socketUrl = "http://10.10.7.46:5009";
 
   static const signUp = "/users"; // Saved ny Nasim
   static const verifyEmail = "auth/verify-email"; // Saved ny Nasim
@@ -57,5 +57,11 @@ class ApiEndPoint {
   static const postLearningMatrials = 'lessons';
   static const  addCourse = 'learning';
   static const String uoloadVideo = 'upload';
+
+
+  // my event
+
+  static const getMyEvents= 'events/my-events';
+  static const eventDetails = 'events';
 
 }

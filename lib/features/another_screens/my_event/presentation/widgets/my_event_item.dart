@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
@@ -26,7 +25,7 @@ class MyEventItem extends StatelessWidget {
     return Container(
       // margin: EdgeInsets.only(right: 16.w),
       width: 158.w,
-      height: 190.h,
+      height: 195.h, // Updated to match grid height
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
@@ -35,13 +34,35 @@ class MyEventItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12.r),
-            child: CommonImage(
-              width: 158.w,
-              fill: BoxFit.fill,
-              height: 112.h,
-              imageSrc: ApiEndPoint.imageUrl + cover,
-              // AppImages.eventImage,
-            ),
+            child: cover.isNotEmpty
+                ? Image.network(
+                    ApiEndPoint.imageUrl + cover,
+                    width: 158.w,
+                    height: 112.h,
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 158.w,
+                        height: 112.h,
+                        color: AppColors.yelloFade,
+                        child: Icon(
+                          Icons.event,
+                          size: 40.sp,
+                          color: AppColors.primaryColor,
+                        ),
+                      );
+                    },
+                  )
+                : Container(
+                    width: 158.w,
+                    height: 112.h,
+                    color: AppColors.yelloFade,
+                    child: Icon(
+                      Icons.event,
+                      size: 40.sp,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
           ),
           // Content below image
           Padding(

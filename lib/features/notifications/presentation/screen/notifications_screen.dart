@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../../component/text/common_text.dart';
 import '../../../../utils/constants/app_colors.dart';
 import '../controller/notifications_controller.dart';
-import '../../../../config/api/api_end_point.dart';
 import '../widgets/notification_item.dart';
 
 class NotificationScreen extends StatelessWidget {

@@ -13,7 +13,7 @@ import 'package:tasaned_project/utils/constants/app_string.dart';
 import '../controller/order_history_controller.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
-  OrderHistoryScreen({super.key});
+  const OrderHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

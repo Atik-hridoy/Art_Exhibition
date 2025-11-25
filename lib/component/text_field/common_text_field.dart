@@ -6,7 +6,7 @@ import '../../utils/constants/app_colors.dart';
 import '../text/common_text.dart';
 
 class CommonTextField extends StatefulWidget {
-  CommonTextField({
+  const CommonTextField({
     super.key,
     this.hintText,
     this.labelText,

@@ -314,15 +314,21 @@ Future<Exhibition?> getExibitionDetails({required String id}) async {
 
 Future<EventModel?> getEventDetails({required String eventId}) async {
   try {
-    var response = await ApiService.get('${ApiEndPoint.events}/$eventId');
+    final endpoint = '${ApiEndPoint.eventDetails}/$eventId';
+    log('Fetching event details => $endpoint');
+    final response = await ApiService.get(endpoint);
+    log('Event details status => ${response.statusCode}');
 
     if (response.statusCode == 200) {
-      EventModel responseBody = EventModel.fromJson(response.data['data']);
-      return responseBody;
+      final data = (response.data['data'] ?? response.data) as Map<String, dynamic>;
+      log('Event details fetched for id $eventId, title: ${data['title']}');
+      return EventModel.fromJson(data);
     }
+
     return null;
   } catch (e) {
-    Utils.errorSnackBar('An error with repository', 'Please contact with developer');
+    log('Error fetching event details: $e');
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer $e');
     return null;
   }
 }
@@ -379,17 +385,24 @@ Future<List<ExhibitionCardModel>?> getMyExibition({int page = 1, int limit = 10}
   }
 }
 
-Future<List<EventCardModel>?> getMyEvent({int page = 1, int limit = 10}) async {
+Future<List<EventModel>?> getMyEvent({int page = 1, int limit = 10}) async {
   try {
-    var response = await ApiService.get('${ApiEndPoint.users}/${LocalStorage.userId}');
+    log('Calling API: ${ApiEndPoint.getMyEvents}');
+    var response = await ApiService.get(ApiEndPoint.getMyEvents);
+    log('API Response Status: ${response.statusCode}');
+    log('API Response Data: ${response.data}');
+    
     if (response.statusCode == 200) {
-      var responseBody = (response.data['data']["events"] as List<dynamic>? ?? [])
-          .map((e) => EventCardModel.fromJson(e as Map<String, dynamic>))
+      var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+          .map((e) => EventModel.fromJson(e as Map<String, dynamic>))
           .toList();
+      log('Parsed ${responseBody.length} events');
       return responseBody;
     }
+    log('API returned status ${response.statusCode}, expected 200');
     return null;
   } catch (e) {
+    log('Error in getMyEvent repository: $e');
     Utils.errorSnackBar('An error with repository', 'Please contact with developer');
     return null;
   }

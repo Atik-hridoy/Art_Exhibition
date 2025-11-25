@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../data/model/notification_model.dart';
-import '../../repository/notification_repository.dart';
 
 class NotificationsController extends GetxController {
   // State variables

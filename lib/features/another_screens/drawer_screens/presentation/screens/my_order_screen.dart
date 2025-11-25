@@ -105,7 +105,7 @@ class MyOrderScreen extends StatelessWidget {
                     ),
                     8.height,
                     CommonText(
-                      text: '\$${price}',
+                      text: '\$$price',
                       fontSize:24,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryColor,
@@ -136,7 +136,7 @@ class MyOrderScreen extends StatelessWidget {
                     RowItem(AppString.orderStatus, c.currentStatus),
                     RowItem(AppString.paymentMethod, 'Credit Card'),
                     RowItem(AppString.paymentStatus, 'Paid'),
-                    RowItem(AppString.totalAmount, '\$${price}.00'),
+                    RowItem(AppString.totalAmount, '\$$price.00'),
                   ]);
                 }),
               ),

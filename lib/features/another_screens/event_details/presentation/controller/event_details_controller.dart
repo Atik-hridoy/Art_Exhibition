@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
@@ -12,18 +13,33 @@ class EventDetailsController extends GetxController {
   EventModel? event;
   String? eventId;
 
-  Future<void> exibitionDetails() async {
+  Future<void> getEventDetailsData() async {
     try {
       upComingEventIsLoading = true;
-      // TODO: Need to change the  ID parameter
-      var response = await getEventDetails(eventId: '68ca6147969c0da069ba93e1');
+      update();
+      
+      if (eventId == null || eventId!.isEmpty) {
+        upComingEventIsLoading = false;
+        update();
+        Utils.errorSnackBar('Error', 'Event ID is required');
+        return;
+      }
+      
+      log('Fetching event details for ID: $eventId');
+      var response = await getEventDetails(eventId: eventId!);
+      
       if (response != null) {
         event = response;
-        eventId = event!.id;
-        upComingEventIsLoading = false;
+        log('Event details loaded successfully: ${event?.title}');
+        isSaved = event?.isOnFavorite ?? false;
+      } else {
+        log('Failed to load event details');
       }
+      
+      upComingEventIsLoading = false;
       update();
     } catch (error) {
+      log('Error fetching event details: $error');
       upComingEventIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
       update();
@@ -54,9 +70,18 @@ class EventDetailsController extends GetxController {
   }
 
   void initialFunction() async {
-    await exibitionDetails();
-    if (event != null) {
-      isSaved = event?.isOnFavorite ?? false;
+    // Get eventId from arguments passed from My Events screen
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    if (arguments != null) {
+      eventId = arguments['eventId']?.toString();
+      log('Event ID from arguments: $eventId');
+    }
+    
+    if (eventId != null) {
+      await getEventDetailsData();
+    } else {
+      log('No eventId provided in arguments');
+      Utils.errorSnackBar('Error', 'Event ID not found');
     }
   }
 

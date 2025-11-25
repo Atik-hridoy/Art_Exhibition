@@ -5,7 +5,6 @@ import '../../../../../component/text/common_text.dart';
 import '../../../../../component/text_field/common_text_field.dart';
 import '../controller/sign_up_controller.dart';
 import '../../../../../utils/constants/app_colors.dart';
-import 'choose_role_bottomsheet.dart';
 
 class SignUpAllField extends StatelessWidget {
   const SignUpAllField({super.key, required this.controller});

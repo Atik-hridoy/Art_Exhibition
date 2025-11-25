@@ -1,6 +1,7 @@
 class EventModel {
   final String? id;
   final String? creatorName;
+  final String? creatorId; // Add creatorId field
   final String? title;
   final String? description;
   final String? overview;
@@ -17,6 +18,7 @@ class EventModel {
   const EventModel({
     this.id,
     this.creatorName,
+    this.creatorId,
     this.title,
     this.description,
     this.overview,
@@ -31,20 +33,43 @@ class EventModel {
     this.isOnFavorite,
   });
 
-  factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
-    id: json["_id"],
-    creatorName: json["creatorId"]?["name"],
-    title: json["title"],
-    description: json["description"],
-    overview: json["overview"],
-    startDate: json["startDate"] == null ? null : DateTime.parse(json["startDate"]),
-    endDate: json["endDate"] == null ? null : DateTime.parse(json["endDate"]),
-    visitingHour: json["visitingHour"],
-    venue: json["venue"],
-    images: json["images"] == null ? [] : List<String>.from(json["images"].map((x) => x)),
-    ticketPrice: json["ticketPrice"],
-    bookingUrl: json["bookingUrl"],
-    status: json["status"],
-    isOnFavorite: json["isOnFavorite"],
-  );
+  factory EventModel.fromJson(Map<String, dynamic> json) {
+  try {
+    // Handle creatorId - it can be a string (from my-events) or an object (from event details)
+    String? creatorName;
+    String? creatorId;
+    
+    if (json["creatorId"] is Map) {
+      // Event details API response - creatorId is an object with name
+      creatorId = json["creatorId"]["_id"]?.toString();
+      creatorName = json["creatorId"]["name"]?.toString();
+    } else {
+      // My events API response - creatorId is a string
+      creatorId = json["creatorId"]?.toString();
+      creatorName = json["creatorName"]?.toString() ?? json["creatorId"]?.toString();
+    }
+    
+    return EventModel(
+      id: json["_id"]?.toString(),
+      creatorName: creatorName,
+      creatorId: creatorId,
+      title: json["title"]?.toString(),
+      description: json["description"]?.toString(),
+      overview: json["overview"]?.toString(),
+      startDate: json["startDate"] == null ? null : DateTime.parse(json["startDate"].toString()),
+      endDate: json["endDate"] == null ? null : DateTime.parse(json["endDate"].toString()),
+      visitingHour: json["visitingHour"]?.toString(),
+      venue: json["venue"]?.toString(),
+      images: json["images"] == null ? [] : List<String>.from((json["images"] as List).map((x) => x.toString())),
+      ticketPrice: json["ticketPrice"] is int ? json["ticketPrice"] : int.tryParse(json["ticketPrice"]?.toString() ?? ""),
+      bookingUrl: json["bookingUrl"]?.toString(),
+      status: json["status"]?.toString(),
+      isOnFavorite: json["isOnFavorite"] is bool ? json["isOnFavorite"] : null,
+    );
+  } catch (e) {
+    print('Error parsing EventModel: $e');
+    print('JSON data: $json');
+    rethrow;
+  }
+}
 }

@@ -15,7 +15,7 @@ import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class LearningMetarialScreen extends StatelessWidget {
-  LearningMetarialScreen({super.key});
+  const LearningMetarialScreen({super.key});
 
 
   @override

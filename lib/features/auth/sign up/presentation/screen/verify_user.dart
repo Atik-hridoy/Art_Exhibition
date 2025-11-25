@@ -6,7 +6,6 @@ import 'package:tasaned_project/utils/extensions/extension.dart';
 import '../../../../../component/button/common_button.dart';
 import '../../../../../component/image/common_image.dart';
 import '../../../../../component/text/common_text.dart';
-import '../../../../../config/route/app_routes.dart';
 import '../../../../../utils/constants/app_images.dart';
 import '../controller/sign_up_controller.dart';
 import '../../../../../utils/constants/app_colors.dart';

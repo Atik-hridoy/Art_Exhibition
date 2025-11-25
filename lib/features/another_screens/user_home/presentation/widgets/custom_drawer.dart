@@ -18,6 +18,8 @@ import 'package:tasaned_project/utils/extensions/extension.dart';
 import 'package:tasaned_project/utils/helpers/image_helper.dart';
 
 class CustomDrawer extends StatelessWidget {
+  const CustomDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(

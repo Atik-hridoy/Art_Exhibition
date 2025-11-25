@@ -68,7 +68,7 @@ class ArtDetailsScreen extends StatelessWidget {
                   ),
                   8.height,
                   CommonText(
-                    text: '\$${price}',
+                    text: '\$$price',
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                     color: AppColors.primaryColor,
@@ -121,7 +121,7 @@ class ArtDetailsScreen extends StatelessWidget {
                     text: const TextSpan(
                       children: [
                         TextSpan(
-                          text: AppString.dimensionsLabel + ' ',
+                          text: '${AppString.dimensionsLabel} ',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -145,7 +145,7 @@ class ArtDetailsScreen extends StatelessWidget {
                     text: const TextSpan(
                       children: [
                         TextSpan(
-                          text: AppString.authenticationLabel + ' ',
+                          text: '${AppString.authenticationLabel} ',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,

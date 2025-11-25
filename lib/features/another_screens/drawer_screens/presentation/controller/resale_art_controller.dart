@@ -35,12 +35,12 @@ class ResaleArtController extends GetxController {
 
   void submitListing() {
     if (!isValid) {
-      Get.snackbar(AppString.tryAgain, AppString.enterAmount + ' & ' + AppString.productCondition);
+      Get.snackbar(AppString.tryAgain, '${AppString.enterAmount} & ${AppString.productCondition}');
       return;
     }
 
     Get.back();
-    Get.snackbar(AppString.confirmation, AppString.addListing + ' ' + AppString.done);
+    Get.snackbar(AppString.confirmation, '${AppString.addListing} ${AppString.done}');
   }
 
   @override

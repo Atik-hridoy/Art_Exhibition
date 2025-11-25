@@ -180,7 +180,7 @@ class CreateArtWorkScreen extends StatelessWidget {
                       width: 42,
                       child: Switch(
                         value: controller.acceptOffers,
-                        activeColor: AppColors.primaryColor,
+                        activeThumbColor: AppColors.primaryColor,
                         onChanged: controller.toggleOffers,
                       ),
                     ),

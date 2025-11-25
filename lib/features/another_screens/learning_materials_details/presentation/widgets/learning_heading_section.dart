@@ -103,7 +103,7 @@ class LearningHeadingSection extends StatelessWidget {
 
   Widget _buildCreatorCard() {
     final creatorName = detail.creator?.name ?? 'Unknown Creator';
-    final about = detail.creator?.about?.isNotEmpty == true ? detail.creator!.about : '';
+    final about = detail.creator?.about.isNotEmpty == true ? detail.creator!.about : '';
     final profileImage = detail.creator?.profileImage ?? '';
 
     return Container(

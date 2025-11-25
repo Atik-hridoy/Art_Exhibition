@@ -46,7 +46,7 @@ class ResaleInfoCard extends StatelessWidget {
                   color: AppColors.primaryColor,
                   fontWeight: FontWeight.w600,
                      right: 20,
-                  text: '\$${originalPrice}', fontSize: 14),
+                  text: '\$$originalPrice', fontSize: 14),
             ],
           ),
 

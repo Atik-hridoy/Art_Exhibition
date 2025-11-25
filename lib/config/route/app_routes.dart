@@ -7,10 +7,6 @@ import 'package:tasaned_project/features/another_screens/artist_details/presenta
 import 'package:tasaned_project/features/another_screens/category/presentation/screens/category_Screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_art/presentation/screens/create_art_work_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_event/presentation/screens/create_new_event_ticket_booking_screen.dart';
-import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_screen.dart';
-import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_gallery_screen.dart';
-import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_feature_artist_screen.dart';
-import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/create_new_exhibition_ticket_booking_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/nasim/create_exibition_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/order_history_screen.dart';
 import 'package:tasaned_project/features/another_screens/event_details/presentation/screens/event_details_screen.dart';

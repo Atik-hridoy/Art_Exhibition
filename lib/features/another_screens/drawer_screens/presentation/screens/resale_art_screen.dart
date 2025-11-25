@@ -116,7 +116,7 @@ class ResaleArtScreen extends StatelessWidget {
                     Obx(() => Switch(
                           value: controller.acceptOffers.value,
                           onChanged: controller.toggleAccept,
-                          activeColor: AppColors.primaryColor,
+                          activeThumbColor: AppColors.primaryColor,
                         )),
                   ],
                 ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasaned_project/services/api/api_response_model.dart';
 import '../../../../config/api/api_end_point.dart';
 import '../../../../services/api/api_service.dart';
 import '../../../../services/storage/storage_services.dart';
@@ -218,7 +219,7 @@ class ProfileController extends GetxController {
       print("Updating profile with data: $bodyData");
       print("Image selected: ${image != null ? 'Yes' : 'No'}");
 
-      var response;
+      ApiResponseModel response;
 
       // If image is selected, use multipart request
       if (image != null && image!.isNotEmpty) {
@@ -242,7 +243,7 @@ class ProfileController extends GetxController {
           final timestamp = DateTime.now().millisecondsSinceEpoch;
           final originalFileName = imageFile.path.split('/').last;
           final extension = originalFileName.split('.').last;
-          final uniqueFileName = "profile_${timestamp}.$extension";
+          final uniqueFileName = "profile_$timestamp.$extension";
           
           print("Sending image with unique filename: $uniqueFileName");
           print("Original file: $originalFileName");
