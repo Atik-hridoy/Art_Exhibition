@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:tasaned_project/utils/helpers/other_helper.dart';
+import 'create_new_event_controller.dart';
 
 class CreateNewEventGalleryController extends GetxController {
   final List<String> imagePaths = [];
@@ -28,5 +30,18 @@ class CreateNewEventGalleryController extends GetxController {
   void removeVideo() {
     videoPath = null;
     update();
+  }
+
+  // Save current step images
+  void saveCurrentImages() {
+    CreateNewEventController.eventData['images'] = imagePaths;
+    log('Step 2 images saved: ${imagePaths.length} images');
+  }
+
+  @override
+  void onClose() {
+    imagePaths.clear();
+    videoPath = null;
+    super.onClose();
   }
 }

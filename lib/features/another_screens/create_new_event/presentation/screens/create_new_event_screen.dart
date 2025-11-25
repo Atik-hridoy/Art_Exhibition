@@ -221,6 +221,8 @@ class CreateNewEventScreen extends StatelessWidget {
                         titleText: AppString.next,
                         buttonRadius: 60,
                         onTap: () {
+                        // Save current step data before navigating
+                        c.saveCurrentStepData();
                         Get.toNamed(AppRoutes.createNewEventGalleryScreen, arguments: {
                           "title":title=="Edit Event"? "Edit Event" : "Create New Event"
                         });

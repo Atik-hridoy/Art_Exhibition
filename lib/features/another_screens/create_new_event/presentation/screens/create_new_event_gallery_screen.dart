@@ -102,6 +102,8 @@ class CreateNewEventGalleryScreen extends StatelessWidget {
                         titleText: AppString.next,
                         buttonRadius: 60,
                         onTap: () {
+                          // Save current images before navigating
+                          c.saveCurrentImages();
                           Get.toNamed(AppRoutes.createNewEventTicketBookingScreen, arguments: {
                             "title": title=="Edit Event"? "Edit Event" : "Create New Event"
                           });

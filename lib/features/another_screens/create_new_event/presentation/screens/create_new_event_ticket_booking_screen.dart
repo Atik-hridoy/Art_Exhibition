@@ -7,7 +7,6 @@ import 'package:tasaned_project/component/text_field/common_text_field.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
-import 'package:tasaned_project/component/pop_up/create_exhibition_success_popup.dart';
 import '../controllers/create_new_event_ticket_booking_controller.dart';
 
 class CreateNewEventTicketBookingScreen extends StatelessWidget {
@@ -131,7 +130,7 @@ class CreateNewEventTicketBookingScreen extends StatelessWidget {
                         titleText: 'Publish',
                         buttonRadius: 60,
                         onTap: () {
-                          CreateNewExhibitionSuccessPopup.show();
+                          c.createEvent();
                         },
                       ),
                       30.height,

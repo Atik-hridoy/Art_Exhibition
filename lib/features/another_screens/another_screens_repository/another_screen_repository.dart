@@ -441,7 +441,72 @@ Future<List<EventCardModel>?> getEvents({int page = 1, int limit = 10}) async {
   }
 }
 
-
+Future<ApiResponseModel?> createEventWithImages({
+  required Map<String, dynamic> eventData,
+  required List<String> imagePaths,
+}) async {
+  try {
+    log('Creating event with ${imagePaths.length} images');
+    
+    // Prepare form data
+    Map<String, String> body = {};
+    eventData.forEach((key, value) {
+      if (value != null && value.toString().isNotEmpty && key != 'images') {
+        body[key] = value.toString();
+      }
+    });
+    
+    // Create event with first image if available
+    if (imagePaths.isNotEmpty) {
+      final response = await ApiService.multipart(
+        ApiEndPoint.eventCreation,
+        body: body,
+        imagePath: imagePaths.first,
+        imageName: 'images',
+      );
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // If there are more images, upload them separately
+        if (imagePaths.length > 1) {
+          final eventId = response.data['data']?['_id'];
+          if (eventId != null) {
+            for (int i = 1; i < imagePaths.length; i++) {
+              await ApiService.multipart(
+                '${ApiEndPoint.eventCreation}/$eventId',
+                body: {},
+                imagePath: imagePaths[i],
+                imageName: 'images',
+              );
+            }
+          }
+        }
+        log('Event created successfully');
+        return response;
+      } else {
+        log('Failed to create event: ${response.statusCode}');
+        return response;
+      }
+    } else {
+      // Create event without images
+      final response = await ApiService.post(
+        ApiEndPoint.eventCreation,
+        body: body,
+      );
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log('Event created successfully without images');
+        return response;
+      } else {
+        log('Failed to create event: ${response.statusCode}');
+        return response;
+      }
+    }
+  } catch (e) {
+    log('Error creating event: $e');
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer $e');
+    return null;
+  }
+}
 
 
 // Future<ArtsResponse?> getFeaturedArt({int page = 1}) async {

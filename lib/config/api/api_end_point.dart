@@ -63,5 +63,6 @@ class ApiEndPoint {
 
   static const getMyEvents= 'events/my-events';
   static const eventDetails = 'events';
+  static const eventCreation = 'events';
 
 }
