@@ -36,7 +36,7 @@ class UserAppBar extends StatelessWidget {
             SizedBox(width: 12.w),
 
             // Create Event Icon
-            _buildCreateEventButton(),
+           // _buildCreateEventButton(),
 
             SizedBox(width: 12.w),
 
@@ -72,25 +72,25 @@ class UserAppBar extends StatelessWidget {
     );
   }
 
-  /// Build create event button
-  Widget _buildCreateEventButton() {
-    return InkWell(
-      onTap: () => _navigateToCreateEvent(),
-      borderRadius: BorderRadius.circular(8.r),
-      child: Container(
-        padding: EdgeInsets.all(8.r),
-        decoration: BoxDecoration(
-          color: AppColors.primaryColor,
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: Icon(
-          Icons.add,
-          size: 24.sp,
-          color: AppColors.white,
-        ),
-      ),
-    );
-  }
+  // /// Build create event button
+  // Widget _buildCreateEventButton() {
+  //   return InkWell(
+  //     onTap: () => _navigateToCreateEvent(),
+  //     borderRadius: BorderRadius.circular(8.r),
+  //     child: Container(
+  //       padding: EdgeInsets.all(8.r),
+  //       decoration: BoxDecoration(
+  //         color: AppColors.primaryColor,
+  //         borderRadius: BorderRadius.circular(8.r),
+  //       ),
+  //       // child: Icon(
+  //       //   Icons.add,
+  //       //   size: 24.sp,
+  //       //   color: AppColors.white,
+  //       // ),
+  //     ),
+  //   );
+  // }
 
   /// Navigate to notifications screen
   void _navigateToNotifications() {

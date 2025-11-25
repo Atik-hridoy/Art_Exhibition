@@ -37,6 +37,8 @@ class EventItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Stack(
             children: [
@@ -74,8 +76,9 @@ class EventItem extends StatelessWidget {
             ],
           ),
           // Content below image
-          Padding(
-            padding: EdgeInsets.all(8.w),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(6.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -149,6 +152,7 @@ class EventItem extends StatelessWidget {
                   ],
                 ),
               ],
+            ),
             ),
           ),
         ],

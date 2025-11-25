@@ -13,8 +13,13 @@ class EventController extends GetxController {
     try {
       upComingEventIsLoading = true;
       var response = await getEvents();
+      print('Events response: $response');
       if (response != null) {
         eventsList = response;
+        print('Events list length: ${eventsList?.length}');
+        for (int i = 0; i < (eventsList?.length ?? 0); i++) {
+          print('Event $i ID: ${eventsList?[i].id}');
+        }
         upComingEventIsLoading = false;
       }
       update();

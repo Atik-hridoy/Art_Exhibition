@@ -508,6 +508,23 @@ Future<ApiResponseModel?> createEventWithImages({
   }
 }
 
+Future<ApiResponseModel?> getExhibitionDetails({required String exhibitionId}) async {
+  try {
+    final response = await ApiService.get('${ApiEndPoint.exhibitionDetails}/$exhibitionId');
+    
+    if (response.statusCode == 200) {
+      log('Exhibition details retrieved successfully');
+      return response;
+    } else {
+      log('Failed to get exhibition details: ${response.statusCode}');
+      return response;
+    }
+  } catch (e) {
+    log('Error getting exhibition details: $e');
+    Utils.errorSnackBar('An error with repository', 'Please contact with developer $e');
+    return null;
+  }
+}
 
 // Future<ArtsResponse?> getFeaturedArt({int page = 1}) async {
 //   try {

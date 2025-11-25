@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
@@ -81,7 +82,9 @@ class EventDetailsController extends GetxController {
       await getEventDetailsData();
     } else {
       log('No eventId provided in arguments');
-      Utils.errorSnackBar('Error', 'Event ID not found');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Utils.errorSnackBar('Error', 'Event ID not found');
+      });
     }
   }
 

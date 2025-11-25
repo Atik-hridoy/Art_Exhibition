@@ -47,20 +47,20 @@ class MyExhibitionsScreen extends StatelessWidget {
               // Vertical space between items
             ),
             itemBuilder: (context, index) {
+              final exhibition = controller.exhibitionList?[index];
               return InkWell(
                 onTap: () {
                   Get.toNamed(
                     AppRoutes.exhibitionDetailsScreen,
-                    arguments: {"title": "My Exhibition"},
+                    arguments: {"title": "My Exhibition", "exhibitionId": exhibition?.id},
                   );
                 },
                 child: MyExhibitionsItem(
-                  image: controller.exhibitionList?[index].image ?? '',
-                  title: controller.exhibitionList?[index].title ?? 'N/A',
-                  venue: controller.exhibitionList?[index].venue ?? 'N/A',
-                  startDate:
-                      controller.exhibitionList?[index].startDate ?? DateTime.now(),
-                  endDate: controller.exhibitionList?[index].startDate ?? DateTime.now(),
+                  image: exhibition?.image ?? '',
+                  title: exhibition?.title ?? 'N/A',
+                  venue: exhibition?.venue ?? 'N/A',
+                  startDate: exhibition?.startDate ?? DateTime.now(),
+                  endDate: exhibition?.endDate ?? DateTime.now(),
                 ),
               );
             },

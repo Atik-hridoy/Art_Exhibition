@@ -203,11 +203,15 @@ class UpcomingEvents extends StatelessWidget {
                         ? controller.eventsList!.length
                         : 5,
                     itemBuilder: (context, index) {
+                      final event = controller.eventsList?[index];
                       return InkWell(
                         onTap: () {
                           Get.toNamed(
                             AppRoutes.eventDetailsScreen,
-                            arguments: {"title": "User Home"},
+                            arguments: {
+                              "title": "User Home",
+                              "eventId": event?.id
+                            },
                           );
                         },
                         child: EventItem(
@@ -357,7 +361,9 @@ class RecomendedArts extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       // SvgPicture.asset(AppIcons.noDataFoundIcon),
-                      CommonText(text: AppString.noRecommendedArts, color: Colors.grey),
+                      Flexible(
+                        child: CommonText(text: AppString.noRecommendedArts, color: Colors.grey),
+                      ),
                     ],
                   ),
                 )

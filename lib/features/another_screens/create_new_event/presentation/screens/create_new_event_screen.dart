@@ -214,7 +214,9 @@ class CreateNewEventScreen extends StatelessWidget {
                         borderColor: AppColors.primaryColor,
                         buttonColor: AppColors.white,
                         titleText: AppString.saveAsDraft,
-                        onTap: () {},
+                        onTap: () {
+                          c.saveAsDraft();
+                        },
                       ),
                       12.height,
                       CommonButton(

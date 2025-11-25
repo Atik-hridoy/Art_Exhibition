@@ -17,13 +17,15 @@ import 'package:tasaned_project/utils/extensions/extension.dart';
 class ExhibitionDetailsScreen extends StatelessWidget {
   ExhibitionDetailsScreen({super.key});
 
-  final String title = Get.arguments["title"];
+  final String title = Get.arguments?["title"] ?? "Exhibition Details";
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      init: ExhibitionDetailsController(),
-      builder: (controller) {
+    // Initialize controller
+    Get.put(ExhibitionDetailsController());
+    
+    return GetBuilder<ExhibitionDetailsController>(
+      builder: (ctrl) {
         String? formattedDate(DateTime? date) {
           if (date == null) {
             return null;
@@ -44,24 +46,24 @@ class ExhibitionDetailsScreen extends StatelessWidget {
           return remainingDays.toString();
         }
 
-        DateTime? startDate = controller.exibition?.startDate;
-        DateTime? endDate = controller.exibition?.endDate;
+        DateTime? startDate = ctrl.exibition?.startDate;
+        DateTime? endDate = ctrl.exibition?.endDate;
         String image =
-            (controller.exibition?.images != null &&
-                controller.exibition!.images!.isNotEmpty)
-            ? controller.exibition!.images![0]
+            (ctrl.exibition?.images != null &&
+                ctrl.exibition!.images!.isNotEmpty)
+            ? ctrl.exibition!.images![0]
             : 'N/A';
-        String exibitionTitle = controller.exibition?.title ?? 'N/A';
-        String creatorName = controller.exibition?.creatorId?.name ?? 'N/A';
-        String about = controller.exibition?.description ?? 'N/A';
+        String exibitionTitle = ctrl.exibition?.title ?? 'N/A';
+        String creatorName = ctrl.exibition?.creatorId?.name ?? 'N/A';
+        String about = ctrl.exibition?.description ?? 'N/A';
         String formatterdStartDate = formattedDate(startDate) ?? 'N/A';
         String formatterdEndDate = formattedDate(endDate) ?? 'N/A';
         String deysRemaining = calculateRemainingDays(DateTime.now(), startDate) ?? 'N/A';
-        String visitingHour = controller.exibition?.visitingHour ?? 'N/A';
-        String venue = controller.exibition?.venue ?? 'N/A';
-        String ticketPrice = controller.exibition?.ticketPrice.toString() ?? 'N/A';
-        List<Artist> artist = controller.exibition?.artists ?? [];
-        String buyTicketURL = controller.exibition?.bookingUrl ?? 'N/A';
+        String visitingHour = ctrl.exibition?.visitingHour ?? 'N/A';
+        String venue = ctrl.exibition?.venue ?? 'N/A';
+        String ticketPrice = ctrl.exibition?.ticketPrice.toString() ?? 'N/A';
+        List<Artist> artist = ctrl.exibition?.artists ?? [];
+        String buyTicketURL = ctrl.exibition?.bookingUrl ?? 'N/A';
 
         return Scaffold(
           backgroundColor: AppColors.white,
@@ -91,8 +93,8 @@ class ExhibitionDetailsScreen extends StatelessWidget {
                       onDelete: () => _confirmDelete(context),
                     )
                   : GestureDetector(
-                      onTap: () => controller.saveToggle(),
-                      child: controller.isSaved
+                      onTap: () => ctrl.saveToggle(),
+                      child: ctrl.isSaved
                           ? Icon(Icons.favorite, size: 18.sp, color: AppColors.titleColor)
                           : Icon(
                               Icons.favorite_border,
@@ -322,7 +324,7 @@ class ExhibitionDetailsScreen extends StatelessWidget {
             ),
             child: CommonButton(
               onTap: () {
-                controller.openInBrowser(buyTicketURL);
+                ctrl.openInBrowser(buyTicketURL);
               },
               titleText: AppString.getTickets,
             ),

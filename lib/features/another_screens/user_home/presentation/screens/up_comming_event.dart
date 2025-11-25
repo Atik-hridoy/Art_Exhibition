@@ -56,11 +56,19 @@ class UpComingEventScreen extends StatelessWidget {
                       // Vertical space between items
                     ),
                     itemBuilder: (context, index) {
+                      final event = controller.eventsList?[index];
+                      print('Home view - Event ID: ${event?.id}');
+                      print('Home view - Event Title: ${event?.title}');
+                      print('Home view - Events List Length: ${controller.eventsList?.length}');
                       return InkWell(
                         onTap: () {
+                          print('Navigating to details with ID: ${event?.id}');
                           Get.toNamed(
                             AppRoutes.eventDetailsScreen,
-                            arguments: {"title": "User Home"},
+                            arguments: {
+                              "title": "User Home",
+                              "eventId": event?.id
+                            },
                           );
                         },
                         child: EventItem(

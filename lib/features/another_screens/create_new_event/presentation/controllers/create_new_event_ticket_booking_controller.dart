@@ -90,6 +90,7 @@ class CreateNewEventTicketBookingController extends GetxController {
       // Add ticket and booking info to event data
       CreateNewEventController.eventData['ticketPrice'] = priceController.text;
       CreateNewEventController.eventData['bookingUrl'] = urlController.text;
+      CreateNewEventController.eventData['status'] = 'UPCOMING'; // Set to UPCOMING for publish
       
       log('Final event data: ${CreateNewEventController.eventData}');
       
@@ -133,6 +134,56 @@ class CreateNewEventTicketBookingController extends GetxController {
     } finally {
       isCreating = false;
       update();
+    }
+  }
+
+  // Save as draft functionality
+  Future<void> saveAsDraft() async {
+    try {
+      // Add ticket and booking info to event data
+      CreateNewEventController.eventData['ticketPrice'] = priceController.text;
+      CreateNewEventController.eventData['bookingUrl'] = urlController.text;
+      CreateNewEventController.eventData['status'] = 'DRAFT'; // Set to DRAFT
+      
+      log('Saving event as draft with final data: ${CreateNewEventController.eventData}');
+      
+      // Prepare form data
+      Map<String, String> body = {};
+      CreateNewEventController.eventData.forEach((key, value) {
+        if (value != null && value.toString().isNotEmpty && key != 'images') {
+          body[key] = value.toString();
+        }
+      });
+      
+      // Get image paths
+      List<String> imagePaths = [];
+      if (CreateNewEventController.eventData['images'] != null) {
+        imagePaths = List<String>.from(CreateNewEventController.eventData['images']);
+      }
+      
+      // Call API to create draft
+      final response = await createEventWithImages(
+        eventData: CreateNewEventController.eventData,
+        imagePaths: imagePaths,
+      );
+      
+      if (response != null && (response.statusCode == 200 || response.statusCode == 201)) {
+        log('Event draft saved successfully');
+        Utils.successSnackBar('Success', 'Event saved as draft');
+        
+        // Clear stored data
+        CreateNewEventController.eventData.clear();
+        
+        // Navigate back to home
+        Get.offAllNamed('/userHome');
+      } else {
+        log('Failed to save draft: ${response?.statusCode}');
+        Utils.errorSnackBar('Error', 'Failed to save draft');
+      }
+      
+    } catch (e) {
+      log('Error saving draft: $e');
+      Utils.errorSnackBar('Error', 'Failed to save draft: $e');
     }
   }
 

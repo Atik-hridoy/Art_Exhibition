@@ -134,11 +134,18 @@ class UpComingExhibitionScreen extends StatelessWidget {
                             // Vertical space between items
                           ),
                           itemBuilder: (context, index) {
+                            final exhibition = controller.exhibitionList?[index];
+                            print('Home view - Exhibition ID: ${exhibition?.id}');
+                            print('Home view - Exhibition Title: ${exhibition?.title}');
                             return InkWell(
                               onTap: () {
+                                print('Navigating to details with ID: ${exhibition?.id}');
                                 Get.toNamed(
                                   AppRoutes.exhibitionDetailsScreen,
-                                  arguments: {"title": "User Home"},
+                                  arguments: {
+                                    "title": "User Home", 
+                                    "exhibitionId": exhibition?.id
+                                  },
                                 );
                               },
                               child: ExhibitionItem(
@@ -152,7 +159,7 @@ class UpComingExhibitionScreen extends StatelessWidget {
                                     controller.exhibitionList?[index].startDate ??
                                     DateTime.now(),
                                 endDate:
-                                    controller.exhibitionList?[index].startDate ??
+                                    controller.exhibitionList?[index].endDate ??
                                     DateTime.now(),
                                 onTapSave: () {
                                   controller.savedExhibitionToggle(index: index);

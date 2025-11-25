@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
@@ -15,16 +16,39 @@ class ExhibitionDetailsController extends GetxController {
   void exibitionDetails() async {
     try {
       upComingExibitionIsLoading = true;
-      // TODO: Need to change the  ID parameter
-      var response = await getExibitionDetails(id: '68fa0e5cdb0dd5f1b948a6c0');
-      if (response != null) {
-        exibition = response;
-        exibitionId = exibition!.id;
+      update();
+      
+      // Get exhibition ID from arguments
+      final args = Get.arguments as Map<String, dynamic>?;
+      log('Received arguments: $args');
+      final String? exhibitionId = args?['exhibitionId'];
+      log('Extracted exhibition ID: $exhibitionId');
+      
+      if (exhibitionId == null || exhibitionId.isEmpty) {
+        log('No exhibition ID provided');
         upComingExibitionIsLoading = false;
+        update();
+        return;
       }
+      
+      log('Fetching exhibition details for ID: $exhibitionId');
+      
+      var response = await getExhibitionDetails(exhibitionId: exhibitionId);
+      if (response != null && response.statusCode == 200) {
+        final data = response.data['data'] as Map<String, dynamic>;
+        exibition = Exhibition.fromJson(data);
+        exibitionId = exibition!.id;
+        isSaved = exibition!.isOnFavorite ?? false;
+        log('Exhibition details loaded: ${exibition!.title}');
+      } else {
+        log('Failed to load exhibition details: ${response?.statusCode}');
+      }
+      
+      upComingExibitionIsLoading = false;
       update();
     } catch (error) {
       upComingExibitionIsLoading = false;
+      log('Error loading exhibition details: $error');
       Utils.errorSnackBar('Error', error.toString());
       update();
     }
@@ -32,10 +56,12 @@ class ExhibitionDetailsController extends GetxController {
 
   Future<void> saveToggle() async {
     try {
+      if (exibitionId == null) return;
+      
       Map<String, dynamic> body = {'type': 'Exhibition', "item": exibitionId};
       var response = await ApiService.post(ApiEndPoint.saveToggle, body: body);
       if (response.statusCode == 200) {
-        response.data["data"]["deletedCount"] == null ? isSaved = true : isSaved = false;
+        isSaved = response.data["data"]["deletedCount"] == null;
         update();
       }
     } catch (e) {
@@ -56,7 +82,6 @@ class ExhibitionDetailsController extends GetxController {
   @override
   void onInit() {
     exibitionDetails();
-    isSaved = exibition?.isOnFavorite ?? false;
     super.onInit();
   }
 }
