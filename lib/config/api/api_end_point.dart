@@ -69,6 +69,12 @@ class ApiEndPoint {
 
   static const getMyExhibition = 'exhibition/my-exhibitions';
   static const exhibitionDetails = 'exhibition';
+  static const createExhibition = 'exhibition';
+
+  //   order 
+
+  
+  static const order = 'order';
 
 
 }

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:tasaned_project/features/another_screens/art_details/presentation/screens/art_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/art_details/presentation/screens/check_out_screen.dart';
 import 'package:tasaned_project/features/another_screens/art_details/presentation/screens/payment_confirmation_screen.dart';
+import 'package:tasaned_project/features/another_screens/art_details/presentation/screens/payment_checkout_webview_screen.dart';
 import 'package:tasaned_project/features/another_screens/art_details/presentation/screens/offer_submitted_screen.dart';
 import 'package:tasaned_project/features/another_screens/artist_details/presentation/screens/artist_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/category/presentation/screens/category_Screen.dart';
@@ -147,6 +148,7 @@ class AppRoutes {
   static const String grandleGallery = "/grandleGallery";
   static const String artistDetailsScreen = "/artistDetailsScreen";
   static const String paymentConfirmationScreen = "/paymentConfirmationScreen";
+  static const String paymentCheckoutWebView = "/paymentCheckoutWebView";
   static const String offerSubmittedScreen = "/offerSubmittedScreen";
   static const String exhibitionScreen = "/exhibitionScreen";
   static const String exhibitionDetailsScreen = "/exhibitionDetailsScreen";
@@ -211,6 +213,7 @@ class AppRoutes {
     GetPage(name: artDetailsScreen, page: () => ArtDetailsScreen()),
     GetPage(name: checkOutScreen, page: () => CheckOutScreen()),
     GetPage(name: paymentConfirmationScreen, page: () => PaymentConfirmationScreen()),
+    GetPage(name: paymentCheckoutWebView, page: () => const PaymentCheckoutWebViewScreen()),
     GetPage(name: offerSubmittedScreen, page: () => const OfferSubmittedScreen()),
     // TODO: GetPage(name: grandleGallery, page: () => GrandleGallery()),
     GetPage(name: artistDetailsScreen, page: () => ArtistDetailsScreen()),

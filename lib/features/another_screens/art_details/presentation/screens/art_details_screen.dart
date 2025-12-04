@@ -394,9 +394,17 @@ class ArtDetailsScreen extends StatelessWidget {
                                   Expanded(
                                     child: CommonButton(
                                       buttonRadius: 60,
-                                      onTap: () {
-                                        Get.toNamed(AppRoutes.checkOutScreen);
-                                      },
+                                      onTap: controller.artData == null
+                                          ? null
+                                          : () {
+                                              Get.toNamed(
+                                                AppRoutes.checkOutScreen,
+                                                arguments: {
+                                                  'artId': controller.artData?.id ?? '',
+                                                  'price': controller.artData?.price ?? 0,
+                                                },
+                                              );
+                                            },
 
                                       titleText: AppString.purchase,
                                     ),

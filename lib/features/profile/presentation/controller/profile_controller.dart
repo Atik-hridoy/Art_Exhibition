@@ -288,7 +288,7 @@ class ProfileController extends GetxController {
           print("Response contains: ${response.data}");
           
           // Check if the response contains a new image URL
-          if (response.data != null && response.data['data'] != null) {
+          if (response.data['data'] != null) {
             final newImageUrl = response.data['data']['profileImage'];
             print("New profile image URL from server: '$newImageUrl'");
             

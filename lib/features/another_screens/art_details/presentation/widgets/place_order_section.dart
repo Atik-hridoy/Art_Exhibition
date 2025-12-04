@@ -5,19 +5,32 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/component/button/common_button.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
-import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/art_details/presentation/controller/check_out_controller.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_string.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 
 class PlaceOrderSection extends StatelessWidget {
-  const PlaceOrderSection({super.key});
+  final String artId;
+  final num artPrice;
+
+  const PlaceOrderSection({
+    super.key,
+    required this.artId,
+    required this.artPrice,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CheckOutController>(
       builder: (controller) {
+        final double shippingFee = controller.shippingCharge.toDouble();
+        final double priceValue = artPrice.toDouble();
+        final double totalPrice = priceValue + shippingFee;
+        final String itemCostText = '\$${priceValue.toStringAsFixed(2)}';
+        final String shippingFeeText = '\$${shippingFee.toStringAsFixed(2)}';
+        final String totalPriceText = '\$${totalPrice.toStringAsFixed(2)}';
+
         return Container(
           width: double.infinity,
 
@@ -49,7 +62,7 @@ class PlaceOrderSection extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppColors.titleColor,
-                    text:"\$449.97"),
+                    text:itemCostText),
               ],),
               16.height,
 
@@ -66,7 +79,7 @@ class PlaceOrderSection extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppColors.titleColor,
-                    text:"\$29.00"),
+                    text:shippingFeeText),
 
             
 
@@ -97,7 +110,7 @@ class PlaceOrderSection extends StatelessWidget {
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: AppColors.titleColor,
-                      text:"\$29.00"),
+                      text:totalPriceText),
                 ],),
 
 
@@ -156,11 +169,18 @@ class PlaceOrderSection extends StatelessWidget {
               ),
               
               24.height,
-              
+              24.height,
+
               CommonButton(
-                onTap: (){
-                  Get.toNamed(AppRoutes.paymentConfirmationScreen);
-                },
+                isLoading: controller.isPlacingOrder,
+                onTap: controller.isPlacingOrder
+                    ? null
+                    : () async {
+                        await controller.placeOrder(
+                          artId: artId,
+                          artPrice: artPrice,
+                        );
+                      },
                   buttonRadius: 60,
                   titleText: AppString.placeOrder),
 

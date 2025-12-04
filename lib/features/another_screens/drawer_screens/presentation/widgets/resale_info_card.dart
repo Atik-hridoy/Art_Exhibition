@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';

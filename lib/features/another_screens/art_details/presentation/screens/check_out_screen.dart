@@ -16,6 +16,10 @@ class CheckOutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments ?? {};
+    final String artId = arguments['artId'] ?? '';
+    final num artPrice = arguments['price'] ?? 0;
+
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -42,7 +46,7 @@ class CheckOutScreen extends StatelessWidget {
 
       body: GetBuilder<CheckOutController>(
         init: CheckOutController(),
-        builder: (_) => SingleChildScrollView(
+        builder: (controller) => SingleChildScrollView(
           child: Column(
             children: [
         
@@ -68,6 +72,7 @@ class CheckOutScreen extends StatelessWidget {
                     hintText: 'Write Additional Notes for seller',
                     borderColor: AppColors.bodyClr,
                     maxline: 4,
+                    controller: controller.noteCtrl,
                   ),
                 ],
               ),
@@ -78,7 +83,10 @@ class CheckOutScreen extends StatelessWidget {
        
 
             // Order Summary and CTA
-            PlaceOrderSection()
+            PlaceOrderSection(
+              artId: artId,
+              artPrice: artPrice,
+            )
           ],
         ),
       ),
