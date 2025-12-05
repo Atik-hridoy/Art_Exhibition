@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
+import 'package:tasaned_project/features/another_screens/drawer_screens/data/models/order_item_model.dart';
 
 class OrderHistoryController extends GetxController {
-  // 0 = My Purchase, 1 = My Sales
-  int selectedTab = 0;
-  String comeFromType="";
+  OrderHistoryController({OrderHistoryRepository? repository})
+      : _repository = repository ?? OrderHistoryRepository();
 
+  static OrderHistoryController? instance = Get.put(OrderHistoryController());
+
+  final OrderHistoryRepository _repository;
   final TextEditingController searchController = TextEditingController();
 
-  static OrderHistoryController? instance =Get.put(OrderHistoryController());
+  String comeFromType = '';
+  int selectedTab = 0; // 0 = My Purchase, 1 = My Sales
 
-  // Filter state
-  String? selectedStatusFilter; // null means no filter
+  String? selectedStatusFilter;
   final List<String> statuses = const [
     'Pending',
     'Processing',
@@ -23,41 +27,50 @@ class OrderHistoryController extends GetxController {
     'New Offer',
   ];
 
-  final List<Map<String, dynamic>> purchases = [
-    {"title": "Whispers of the Forest", "price": 250, "status": "Received"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Pending"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Processing"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Confirmed"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Canceled"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Rejected"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Expired"},
-  ];
+  bool isLoadingPurchases = true;
+  String? purchasesError;
 
-  final List<Map<String, dynamic>> sales = [
-    {"title": "Whispers of the Forest", "price": 250, "status": "New Offer"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Processing"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Confirmed"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Canceled"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Rejected"},
-    {"title": "Whispers of the Forest", "price": 250, "status": "Expired"},
-  ];
+  List<OrderItemModel> purchases = [];
+  final List<OrderItemModel> sales = [];
 
-  void changeTab(int index) {
-    if (selectedTab != index) {
-      selectedTab = index;
-      // Reset filter on tab switch
-      selectedStatusFilter = null;
+  @override
+  void onInit() {
+    super.onInit();
+    fetchMyPurchases();
+  }
+
+  Future<void> fetchMyPurchases() async {
+    try {
+      isLoadingPurchases = true;
+      purchasesError = null;
+      update();
+
+      final result = await _repository.getOrderHistory(type: 'purchases');
+      purchases = result ?? [];
+    } catch (e) {
+      purchasesError = e.toString();
+    } finally {
+      isLoadingPurchases = false;
       update();
     }
   }
 
-  List<Map<String, dynamic>> get currentList => selectedTab == 0 ? purchases : sales;
+  void changeTab(int index) {
+    if (selectedTab == index) return;
+    selectedTab = index;
+    selectedStatusFilter = null;
+    update();
+  }
 
-  // Returns the list respecting the selectedStatusFilter
-  List<Map<String, dynamic>> get filteredList {
+  List<OrderItemModel> get currentList => selectedTab == 0 ? purchases : sales;
+
+  List<OrderItemModel> get filteredList {
     final list = currentList;
-    if (selectedStatusFilter == null) return list;
-    return list.where((e) => (e['status'] as String).toLowerCase() == selectedStatusFilter!.toLowerCase()).toList();
+    if (selectedStatusFilter == null || selectedStatusFilter!.isEmpty) {
+      return list;
+    }
+    final filter = selectedStatusFilter!.toLowerCase();
+    return list.where((item) => item.status.toLowerCase() == filter).toList();
   }
 
   void setFilter(String? status) {
@@ -70,11 +83,9 @@ class OrderHistoryController extends GetxController {
     update();
   }
 
-  void comeFrom(String type){
-    comeFromType=type;
+  void comeFrom(String type) {
+    comeFromType = type;
     update();
-
-    
   }
 
   @override

@@ -5,8 +5,8 @@ import 'package:tasaned_project/component/button/common_button.dart';
 import 'package:tasaned_project/component/image/common_image.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
-import 'package:tasaned_project/features/another_screens/art_details/presentation/screens/art_details_loading_widgets/art_details_loading.dart';
-import 'package:tasaned_project/features/another_screens/art_details/presentation/screens/art_details_loading_widgets/releated_art_loading.dart';
+import 'package:tasaned_project/features/another_screens/related_art_details/presentation/screens/art_details_loading_widgets/art_details_loading.dart';
+import 'package:tasaned_project/features/another_screens/related_art_details/presentation/screens/art_details_loading_widgets/releated_art_loading.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_loader.dart';
@@ -19,8 +19,8 @@ import '../../../user_home/presentation/widgets/arts_item.dart';
 import '../widgets/banner_dot_indecator.dart';
 import '../controller/art_details_controller.dart';
 
-class ArtDetailsScreen extends StatelessWidget {
-  ArtDetailsScreen({super.key});
+class RelatedArtDetailsScreen extends StatelessWidget {
+  RelatedArtDetailsScreen({super.key});
 
   final String screenType = Get.arguments['screenType'];
 
@@ -44,8 +44,8 @@ class ArtDetailsScreen extends StatelessWidget {
         ),
       ),
 
-      body: GetBuilder<ArtDetailsController>(
-        init: ArtDetailsController(),
+      body: GetBuilder<RelatedArtDetailsController>(
+        init: RelatedArtDetailsController(),
         builder: (controller) {
           // Check for navigation updates
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -349,16 +349,16 @@ class ArtDetailsScreen extends StatelessWidget {
 
                               20.height,
 
-                              // Related Arts
-                              CommonText(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.titleColor,
-                                text: "Related Arts",
-                              ),
-                              16.height,
+                              // Related Arts - Skip for related art details view
+                              // CommonText(
+                              //   fontSize: 16,
+                              //   fontWeight: FontWeight.w600,
+                              //   color: AppColors.titleColor,
+                              //   text: "Related Arts",
+                              // ),
+                              // 16.height,
 
-                              RelatedArtScreen(controller: controller),
+                              // RelatedArtScreen(controller: controller),
 
                               30.height,
                             ],
@@ -435,7 +435,7 @@ class ArtDetailsScreen extends StatelessWidget {
 }
 
 class RelatedArtScreen extends StatelessWidget {
-  final ArtDetailsController controller;
+  final RelatedArtDetailsController controller;
   const RelatedArtScreen({super.key, required this.controller});
 
   @override
@@ -465,7 +465,7 @@ class RelatedArtScreen extends StatelessWidget {
                     padding: EdgeInsets.only(right: 16.w),
                     child: InkWell(
                       onTap: () => Get.toNamed(
-                        AppRoutes.relatedArtDetailsScreen,
+                        AppRoutes.artDetailsScreen,
                         arguments: {
                           'screenType': 'relatedArt',
                           'artId': relatedArtId,
@@ -492,7 +492,7 @@ class RelatedArtScreen extends StatelessWidget {
 // =============== Make an Offer Dialog ===============
 void _showMakeOfferDialog(BuildContext context) {
   Get.dialog(
-    GetBuilder<ArtDetailsController>(
+    GetBuilder<RelatedArtDetailsController>(
       builder: (controller) => AnimatedPadding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         duration: const Duration(milliseconds: 200),

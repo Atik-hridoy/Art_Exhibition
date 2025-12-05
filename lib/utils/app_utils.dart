@@ -32,26 +32,11 @@ class Utils {
     required Color backgroundColor,
     required SnackPosition snackPosition,
   }) {
-    final messenger = scaffoldMessengerKey.currentState;
-
-    if (messenger != null) {
-      messenger
-        ..removeCurrentSnackBar()
-        ..showSnackBar(
-          _buildSnackBar(
-            title: title,
-            message: message,
-            backgroundColor: backgroundColor,
-            snackPosition: snackPosition,
-          ),
-        );
-      return;
-    }
-
+    // Always use post-frame callback to avoid build phase issues
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final retryMessenger = scaffoldMessengerKey.currentState;
-      if (retryMessenger != null) {
-        retryMessenger
+      final messenger = scaffoldMessengerKey.currentState;
+      if (messenger != null) {
+        messenger
           ..removeCurrentSnackBar()
           ..showSnackBar(
             _buildSnackBar(
@@ -61,8 +46,6 @@ class Utils {
               snackPosition: snackPosition,
             ),
           );
-      } else {
-        debugPrint('ScaffoldMessenger not ready: unable to show snackbar.');
       }
     });
   }

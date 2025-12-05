@@ -380,7 +380,10 @@ class RecomendedArts extends StatelessWidget {
                         onTap: () {
                           Get.toNamed(
                             AppRoutes.artDetailsScreen,
-                            arguments: {"screenType": "userHome"},
+                            arguments: {
+                              "screenType": "userHome",
+                              "artId": controller.recommendedArtList?[index].id ?? '',
+                            },
                           );
                         },
                         child: ArtsItem(
@@ -631,11 +634,15 @@ class FeatureArtSection extends StatelessWidget {
                         ? controller.featureArtList!.length
                         : 5,
                     itemBuilder: (context, index) {
+                      final artId = controller.featureArtList?[index].id ?? '';
                       return InkWell(
                         onTap: () {
                           Get.toNamed(
                             AppRoutes.artDetailsScreen,
-                            arguments: {"screenType": "userHome"},
+                            arguments: {
+                              "screenType": "userHome",
+                              "artId": artId,
+                            },
                           );
                         },
                         child: ArtsItem(

@@ -48,12 +48,11 @@ class VisitorOrderList extends StatelessWidget {
       itemBuilder: (context, index) {
         final item = items[index];
         final Color statusColor = _statusColor(item['status']);
-        return InkWell(
-          onTap: () {
-       
-              Get.to(() => MyOrderScreen(order: item));
-          
-          },
+        final id = (item['id'] ?? item['_id'] ?? '').toString();
+            return InkWell(
+              onTap: () {
+                Get.to(() => MyOrderScreen(orderId: id, initialOrder: item));
+              },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8.h),
             padding: EdgeInsets.all(12.r),

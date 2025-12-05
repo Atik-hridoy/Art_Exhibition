@@ -104,10 +104,11 @@ class OtherHelper {
   }
 
   static Future<List<String>> pickMultipleImage({required int imageLimit}) async {
-    final ImagePicker picker = ImagePicker();
-    log("Image Limit: $imageLimit");
+    try {
+      final ImagePicker picker = ImagePicker();
+      log("Image Limit: $imageLimit");
 
-    final List<XFile> getImages = await picker.pickMultiImage(imageQuality: 50, limit: imageLimit) ?? [];
+      final List<XFile> getImages = await picker.pickMultiImage(imageQuality: 50, limit: imageLimit) ?? [];
 
     if (getImages.isEmpty) return [];
 
@@ -119,6 +120,10 @@ class OtherHelper {
     }
 
     return getImages.map((file) => file.path).toList();
+    } catch (e) {
+      log("Error picking images: $e");
+      return [];
+    }
   }
 
   static Future<String?> pickVideoFromGallery() async {

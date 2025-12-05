@@ -8,7 +8,7 @@ class ApiEndPoint {
   static const signIn = "auth/login"; // Saved ny Nasim
   static const forgotPassword = "auth/forget-password"; // Saved ny Nasim
 
-  // static const verifyOtp = "users/verify-otp";
+  static const verifyOtp = "users/verify-otp";
 
   static const resendOtp = "/auth/resend-otp"; // Saved ny Nasim
   static const resetPassword = "auth/reset-password"; // Saved ny Nasim
@@ -73,7 +73,7 @@ class ApiEndPoint {
 
   //   order 
 
-  
+  static const getMyOrder = 'order/my-orders';
   static const order = 'order';
 
 

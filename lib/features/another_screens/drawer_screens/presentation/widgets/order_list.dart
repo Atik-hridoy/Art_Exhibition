@@ -7,6 +7,7 @@ import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
+import 'package:tasaned_project/features/another_screens/drawer_screens/data/models/order_item_model.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/my_order_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/resale_art_screen.dart';
 
@@ -17,7 +18,7 @@ class OrderList extends StatelessWidget {
     required this.selectedTab,
   });
 
-  final List<Map<String, dynamic>> items;
+  final List<dynamic> items;
   final int selectedTab; // 0 = Purchase, 1 = Sales
 
   Color _statusColor(String status) {
@@ -40,6 +41,18 @@ class OrderList extends StatelessWidget {
     }
   }
 
+  OrderItemModel _parseItem(dynamic raw) {
+    if (raw is OrderItemModel) return raw;
+    if (raw is Map<String, dynamic>) return OrderItemModel.fromJson(raw);
+    return const OrderItemModel(
+      id: '',
+      title: 'Unknown',
+      price: '0',
+      image: '',
+      status: 'Pending',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -48,14 +61,16 @@ class OrderList extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final item = items[index];
-        final Color statusColor = _statusColor(item['status']);
+        final OrderItemModel order = _parseItem(items[index]);
+        final Color statusColor = _statusColor(order.status);
+        final orderMap = order.toJson();
+        final id = orderMap['id'] ?? orderMap['_id'] ?? '';
         return InkWell(
           onTap: () {
             if (selectedTab == 0) {
-              Get.to(() => MyOrderScreen(order: item));
+              Get.to(() => MyOrderScreen(orderId: id.toString(), initialOrder: orderMap));
             } else {
-              Get.to(() => MyOrderScreen(order: item, isSales: true));
+              Get.to(() => MyOrderScreen(orderId: id.toString(), initialOrder: orderMap, isSales: true));
             }
           },
           child: Container(
@@ -72,7 +87,7 @@ class OrderList extends StatelessWidget {
                   width: 86.w,
                   borderRadius: 8.r,
                   fill: BoxFit.cover,
-                  imageSrc: AppImages.arts,
+                  imageSrc: order.image.isNotEmpty ? order.image : AppImages.arts,
                 ),
                 10.width,
                 Expanded(
@@ -85,16 +100,16 @@ class OrderList extends StatelessWidget {
                           Expanded(
                             child: CommonText(
                               textAlign: TextAlign.left,
-                              text: item['title'],
+                              text: order.title,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.titleColor,
                               maxLines: 1,
                             ),
                           ),
-                          if (selectedTab == 0 && item['status'] == 'Received')
+                          if (selectedTab == 0 && order.status == 'Received')
                             GestureDetector(
-                              onTap: () => Get.to(() => ResaleArtScreen(order: item)),
+                              onTap: () => Get.to(() => ResaleArtScreen(order: order.toJson())),
                               child: Icon(
                                 CupertinoIcons.arrow_2_squarepath,
                                 size: 20.sp,
@@ -108,13 +123,13 @@ class OrderList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CommonText(
-                            text: "\$${item["price"]}",
+                            text: "\$${order.price}",
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: AppColors.primaryColor,
                           ),
                           CommonText(
-                            text: item['status'],
+                            text: order.status,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: statusColor,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:tasaned_project/component/text/common_text.dart';
 import 'package:tasaned_project/component/button/common_button.dart';
 import 'package:tasaned_project/utils/constants/app_colors.dart';
@@ -11,25 +12,48 @@ import 'package:tasaned_project/features/another_screens/drawer_screens/presenta
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/controller/my_order_controller.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/order_info_table.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/widgets/my_information_card.dart';
-import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/art_details_screen.dart';
+import '../../../../../config/route/app_routes.dart';
 
 class MyOrderScreen extends StatelessWidget {
-  const MyOrderScreen({super.key, required this.order, this.isSales = false});
+  const MyOrderScreen({super.key, required this.orderId, this.initialOrder, this.isSales = false});
 
-  final Map<String, dynamic> order;
+  final String orderId;
+  final Map<String, dynamic>? initialOrder;
   final bool isSales;
+
+  String _formatOrderId(String? orderId) {
+    if (orderId == null || orderId.isEmpty) return '--';
+    if (orderId.length <= 8) return orderId;
+    return orderId.substring(orderId.length - 8);
+  }
+
+  String _formatOrderDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '--';
+    try {
+      final dateTime = DateTime.parse(dateStr);
+      return DateFormat('MMM d, yyyy').format(dateTime);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  Map<String, dynamic>? _mergeData(MyOrderController controller) {
+    final details = controller.orderDetails;
+    if (details == null) return initialOrder;
+    if (initialOrder == null) return details;
+    return {...initialOrder!, ...details};
+  }
 
   @override
   Widget build(BuildContext context) {
-    // put controller for carousel and status
     final myOrderCtrl = Get.put(MyOrderController());
-    final title = (order['title'] ?? '').toString();
-    final price = (order['price'] ?? 0).toString();
-    //final status = (order['status'] ?? '').toString();
 
-    // ensure initial status is set after first frame to avoid update() during build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      myOrderCtrl.setInitialStatus((order['status'] ?? '').toString());
+      final status = (initialOrder?['status'] ?? '').toString();
+      if (status.isNotEmpty) {
+        myOrderCtrl.setInitialStatus(status);
+      }
+      myOrderCtrl.loadOrderDetails(orderId);
     });
 
     return Scaffold(
@@ -65,156 +89,199 @@ class MyOrderScreen extends StatelessWidget {
             }),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 16.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top image/banner as slidable carousel
-              Padding(
-                padding: EdgeInsets.all(16.w),
-                child: OrderImageCarousel(
-                  images: const [
-                    AppImages.arts,
-                    AppImages.exhibition,
-                    AppImages.classic,
-                  ],
-                  height: 300.h,
-                ),
-              ),
+      body: GetBuilder<MyOrderController>(
+        builder: (controller) {
+          if (controller.isLoading && controller.orderDetails == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-              // Title, subtitle, price
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CommonText(
-                      text: title,
+          if (controller.errorMessage != null && controller.orderDetails == null) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CommonText(
+                    text: controller.errorMessage!,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.titleColor,
+                  ),
+                  12.height,
+                  ElevatedButton(
+                    onPressed: () => controller.loadOrderDetails(orderId),
+                    child: const CommonText(
+                      text: 'Retry',
                       fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final data = _mergeData(controller);
+          final art = data?['artId'] as Map<String, dynamic>?;
+          final title = (art?['title'] ?? data?['title'] ?? '').toString();
+          final price = (data?['price'] ?? art?['price'] ?? 0).toString();
+          final images = <String>[
+            if ((data?['artImage'] ?? '').toString().isNotEmpty) data!['artImage'],
+            if ((art?['image'] ?? '').toString().isNotEmpty) art!['image'],
+          ];
+
+          final shipping = data?['shippingAddress'] as Map<String, dynamic>?;
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: OrderImageCarousel(
+                      images: images.isNotEmpty
+                          ? images
+                          : const [
+                              AppImages.arts,
+                              AppImages.exhibition,
+                              AppImages.classic,
+                            ],
+                      height: 300.h,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CommonText(
+                          text: title.isNotEmpty ? title : 'Untitled Art',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.titleColor,
+                        ),
+                        5.height,
+                        CommonText(
+                          text: AppString.abstractLabel,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.titleColorSecondary,
+                        ),
+                        8.height,
+                        CommonText(
+                          text: '\$$price',
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  20.height,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: CommonText(
+                      text: AppString.orderDetails,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: AppColors.titleColor,
                     ),
-                    5.height,
-                    CommonText(
-                      text: AppString.abstractLabel,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.titleColorSecondary,
+                  ),
+                  8.height,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: InfoTable(rows: [
+                      RowItem(AppString.orderId, _formatOrderId(data?['_id']?.toString())),
+                      RowItem(AppString.orderDate, _formatOrderDate(data?['createdAt']?.toString())),
+                      RowItem(AppString.orderStatus, controller.currentStatus),
+                      RowItem(AppString.paymentMethod, data?['paymentMethod']?.toString() ?? '--'),
+                      RowItem(AppString.paymentStatus, data?['isPaid'] == true ? 'Paid' : 'Unpaid'),
+                      RowItem(AppString.totalAmount, '\$${data?['totalPrice'] ?? price}'),
+                    ]),
+                  ),
+                  24.height,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: CommonText(
+                      text: AppString.myInformation,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.titleColor,
                     ),
-                    8.height,
-                    CommonText(
-                      text: '\$$price',
-                      fontSize:24,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryColor,
+                  ),
+                  8.height,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: MyInformationCard(
+                      name: shipping?['name']?.toString(),
+                      phone: shipping?['phone']?.toString(),
+                      address: shipping?['address']?.toString(),
                     ),
+                  ),
+                  24.height,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: CommonText(
+                      text: AppString.additionalInformation,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.titleColor,
+                    ),
+                  ),
+                  8.height,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(12.r),
+                      decoration: BoxDecoration(
+                        border: Border(left: BorderSide(color: AppColors.primaryColor, width: 3)),
+                        color: AppColors.yelloFade,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: CommonText(
+                        text: data?['additionalNote']?.toString().isNotEmpty == true
+                            ? data!['additionalNote']
+                            : AppString.callMeBeforeSending,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.titleColor,
+                      ),
+                    ),
+                  ),
+                  20.height,
+                  if (!isSales) ...[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: CommonButton(
+                        buttonColor: AppColors.transparent,
+                        titleText: AppString.viewProductDetails,
+                        buttonRadius: 60,
+                        titleColor: AppColors.primaryColor,
+                        onTap: () {
+                          final artId = (data?['artId']?['_id'] ?? data?['artId'] ?? '').toString();
+                          if (artId.isNotEmpty) {
+                            Get.toNamed(
+                              AppRoutes.artDetailsScreen,
+                              arguments: {
+                                "screenType": "orderDetails",
+                                "artId": artId,
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    20.height,
                   ],
-                ),
+                ],
               ),
-
-              20.height,
-
-              // Order Details card
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: CommonText(
-                  text: AppString.orderDetails,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.titleColor,
-                ),
-              ),
-              8.height,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: GetBuilder<MyOrderController>(builder: (c) {
-                  return InfoTable(rows: [
-                    RowItem(AppString.orderId, '#ORD-2024-0892'),
-                    RowItem(AppString.orderDate, 'Aug 19, 2025'),
-                    RowItem(AppString.orderStatus, c.currentStatus),
-                    RowItem(AppString.paymentMethod, 'Credit Card'),
-                    RowItem(AppString.paymentStatus, 'Paid'),
-                    RowItem(AppString.totalAmount, '\$$price.00'),
-                  ]);
-                }),
-              ),
-
-              24.height,
-
-              // My Information
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: CommonText(
-                  text: AppString.myInformation,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.titleColor,
-                ),
-              ),
-              8.height,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: const MyInformationCard(),
-              ),
-
-              24.height,
-
-              // Additional Information
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: CommonText(
-                  text: AppString.additionalInformation,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.titleColor,
-                ),
-              ),
-              8.height,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12.r),
-                  decoration: BoxDecoration(
-                    border: Border(left: BorderSide(color: AppColors.primaryColor, width: 3)),
-                    color: AppColors.yelloFade,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: CommonText(
-                    text: AppString.callMeBeforeSending,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.titleColor,
-                  ),
-                ),
-              ),
-
-              20.height,
-
-              // View product details button (hidden for My Sales)
-              if (!isSales) ...[
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: CommonButton(
-                    buttonColor: AppColors.transparent,
-                    titleText: AppString.viewProductDetails,
-                    buttonRadius: 60,
-                    titleColor: AppColors.primaryColor,
-                    onTap: () {
-                      Get.to(() => ArtDetailsScreen(title: title, price: price));
-                    },
-                  ),
-                ),
-
-                20.height,
-              ],
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
-
 }

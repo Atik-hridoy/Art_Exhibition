@@ -8,7 +8,7 @@ import 'package:tasaned_project/services/api/api_service.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 
-class ArtDetailsController extends GetxController {
+class RelatedArtDetailsController extends GetxController {
   final PageController pageController = PageController();
   int currentIndex = 0;
   bool isFollowing = false;
@@ -150,16 +150,18 @@ class ArtDetailsController extends GetxController {
       isFollowing = artData?.followArtist ?? false;
       isSaved = artData?.isOnFavorite ?? false;
       artID = artData?.id ?? '';
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        update();
-      });
     }
     await reletedArt();
   }
 
   Future<void> refreshArtDetails(String newArtId) async {
     artID = newArtId;
-    await initialFunction();
+    await artDetails();
+    // Skip related arts for related art details view
+    if (artData != null) {
+      isFollowing = artData?.followArtist ?? false;
+      isSaved = artData?.isOnFavorite ?? false;
+    }
   }
 
   @override
@@ -168,9 +170,9 @@ class ArtDetailsController extends GetxController {
     final newArtId = Get.arguments?['artId'] ?? '';
     if (newArtId.isNotEmpty && newArtId != artID) {
       artID = newArtId;
-      initialFunction();
+      refreshArtDetails(newArtId);
     } else {
-      initialFunction();
+      refreshArtDetails(newArtId);
     }
     super.onInit();
   }

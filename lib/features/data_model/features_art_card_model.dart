@@ -18,11 +18,23 @@ class FeaturesArtCardModel {
   });
 
   factory FeaturesArtCardModel.fromJson(Map<String, dynamic> json) {
-    // extract the first image from the list if available
-    final images = json['images'];
+    // Try multiple possible image field names
     String imagePath = '';
+    
+    // Try 'images' array first
+    final images = json['images'];
     if (images is List && images.isNotEmpty) {
       imagePath = images.first ?? '';
+    }
+    
+    // Try 'image' field if 'images' didn't work
+    if (imagePath.isEmpty) {
+      imagePath = json['image'] ?? '';
+    }
+    
+    // Try 'artImage' field if still empty
+    if (imagePath.isEmpty) {
+      imagePath = json['artImage'] ?? '';
     }
 
     return FeaturesArtCardModel(
