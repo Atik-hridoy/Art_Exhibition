@@ -51,7 +51,7 @@ class MessageModel {
     return MessageModel(
       id: json['_id'] ?? '',
       chat: json['chat'] ?? '',
-      message: json['message'] ?? '',
+      message: json['message'] ?? json['text'] ?? '',
       type: json['type'] as String? ?? 'general',
       sender: Sender.fromJson(json['sender'] ?? {}),
       createdAt:

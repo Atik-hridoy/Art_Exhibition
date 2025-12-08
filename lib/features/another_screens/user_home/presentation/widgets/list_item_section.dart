@@ -298,7 +298,10 @@ class UpComingExibition extends StatelessWidget {
                         onTap: () {
                           Get.toNamed(
                             AppRoutes.exhibitionDetailsScreen,
-                            arguments: {"title": "User Home"},
+                            arguments: {
+                              "title": "User Home",
+                              "exhibitionId": controller.exhibitionList?[index].id,
+                            },
                           );
                         },
                         child: ExhibitionItem(

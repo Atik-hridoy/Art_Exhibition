@@ -33,15 +33,14 @@ class ExhibitionDetailsController extends GetxController {
       
       log('Fetching exhibition details for ID: $exhibitionId');
       
-      var response = await getExhibitionDetails(exhibitionId: exhibitionId);
-      if (response != null && response.statusCode == 200) {
-        final data = response.data['data'] as Map<String, dynamic>;
-        exibition = Exhibition.fromJson(data);
+      var response = await getExibitionDetails(id: exhibitionId);
+      if (response != null) {
+        exibition = response;
         exibitionId = exibition!.id;
         isSaved = exibition!.isOnFavorite ?? false;
         log('Exhibition details loaded: ${exibition!.title}');
       } else {
-        log('Failed to load exhibition details: ${response?.statusCode}');
+        log('Failed to load exhibition details');
       }
       
       upComingExibitionIsLoading = false;

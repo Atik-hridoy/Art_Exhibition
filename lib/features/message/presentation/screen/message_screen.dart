@@ -127,7 +127,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       
                         hintText: AppString.messageHere,
                         suffixIcon: GestureDetector(
-                          // onTap: controller.addNewMessage,
+                          onTap: controller.addNewMessage,
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(

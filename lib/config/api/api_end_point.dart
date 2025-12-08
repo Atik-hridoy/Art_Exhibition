@@ -3,7 +3,7 @@ class ApiEndPoint {
   static const imageUrl = "http://10.10.7.46:5009";
   static const socketUrl = "http://10.10.7.46:5009";
 
-  static const signUp = "/users"; // Saved ny Nasim
+  static const signUp = "/users"; 
   static const verifyEmail = "auth/verify-email"; // Saved ny Nasim
   static const signIn = "auth/login"; // Saved ny Nasim
   static const forgotPassword = "auth/forget-password"; // Saved ny Nasim
@@ -75,6 +75,15 @@ class ApiEndPoint {
 
   static const getMyOrder = 'order/my-orders';
   static const order = 'order';
+
+
+  // message 
+
+
+  static const createChat = 'chats';
+  static const getAllCha = 'chats';
+
+  static const sendMessage  = 'messages';
 
 
 }

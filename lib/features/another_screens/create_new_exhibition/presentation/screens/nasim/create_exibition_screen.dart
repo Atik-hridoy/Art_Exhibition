@@ -17,45 +17,49 @@ class CreateExhibitionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize controller using Get.put for proper initialization
+    final controller = Get.put(CreateExhibitionController());
+    
     return GetBuilder<CreateExhibitionController>(
-      init: CreateExhibitionController(),
-      builder: (c) {
-        return Scaffold(
-          backgroundColor: AppColors.background,
-          appBar: AppBar(
-            backgroundColor: AppColors.white,
-            shadowColor: AppColors.transparent,
-            surfaceTintColor: AppColors.transparent,
-            leading: InkWell(
-              onTap: () => Get.back(),
-              child: Icon(Icons.arrow_back_ios, size: 22.sp, color: AppColors.titleColor),
-            ),
-            title: CommonText(
-              text: AppString.createExhibition,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.titleColor,
+      builder: (c) => _buildScaffold(c),
+    );
+  }
+
+  Widget _buildScaffold(CreateExhibitionController c) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        shadowColor: AppColors.transparent,
+        surfaceTintColor: AppColors.transparent,
+        leading: InkWell(
+          onTap: () => Get.back(),
+          child: Icon(Icons.arrow_back_ios, size: 22.sp, color: AppColors.titleColor),
+        ),
+        title: CommonText(
+          text: AppString.createExhibition,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.titleColor,
+        ),
+      ),
+      body: Column(
+        children: [
+          // Step indicator
+          _buildStepIndicator(c),
+
+          // Content area
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              child: _buildStepContent(c),
             ),
           ),
-          body: Column(
-            children: [
-              // Step indicator
-              _buildStepIndicator(c),
 
-              // Content area
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                  child: _buildStepContent(c),
-                ),
-              ),
-
-              // Bottom buttons
-              _buildBottomButtons(c),
-            ],
-          ),
-        );
-      },
+          // Bottom buttons
+          _buildBottomButtons(c),
+        ],
+      ),
     );
   }
 

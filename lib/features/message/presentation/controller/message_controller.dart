@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../data/model/chat_message_model.dart';
@@ -15,14 +14,10 @@ import '../../../../utils/enum/enum.dart';
 class MessageController extends GetxController {
   bool isLoading = false;
   bool isMoreLoading = false;
+  bool hasMore = true;
   String? video;
 
-  List messages = [
-
-    ChatMessageModel(time: DateTime.now(), text: "Is the Hiking Traveler Backpack good for hiking?", image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg", isMe: false),
-    ChatMessageModel(time: DateTime.now(), text: "Yes, it’s durable, water-resistant, and has plenty of space for your gear.", image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg", isMe: true),
-
-  ];
+  List<ChatMessageModel> messages = [];
 
   String chatId = "";
   String name = "";
@@ -41,46 +36,64 @@ class MessageController extends GetxController {
 
   MessageModel messageModel = MessageModel.fromJson({});
 
-  Future<void> getMessageRepo() async {
-    return;
-    if (page == 1) {
+  Future<void> getMessageRepo({bool refresh = false}) async {
+    if (chatId.isEmpty) return;
+
+    if (refresh) {
+      page = 1;
+      hasMore = true;
       messages.clear();
-      status = Status.loading;
-      update();
     }
 
-    var response = await ApiService.get(
-      "${ApiEndPoint.messages}?chatId=$chatId&page=$page&limit=15",
-    );
+    if (!hasMore && !refresh) return;
 
-    if (response.statusCode == 200) {
-      var data = response.data['data']['attributes']['messages'];
-
-      for (var messageData in data) {
-        messageModel = MessageModel.fromJson(messageData);
-
-        messages.add(
-          ChatMessageModel(
-            time: messageModel.createdAt.toLocal(),
-            text: messageModel.message,
-            image: messageModel.sender.image,
-            isNotice: messageModel.type == "notice" ? true : false,
-            isMe: LocalStorage.userId == messageModel.sender.id ? true : false,
-          ),
-        );
-      }
-
-      page = page + 1;
-      status = Status.completed;
-      update();
+    if (page == 1) {
+      isLoading = true;
     } else {
-      Utils.errorSnackBar(response.statusCode.toString(), response.message);
+      isMoreLoading = true;
+    }
+    update();
+
+    try {
+      final response =
+          await ApiService.get("${ApiEndPoint.sendMessage}/$chatId?page=$page&limit=20");
+
+      if (response.statusCode == 200) {
+        final rawMessages = _extractMessageList(response.data);
+
+        if (rawMessages.isEmpty) {
+          hasMore = false;
+        } else {
+          final parsed = rawMessages
+              .whereType<Map<String, dynamic>>()
+              .map(MessageModel.fromJson)
+              .map(_mapMessageToChatModel)
+              .toList();
+
+          messages.addAll(parsed);
+          messages.sort((a, b) => b.time.compareTo(a.time));
+          page += 1;
+        }
+
+        status = Status.completed;
+      } else {
+        Utils.errorSnackBar(response.statusCode.toString(), response.message);
+        status = Status.error;
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Message', 'Failed to load messages');
       status = Status.error;
+    } finally {
+      isLoading = false;
+      isMoreLoading = false;
       update();
     }
   }
 
-  addNewMessage() async {
+  Future<void> addNewMessage() async {
+    final text = messageController.text.trim();
+    if (text.isEmpty || chatId.isEmpty) return;
+
     isMessage = true;
     update();
 
@@ -88,55 +101,51 @@ class MessageController extends GetxController {
       0,
       ChatMessageModel(
         time: DateTime.now(),
-        text: messageController.text,
+        text: text,
         image: LocalStorage.myImage,
         isMe: true,
       ),
-
-      // ChatMessageModel(
-      //     currentTime.format(context).toString(),
-      //     controller.messageController.text,
-      //     true),
     );
-
-    isMessage = false;
     update();
-
-    var body = {
-      "chat": chatId,
-      "message": messageController.text,
-      "sender": LocalStorage.userId,
-    };
 
     messageController.clear();
 
-    SocketServices.emitWithAck("add-new-message", body, (data) {
-      if (kDebugMode) {
-        print(
-          "===============================================================> Received acknowledgment: $data",
-        );
+    try {
+      final response = await ApiService.post(
+        ApiEndPoint.sendMessage,
+        body: {
+          "chat": chatId,
+          "text": text,
+        },
+      );
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        Utils.errorSnackBar(response.statusCode.toString(), response.message);
       }
-    });
+      await getMessageRepo(refresh: true);
+    } catch (e) {
+      Utils.errorSnackBar('Message', 'Failed to send message');
+    } finally {
+      isMessage = false;
+      update();
+    }
   }
 
   listenMessage(String chatId) async {
     SocketServices.on('new-message::$chatId', (data) {
-      status = Status.loading;
-      update();
-
-      var time = data['createdAt'].toLocal();
+      final createdAtStr = data['createdAt']?.toString();
+      final createdAt =
+          DateTime.tryParse(createdAtStr ?? '') ?? DateTime.now();
       messages.insert(
         0,
         ChatMessageModel(
           isNotice: data['messageType'] == "notice" ? true : false,
-          time: time,
+          time: createdAt,
           text: data['message'],
           image: data['sender']['image'],
           isMe: false,
         ),
       );
 
-      status = Status.completed;
       update();
     });
   }
@@ -145,5 +154,43 @@ class MessageController extends GetxController {
     currentIndex = index;
     isInputField = isInputField;
     update();
+  }
+
+  List _extractMessageList(dynamic data) {
+    if (data is List) {
+      return data;
+    }
+
+    if (data is Map<String, dynamic>) {
+      final messagesField = data['messages'];
+      if (messagesField != null) {
+        final nested = _extractMessageList(messagesField);
+        if (nested.isNotEmpty) return nested;
+      }
+
+      final dataField = data['data'];
+      if (dataField != null) {
+        final nested = _extractMessageList(dataField);
+        if (nested.isNotEmpty) return nested;
+      }
+
+      final attributesField = data['attributes'];
+      if (attributesField != null) {
+        final nested = _extractMessageList(attributesField);
+        if (nested.isNotEmpty) return nested;
+      }
+    }
+
+    return [];
+  }
+
+  ChatMessageModel _mapMessageToChatModel(MessageModel message) {
+    return ChatMessageModel(
+      time: message.createdAt.toLocal(),
+      text: message.message,
+      image: message.sender.image,
+      isNotice: message.type == "notice",
+      isMe: LocalStorage.userId == message.sender.id,
+    );
   }
 }

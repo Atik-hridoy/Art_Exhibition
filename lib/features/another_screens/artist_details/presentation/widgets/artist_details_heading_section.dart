@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/artist_details/presentation/controller/artist_details_controller.dart';
 import 'package:tasaned_project/features/data_model/artist_details_model.dart';
+import 'package:tasaned_project/features/message/presentation/controller/chat_controller.dart';
 import 'package:tasaned_project/utils/extensions/extension.dart';
 import '../../../../../component/image/common_image.dart';
 import '../../../../../component/text/common_text.dart';
@@ -123,8 +123,8 @@ class ArtistDetailsHeadingSection extends StatelessWidget {
 
                   InkWell(
 
-                    onTap: (){
-                      Get.toNamed(AppRoutes.message);
+                    onTap: () async {
+                      await ChatController.instance.createChat(artist.id);
                     },
                     child: Container(
                       padding: EdgeInsets.all(8.r),

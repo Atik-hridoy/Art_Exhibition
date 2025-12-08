@@ -17,7 +17,7 @@ class OrderItemModel {
     final art = json['art'] as Map<String, dynamic>?;
     final artId = json['artId'] as Map<String, dynamic>?;
 
-    String _firstNonEmpty(List<dynamic> values, {String fallback = ''}) {
+    String firstNonEmpty(List<dynamic> values, {String fallback = ''}) {
       for (final value in values) {
         if (value == null) continue;
         if (value is String && value.trim().isNotEmpty) {
@@ -29,7 +29,7 @@ class OrderItemModel {
       return fallback;
     }
 
-    String _formatPrice(dynamic value) {
+    String formatPrice(dynamic value) {
       if (value == null) return '0';
       if (value is num) {
         final isInt = value.truncateToDouble() == value;
@@ -39,14 +39,14 @@ class OrderItemModel {
     }
 
     return OrderItemModel(
-      id: _firstNonEmpty([
+      id: firstNonEmpty([
         json['id'],
         json['_id'],
         art?['id'],
         artId?['id'],
         artId?['_id'],
       ]),
-      title: _firstNonEmpty([
+      title: firstNonEmpty([
         json['title'],
         json['Title'],
         json['artTitle'],
@@ -57,7 +57,7 @@ class OrderItemModel {
         artId?['title'],
         artId?['name'],
       ], fallback: 'Untitled'),
-      price: _formatPrice(
+      price: formatPrice(
         json['price'] ??
             art?['price'] ??
             json['totalPrice'] ??
@@ -65,7 +65,7 @@ class OrderItemModel {
             artId?['price'] ??
             artId?['amount'],
       ),
-      image: _firstNonEmpty([
+      image: firstNonEmpty([
         json['image'],
         json['imageUrl'],
         json['thumbnail'],
@@ -75,7 +75,7 @@ class OrderItemModel {
         artId?['image'],
         artId?['coverImage'],
       ]),
-      status: _firstNonEmpty([
+      status: firstNonEmpty([
         json['status'],
         json['orderStatus'],
         json['state'],

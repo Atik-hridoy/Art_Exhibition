@@ -4,11 +4,15 @@ import '../../utils/log/app_log.dart';
 import '../storage/storage_services.dart';
 
 class SocketServices {
-  static late io.Socket _socket;
+  static io.Socket? _socket;
   bool show = false;
 
   ///<<<============ Connect with socket ====================>>>
   static void connectToSocket() {
+    if (_socket != null && _socket!.connected) {
+      return; // Already connected
+    }
+    
     _socket = io.io(
       ApiEndPoint.socketUrl,
       io.OptionBuilder()
@@ -17,27 +21,27 @@ class SocketServices {
           .build(),
     );
 
-    _socket.onConnect((data) => appLog("=============> Connection $data"));
-    _socket.onConnectError((data) => appLog("========>Connection Error $data"));
-    _socket.connect();
-    _socket.on("user-notification::${LocalStorage.userId}", (data) {
+    _socket!.onConnect((data) => appLog("=============> Connection $data"));
+    _socket!.onConnectError((data) => appLog("========>Connection Error $data"));
+    _socket!.connect();
+    _socket!.on("user-notification::${LocalStorage.userId}", (data) {
       appLog("================> get Data on socket: $data");
       // NotificationService.showNotification(data);
     });
   }
 
   static on(String event, Function(dynamic data) handler) {
-    if (!_socket.connected) {
+    if (_socket == null || !_socket!.connected) {
       connectToSocket();
     }
-    _socket.on(event, handler);
+    _socket!.on(event, handler);
   }
 
   static emit(String event, Function(dynamic data) handler) {
-    if (!_socket.connected) {
+    if (_socket == null || !_socket!.connected) {
       connectToSocket();
     }
-    _socket.emit(event, handler);
+    _socket!.emit(event, handler);
   }
 
   static emitWithAck(
@@ -45,9 +49,9 @@ class SocketServices {
     Map<String, dynamic> data,
     Function(dynamic data) handler,
   ) {
-    if (!_socket.connected) {
+    if (_socket == null || !_socket!.connected) {
       connectToSocket();
     }
-    _socket.emitWithAck(event, data, ack: handler);
+    _socket!.emitWithAck(event, data, ack: handler);
   }
 }

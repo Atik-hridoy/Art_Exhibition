@@ -12,9 +12,9 @@ class ChatModel {
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
     return ChatModel(
-      id: json['_id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       participant: Participant.fromJson(json['participant'] ?? {}),
-      latestMessage: LatestMessage.fromJson(json['latestMessage'] ?? {}),
+      latestMessage: LatestMessage.fromJson(json['latestMessage'] ?? json['lastMessage'] ?? {}),
     );
   }
 }
@@ -28,9 +28,9 @@ class Participant {
 
   factory Participant.fromJson(Map<String, dynamic> json) {
     return Participant(
-      id: json['_id'] ?? '',
-      fullName: json['fullName'] ?? '',
-      image: json['image'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
+      fullName: json['fullName'] ?? json['name'] ?? '',
+      image: json['image'] ?? json['profileImage'] ?? '',
     );
   }
 }
@@ -48,9 +48,10 @@ class LatestMessage {
 
   factory LatestMessage.fromJson(Map<String, dynamic> json) {
     return LatestMessage(
-      id: json['_id'] ?? '',
-      message: json['message'] ?? '',
-      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+      id: json['_id'] ?? json['id'] ?? '',
+      message: json['message'] ?? json['text'] ?? '',
+      createdAt: DateTime.tryParse(json['createdAt'] ?? json['updatedAt'] ?? '') ??
+          DateTime.now(),
     );
   }
 }
