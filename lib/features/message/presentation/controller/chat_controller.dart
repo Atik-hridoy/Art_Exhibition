@@ -16,6 +16,7 @@ class ChatController extends GetxController {
 
   /// Chat more Data Loading Bar
   bool isMoreLoading = false;
+  bool hasMore = true;
 
   /// page no here
   int page = 1;
@@ -28,6 +29,7 @@ class ChatController extends GetxController {
 
   /// Chat Controller Instance create here
   static ChatController get instance => Get.put(ChatController());
+  bool _isListeningSocket = false;
 
   /// Chat More data Loading function
   Future<void> moreChats() async {
@@ -42,8 +44,14 @@ class ChatController extends GetxController {
   }
 
   /// Chat data Loading function
-  Future<void> getChatRepo() async {
+  Future<void> getChatRepo({bool refresh = false}) async {
     try {
+      if (refresh) {
+        page = 1;
+        hasMore = true;
+        chats.clear();
+      }
+
       if (page == 1) {
         status = Status.loading;
         chats.clear();
@@ -74,17 +82,118 @@ class ChatController extends GetxController {
 
   /// Chat data Update  Socket listener
   listenChat() async {
-    SocketServices.on("update-chatlist::${LocalStorage.userId}", (data) {
-      page = 1;
-      chats.clear();
+    if (_isListeningSocket) {
+      print("ChatController: Already listening for socket events");
+      return;
+    }
+    _isListeningSocket = true;
+    final userId = LocalStorage.userId;
+    print("ChatController: Setting up socket listeners for userId: $userId");
+    
+    final events = [
+      "chatListUpdate::$userId",
+      "newChat::$userId",
+    ];
 
-      for (var item in data) {
-        chats.add(ChatModel.fromJson(item));
+    for (final event in events) {
+      print("ChatController: Setting up listener for event: $event");
+      SocketServices.on(event, (data) async {
+        print("ChatController: Socket event received: $event");
+        print("ChatController: Socket data: $data");
+        
+        if (data == null) {
+          print("ChatController: No data received, refreshing chat list from API");
+          await getChatRepo(refresh: true);
+          return;
+        }
+
+        if (data is List) {
+          print("ChatController: Data is List with ${data.length} items");
+          final incoming = data
+              .whereType<Map<String, dynamic>>()
+              .map(_normalizeChatJson)
+              .map(ChatModel.fromJson)
+              .toList();
+
+          print("ChatController: Parsed ${incoming.length} valid chats from list");
+          if (incoming.isNotEmpty) {
+            print("ChatController: Chat list before update: ${chats.length} items");
+            chats
+              ..clear()
+              ..addAll(_sortChatsByLatest(incoming));
+            print("ChatController: Chat list after update: ${chats.length} items");
+            print("ChatController: First chat ID: ${chats.isNotEmpty ? chats.first.id : 'none'}");
+            status = Status.completed;
+            update();
+            print("ChatController: UI update() called");
+            return;
+          } else {
+            print("ChatController: No valid chats parsed from incoming data");
+          }
+        }
+
+        if (data is Map<String, dynamic>) {
+          print("ChatController: Single chat data received, updating/inserting");
+          _upsertChatFromSocket(data);
+        } else {
+          print("ChatController: Unexpected data format, refreshing from API");
+          await getChatRepo(refresh: true);
+        }
+      });
+    }
+    
+    print("ChatController: All socket listeners setup complete");
+  }
+
+  void _upsertChatFromSocket(Map<String, dynamic> payload) {
+    print("ChatController: _upsertChatFromSocket called with payload: $payload");
+    
+    // Extract the actual chat data from the nested structure
+    Map<String, dynamic> chatData;
+    if (payload['chat'] is Map<String, dynamic>) {
+      chatData = Map<String, dynamic>.from(payload['chat']);
+      // Copy the latestMessage from the root if it exists
+      if (payload['lastMessage'] != null) {
+        chatData['lastMessage'] = payload['lastMessage'];
+        chatData['latestMessage'] = payload['lastMessage'];
       }
+    } else {
+      chatData = Map<String, dynamic>.from(payload);
+    }
+    
+    final normalized = _normalizeChatJson(chatData);
+    print("ChatController: Normalized payload: $normalized");
+    final updatedChat = ChatModel.fromJson(normalized);
+    print("ChatController: Parsed chat - ID: ${updatedChat.id}, Latest: ${updatedChat.latestMessage.message}");
 
-      status = Status.completed;
-      update();
-    });
+    final existingIndex = chats.indexWhere((chat) => chat.id == updatedChat.id);
+    print("ChatController: Existing chat index: $existingIndex (current chats: ${chats.length})");
+    
+    if (existingIndex != -1) {
+      print("ChatController: Removing existing chat at index $existingIndex");
+      chats.removeAt(existingIndex);
+    }
+    
+    chats.insert(0, updatedChat);
+    print("ChatController: Inserted chat at position 0");
+    
+    chats
+      ..removeWhere((chat) => chat.id.isEmpty)
+      ..setAll(0, _sortChatsByLatest(chats));
+    
+    print("ChatController: Final chat list length: ${chats.length}");
+    print("ChatController: Top chat now: ${chats.isNotEmpty ? chats.first.participant.fullName : 'none'}");
+    
+    status = Status.completed;
+    update();
+    print("ChatController: UI update() called from _upsertChatFromSocket");
+  }
+
+  List<ChatModel> _sortChatsByLatest(List<ChatModel> source) {
+    source.sort(
+      (a, b) => b.latestMessage.createdAt.compareTo(a.latestMessage.createdAt),
+    );
+    return source;
   }
 
   /// Create chat function
@@ -144,17 +253,20 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     getChatRepo();
+    listenChat();
     super.onInit();
   }
 
   List<ChatModel> _parseChatList(dynamic data) {
     final chatList = _extractChatList(data);
 
-    return chatList
+    return _sortChatsByLatest(
+      chatList
         .whereType<Map<String, dynamic>>()
         .map(_normalizeChatJson)
         .map(ChatModel.fromJson)
-        .toList();
+        .toList(),
+    );
   }
 
   List _extractChatList(dynamic data) {

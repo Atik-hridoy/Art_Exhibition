@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,6 +30,7 @@ class MessageController extends GetxController {
 
   bool isMessage = false;
   bool isInputField = false;
+  String? _listeningChatId;
 
   ScrollController scrollController = ScrollController();
   TextEditingController messageController = TextEditingController();
@@ -56,7 +59,7 @@ class MessageController extends GetxController {
 
     try {
       final response =
-          await ApiService.get("${ApiEndPoint.sendMessage}/$chatId?page=$page&limit=20");
+          await ApiService.get("${ApiEndPoint.getMessage}$chatId?page=$page&limit=20");
 
       if (response.statusCode == 200) {
         final rawMessages = _extractMessageList(response.data);
@@ -111,12 +114,12 @@ class MessageController extends GetxController {
     messageController.clear();
 
     try {
-      final response = await ApiService.post(
-        ApiEndPoint.sendMessage,
-        body: {
-          "chat": chatId,
-          "text": text,
-        },
+      final payload = jsonEncode({"text": text});
+
+      final response = await ApiService.multipart(
+        "${ApiEndPoint.sendMessage}$chatId",
+        body: {"data": payload},
+        imagePath: (video != null && video!.isNotEmpty) ? video : null,
       );
       if (response.statusCode != 200 && response.statusCode != 201) {
         Utils.errorSnackBar(response.statusCode.toString(), response.message);
@@ -126,28 +129,72 @@ class MessageController extends GetxController {
       Utils.errorSnackBar('Message', 'Failed to send message');
     } finally {
       isMessage = false;
+      video = null;
       update();
     }
   }
 
-  listenMessage(String chatId) async {
-    SocketServices.on('new-message::$chatId', (data) {
-      final createdAtStr = data['createdAt']?.toString();
-      final createdAt =
-          DateTime.tryParse(createdAtStr ?? '') ?? DateTime.now();
-      messages.insert(
-        0,
-        ChatMessageModel(
-          isNotice: data['messageType'] == "notice" ? true : false,
-          time: createdAt,
-          text: data['message'],
-          image: data['sender']['image'],
-          isMe: false,
-        ),
-      );
+  void listenMessage() {
+    if (_listeningChatId != null) {
+      print("MessageController: Already listening for userId: $_listeningChatId");
+      return;
+    }
+    final userId = LocalStorage.userId;
+    if (userId.isEmpty) {
+      print("MessageController: No userId found, cannot listen for socket events");
+      return;
+    }
+    _listeningChatId = userId;
 
+    final eventKey = 'chatListUpdate::$userId';
+    print("MessageController: Setting up socket listener for event: $eventKey");
+
+    SocketServices.on(eventKey, (data) async {
+      print("MessageController: Socket event received: $eventKey");
+      print("MessageController: Socket data: $data");
+      
+      if (chatId.isEmpty) return;
+      print("MessageController: Processing messages for chatId: $chatId");
+
+      // Check if this socket event is for the current chat
+      String eventChatId = '';
+      if (data is Map<String, dynamic>) {
+        eventChatId = data['chatId']?.toString() ?? '';
+      }
+      
+      if (eventChatId.isNotEmpty && eventChatId != chatId) {
+        print("MessageController: Socket event for different chat ($eventChatId), ignoring");
+        return;
+      }
+
+      final extracted = _extractMessageList(data);
+      print("MessageController: Extracted ${extracted.length} messages");
+      
+      if (extracted.isEmpty) {
+        print("MessageController: No messages in socket data, refreshing from API");
+        await getMessageRepo(refresh: true);
+        return;
+      }
+
+      final parsed = extracted
+          .whereType<Map<String, dynamic>>()
+          .map(MessageModel.fromJson)
+          .map(_mapMessageToChatModel)
+          .toList()
+        ..sort((a, b) => b.time.compareTo(a.time));
+
+      print("MessageController: Parsed ${parsed.length} messages, updating UI");
+
+      messages
+        ..clear()
+        ..addAll(parsed);
+
+      status = Status.completed;
       update();
+      print("MessageController: Message screen UI updated");
     });
+    
+    print("MessageController: Socket listener setup complete for userId: $userId");
   }
 
   void isEmoji(int index) {

@@ -10,9 +10,11 @@ class SocketServices {
   ///<<<============ Connect with socket ====================>>>
   static void connectToSocket() {
     if (_socket != null && _socket!.connected) {
+      print("SocketServices: Already connected to socket");
       return; // Already connected
     }
     
+    print("SocketServices: Connecting to socket at ${ApiEndPoint.socketUrl}");
     _socket = io.io(
       ApiEndPoint.socketUrl,
       io.OptionBuilder()
@@ -21,10 +23,20 @@ class SocketServices {
           .build(),
     );
 
-    _socket!.onConnect((data) => appLog("=============> Connection $data"));
-    _socket!.onConnectError((data) => appLog("========>Connection Error $data"));
+    _socket!.onConnect((data) {
+      print("SocketServices: Connected successfully: $data");
+      appLog("=============> Connection $data");
+    });
+    _socket!.onConnectError((data) {
+      print("SocketServices: Connection error: $data");
+      appLog("========>Connection Error $data");
+    });
+    _socket!.onDisconnect((data) {
+      print("SocketServices: Disconnected: $data");
+    });
     _socket!.connect();
     _socket!.on("user-notification::${LocalStorage.userId}", (data) {
+      print("SocketServices: User notification received: $data");
       appLog("================> get Data on socket: $data");
       // NotificationService.showNotification(data);
     });

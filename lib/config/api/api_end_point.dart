@@ -83,7 +83,8 @@ class ApiEndPoint {
   static const createChat = 'chats';
   static const getAllCha = 'chats';
 
-  static const sendMessage  = 'messages';
-
+  static const sendMessage  = 'messages/send-message/';
+  static const getMessage  = 'messages/';
+  
 
 }
