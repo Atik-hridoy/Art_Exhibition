@@ -167,12 +167,41 @@ class MessageController extends GetxController {
         return;
       }
 
-      final extracted = _extractMessageList(data);
-      print("MessageController: Extracted ${extracted.length} messages");
+      print("MessageController: Socket data received: $data");
+      
+      // Direct extraction for different data structures
+      List extracted = [];
+      
+      if (data is Map<String, dynamic>) {
+        // Try to find message in different possible structures
+        if (data['lastMessage'] != null) {
+          extracted = [data['lastMessage']];
+          print("MessageController: Found lastMessage structure");
+        } else if (data['text'] != null) {
+          extracted = [data];
+          print("MessageController: Found direct message structure");
+        } else if (data['data'] != null) {
+          final dataField = data['data'];
+          if (dataField is List) {
+            extracted = List.from(dataField);
+            print("MessageController: Found data list structure");
+          } else if (dataField is Map) {
+            extracted = [dataField];
+            print("MessageController: Found data object structure");
+          }
+        }
+      }
+      
+      // Fallback extraction
+      if (extracted.isEmpty) {
+        extracted = _extractMessageList(data);
+        print("MessageController: Using fallback extraction: ${extracted.length} messages");
+      }
+      
+      print("MessageController: Total messages to process: ${extracted.length}");
       
       if (extracted.isEmpty) {
-        print("MessageController: No messages in socket data, refreshing from API");
-        await getMessageRepo(refresh: true);
+        print("MessageController: No messages found, ignoring");
         return;
       }
 
@@ -185,9 +214,20 @@ class MessageController extends GetxController {
 
       print("MessageController: Parsed ${parsed.length} messages, updating UI");
 
-      messages
-        ..clear()
-        ..addAll(parsed);
+      // WhatsApp-style update - add new messages without clearing
+      for (final newMsg in parsed) {
+        // Check if message already exists (by text, time, and sender)
+        final exists = messages.any((msg) => 
+          msg.text == newMsg.text && 
+          msg.time.isAtSameMomentAs(newMsg.time) &&
+          msg.isMe == newMsg.isMe
+        );
+        
+        if (!exists) {
+          // Insert new message at top (most recent)
+          messages.insert(0, newMsg);
+        }
+      }
 
       status = Status.completed;
       update();
