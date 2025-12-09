@@ -588,14 +588,70 @@ class OrderHistoryRepository {
           ? '${ApiEndPoint.getMyOrder}?type=$type'
           : ApiEndPoint.getMyOrder;
       final response = await ApiService.get(endpoint);
+      
       if (response.statusCode == 200) {
-        return (response.data['data'] as List<dynamic>? ?? [])
-            .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
-            .toList();
+        final dataList = response.data['data'] as List<dynamic>? ?? [];
+        
+        final List<OrderItemModel> orders = [];
+        for (int i = 0; i < dataList.length; i++) {
+          try {
+            final item = dataList[i];
+            final order = OrderItemModel.fromJson(item as Map<String, dynamic>);
+            orders.add(order);
+          } catch (e) {
+            // Continue with other items instead of failing completely
+          }
+        }
+        
+        return orders;
       }
       return null;
     } catch (e) {
       Utils.errorSnackBar('Order history', 'Please contact the developer');
+      return null;
+    }
+  }
+
+  Future<List<OrderItemModel>?> getMyOffers() async {
+    try {
+      final response = await ApiService.get('offer/my-offer');
+      
+      if (response.statusCode == 200) {
+        final dataList = response.data['data'] as List<dynamic>? ?? [];
+        
+        final List<OrderItemModel> offers = [];
+        for (int i = 0; i < dataList.length; i++) {
+          try {
+            final item = dataList[i];
+            final offer = OrderItemModel.fromJson(item as Map<String, dynamic>);
+            offers.add(offer);
+          } catch (e) {
+            // Continue with other items instead of failing completely
+          }
+        }
+        
+        return offers;
+      }
+      return null;
+    } catch (e) {
+      Utils.errorSnackBar('My offers', 'Please contact the developer');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getOfferDetails(String offerId) async {
+    try {
+      if (offerId.isEmpty) return null;
+      final response = await ApiService.get('offer/$offerId');
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        if (data is Map<String, dynamic>) {
+          return data;
+        }
+      }
+      return null;
+    } catch (e) {
+      Utils.errorSnackBar('Offer details', 'Please contact the developer');
       return null;
     }
   }
@@ -613,6 +669,52 @@ class OrderHistoryRepository {
       return null;
     } catch (e) {
       Utils.errorSnackBar('Order details', 'Please contact the developer');
+      return null;
+    }
+  }
+
+  /// Create an order from an accepted offer
+  Future<ApiResponseModel?> createOrderFromOffer({
+    required String artId,
+    required double price,
+    required String offerId,
+    required Map<String, dynamic> shippingAddress,
+    String additionalNote = '',
+  }) async {
+    try {
+      // Calculate shipping charge and total price
+      const double shippingCharge = 50.0; // Fixed shipping charge
+      final double totalPrice = price + shippingCharge;
+
+      // Construct the request body according to API structure
+      final Map<String, dynamic> requestBody = {
+        "artId": artId,
+        "price": price,
+        "shippingCharge": shippingCharge,
+        "totalPrice": totalPrice,
+        "paymentMethod": "card",
+        "additionalNote": additionalNote,
+        "shippingAddress": shippingAddress,
+        "offerId": offerId, // Include offerId to link this order to the offer
+      };
+
+      log('Creating order with data: $requestBody');
+
+      final response = await ApiService.post(ApiEndPoint.order, body: requestBody);
+      
+      log('Order creation status: ${response.statusCode}');
+      log('Order creation response: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log('Order created successfully');
+        return response;
+      } else {
+        log('Failed to create order: ${response.statusCode}');
+        return response;
+      }
+    } catch (e) {
+      log('Error creating order: $e');
+      Utils.errorSnackBar('Order creation', 'Please contact the developer: $e');
       return null;
     }
   }

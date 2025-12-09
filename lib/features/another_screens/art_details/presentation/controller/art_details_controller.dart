@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tasaned_project/config/api/api_end_point.dart';
+import 'package:tasaned_project/config/route/app_routes.dart';
 import 'package:tasaned_project/features/another_screens/another_screens_repository/another_screen_repository.dart';
 import 'package:tasaned_project/features/data_model/feature_arts_model.dart';
 import 'package:tasaned_project/features/data_model/features_art_card_model.dart';
+import 'package:tasaned_project/features/profile/data/model/profile_model.dart';
+import 'package:tasaned_project/features/profile/data/repository/profile_repository.dart';
 import 'package:tasaned_project/services/api/api_service.dart';
+import 'package:tasaned_project/services/storage/storage_services.dart';
+import 'package:tasaned_project/services/storage/storage_keys.dart';
 import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/constants/app_images.dart';
 
@@ -23,6 +28,13 @@ class ArtDetailsController extends GetxController {
   // Make an Offer popup controllers
   final TextEditingController offerAmountCtrl = TextEditingController(text: '15');
   final TextEditingController offerMessageCtrl = TextEditingController();
+  final TextEditingController offerNameCtrl = TextEditingController();
+  final TextEditingController offerPhoneCtrl = TextEditingController();
+  final TextEditingController offerAddressCtrl = TextEditingController();
+  
+  // Profile data for offer dialog
+  ProfileData? userProfile;
+  bool hasProfileData = false;
 
   final List<String> images = [
     AppImages.arts,
@@ -162,6 +174,102 @@ class ArtDetailsController extends GetxController {
     await initialFunction();
   }
 
+  /// Load user profile data for offer dialog
+  Future<void> loadUserProfile() async {
+    try {
+      // First check local storage
+      await _loadOfferFieldsFromStorage();
+      
+      // Then try to fetch from API
+      final response = await ProfileRepository.getProfile();
+      if (response != null && response.data != null) {
+        userProfile = response.data;
+        hasProfileData = true;
+        
+        // Populate offer fields from profile data
+        if (userProfile!.shippingAddress != null) {
+          offerNameCtrl.text = userProfile!.shippingAddress!.name;
+          offerPhoneCtrl.text = userProfile!.shippingAddress!.phone;
+          offerAddressCtrl.text = userProfile!.shippingAddress!.address;
+          
+          // Save to storage for offline use
+          await saveOfferFieldsToStorage();
+        }
+      }
+    } catch (e) {
+      print("Error loading user profile: $e");
+      hasProfileData = false;
+    }
+    update();
+  }
+
+  /// Load offer fields from local storage
+  Future<void> _loadOfferFieldsFromStorage() async {
+    try {
+      offerNameCtrl.text = await LocalStorage.getString(LocalStorageKeys.offerName) ?? '';
+      offerPhoneCtrl.text = await LocalStorage.getString(LocalStorageKeys.offerPhone) ?? '';
+      offerAddressCtrl.text = await LocalStorage.getString(LocalStorageKeys.offerAddress) ?? '';
+    } catch (e) {
+      print("Error loading offer fields from storage: $e");
+    }
+  }
+
+  /// Save offer fields to local storage
+  Future<void> saveOfferFieldsToStorage() async {
+    try {
+      await LocalStorage.setString(LocalStorageKeys.offerName, offerNameCtrl.text);
+      await LocalStorage.setString(LocalStorageKeys.offerPhone, offerPhoneCtrl.text);
+      await LocalStorage.setString(LocalStorageKeys.offerAddress, offerAddressCtrl.text);
+    } catch (e) {
+      print("Error saving offer fields to storage: $e");
+    }
+  }
+
+  /// Check if user has complete profile data
+  bool get hasCompleteProfileData {
+    return userProfile?.shippingAddress != null &&
+           userProfile!.shippingAddress!.name.isNotEmpty &&
+           userProfile!.shippingAddress!.phone.isNotEmpty &&
+           userProfile!.shippingAddress!.address.isNotEmpty;
+  }
+
+  /// Create an offer
+  Future<void> createOffer() async {
+    try {
+      // Construct the request body according to API structure
+      final Map<String, dynamic> requestBody = {
+        "art": artData?.id ?? '',
+        "priceOffer": int.tryParse(offerAmountCtrl.text) ?? 0,
+        "additionalNote": offerMessageCtrl.text,
+        "shippingAddress": {
+          "name": offerNameCtrl.text,
+          "phone": offerPhoneCtrl.text,
+          "address": offerAddressCtrl.text,
+        },
+      };
+
+      print("Creating offer with data: $requestBody");
+
+      var response = await ApiService.post(ApiEndPoint.offer, body: requestBody);
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Utils.successSnackBar('Success', 'Offer submitted successfully!');
+        
+        // Save offer fields to storage for future use
+        await saveOfferFieldsToStorage();
+        
+        // Navigate to offer submitted screen
+        Get.back();
+        Get.toNamed(AppRoutes.offerSubmittedScreen);
+      } else {
+        Utils.errorSnackBar('Error', 'Failed to submit offer: ${response.message}');
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Something went wrong: $e');
+      print("Error creating offer: $e");
+    }
+  }
+
   @override
   void onInit() {
     // Check if we have new artId from navigation arguments
@@ -172,6 +280,10 @@ class ArtDetailsController extends GetxController {
     } else {
       initialFunction();
     }
+    
+    // Load user profile for offer dialog
+    loadUserProfile();
+    
     super.onInit();
   }
 
@@ -180,6 +292,9 @@ class ArtDetailsController extends GetxController {
     pageController.dispose();
     offerAmountCtrl.dispose();
     offerMessageCtrl.dispose();
+    offerNameCtrl.dispose();
+    offerPhoneCtrl.dispose();
+    offerAddressCtrl.dispose();
     super.onClose();
   }
 }

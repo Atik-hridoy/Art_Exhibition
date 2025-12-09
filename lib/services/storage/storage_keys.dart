@@ -16,4 +16,9 @@ class LocalStorageKeys {
   static const String autoLoginEnabled = "autoLoginEnabled";
   static const String uploadLessonDraft = "uploadLessonDraft";
   static const String uploadCourseDraft = "uploadCourseDraft";
+  
+  // Offer dialog fields
+  static const String offerName = "offerName";
+  static const String offerPhone = "offerPhone";
+  static const String offerAddress = "offerAddress";
 }

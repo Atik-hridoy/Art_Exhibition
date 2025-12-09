@@ -55,6 +55,37 @@ class OrderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (items.isEmpty) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.shopping_bag_outlined,
+                size: 64.sp,
+                color: AppColors.titleColor.withOpacity(0.3),
+              ),
+              16.height,
+              CommonText(
+                text: selectedTab == 0 ? 'No purchases found' : 'No sales found',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: AppColors.titleColor.withOpacity(0.6),
+              ),
+              8.height,
+              CommonText(
+                text: 'Your orders will appear here',
+                fontSize: 12,
+                color: AppColors.titleColor.withOpacity(0.4),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return ListView.builder(
       itemCount: items.length,
       shrinkWrap: true,

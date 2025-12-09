@@ -49,17 +49,26 @@ class CommonImage extends StatelessWidget {
   }
 
   Widget _buildNetworkImage() {
+    // Build full URL if it's a relative path
+    String fullImageUrl = imageSrc;
+    if (imageSrc.isNotEmpty && 
+        !imageSrc.startsWith('http') && 
+        !imageSrc.startsWith('assets') &&
+        imageSrc.startsWith('/')) {
+      fullImageUrl = '${ApiEndPoint.imageUrl}$imageSrc';
+    }
+    
     // Validate image URL before loading
-    if (imageSrc.isEmpty || 
-        imageSrc == ApiEndPoint.imageUrl || 
-        Uri.tryParse(imageSrc)?.hasAbsolutePath != true) {
+    if (fullImageUrl.isEmpty || 
+        fullImageUrl == ApiEndPoint.imageUrl || 
+        Uri.tryParse(fullImageUrl)?.hasAbsolutePath != true) {
       return _buildErrorWidget();
     }
     
     return CachedNetworkImage(
       height: size ?? height,
       width: size ?? width,
-      imageUrl: imageSrc,
+      imageUrl: fullImageUrl,
       fit: fill,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
@@ -73,8 +82,10 @@ class CommonImage extends StatelessWidget {
         child: const SizedBox.shrink(),
       ),
       errorWidget: (context, url, error) {
-        errorLog(error, source: "Common Image");
-
+        // Only log critical errors, not 404s for missing images
+        if (error is Exception && !error.toString().contains('404')) {
+          errorLog(error, source: "Common Image");
+        }
         return _buildErrorWidget();
       },
     );
@@ -100,9 +111,12 @@ class CommonImage extends StatelessWidget {
         width: size ?? width,
         fit: fill,
         errorBuilder: (context, error, stackTrace) {
+        // Only log critical errors, not common asset loading issues
+        if (error is Exception && !error.toString().contains('Unable to load asset')) {
           errorLog(error, source: "Common Image");
-          return _buildErrorWidget();
-        },
+        }
+        return _buildErrorWidget();
+      },
       ),
     );
   }

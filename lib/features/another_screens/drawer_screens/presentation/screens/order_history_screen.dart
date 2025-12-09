@@ -74,6 +74,49 @@ class OrderHistoryScreen extends StatelessWidget {
       ),
       body: GetBuilder<OrderHistoryController>(
         builder: (controller) {
+          if (controller.isLoadingPurchases && controller.selectedTab == 0) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (controller.purchasesError != null && controller.selectedTab == 0) {
+            return Container(
+              padding: EdgeInsets.all(20.w),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64.sp,
+                      color: AppColors.titleColor.withOpacity(0.3),
+                    ),
+                    16.height,
+                    CommonText(
+                      text: 'Error loading orders',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.titleColor.withOpacity(0.6),
+                    ),
+                    8.height,
+                    CommonText(
+                      text: controller.purchasesError!,
+                      fontSize: 12,
+                      color: AppColors.titleColor.withOpacity(0.4),
+                      textAlign: TextAlign.center,
+                    ),
+                    16.height,
+                    ElevatedButton(
+                      onPressed: controller.fetchMyPurchases,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

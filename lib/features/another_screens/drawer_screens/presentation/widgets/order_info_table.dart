@@ -59,11 +59,14 @@ class _InfoRow extends StatelessWidget {
                   color: AppColors.bodyClr,
                 ),
               ),
-              CommonText(
-                text: value,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.titleColor,
+              Expanded(
+                child: CommonText(
+                  text: value,
+                  fontSize: 12,
+                  textAlign: TextAlign.end,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.titleColor,
+                ),
               ),
             ],
           ),

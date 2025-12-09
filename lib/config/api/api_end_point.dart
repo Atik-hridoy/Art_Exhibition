@@ -86,5 +86,8 @@ class ApiEndPoint {
   static const sendMessage  = 'messages/send-message/';
   static const getMessage  = 'messages/';
   
+  // offer
+  static const offer = 'offer';
+
 
 }

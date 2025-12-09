@@ -128,6 +128,17 @@ class CustomDrawer extends StatelessWidget {
             ),
             _DrawerDivider(),
 
+            //========================My Offer item=========================
+            _DrawerRowItem(
+              icon: Icons.local_offer_outlined,
+              text: AppString.myOffer,
+              onTap: () {
+                OrderHistoryController.instance!.comeFrom("drawer");
+                Get.toNamed(AppRoutes.myOfferScreen);
+              },
+            ),
+            _DrawerDivider(),
+
             //========================Following item=========================
             _DrawerRowItem(
               icon: Icons.person_2_outlined,
@@ -153,7 +164,17 @@ class CustomDrawer extends StatelessWidget {
                 Get.toNamed(AppRoutes.purchaseHistory);
               },
             ),
+            _DrawerDivider(),
 
+            //========================My Offer item=========================
+            _DrawerRowItem(
+              icon: Icons.local_offer_outlined,
+              text: AppString.myOffer,
+              onTap: () {
+                OrderHistoryController.instance!.comeFrom("drawer");
+                Get.toNamed(AppRoutes.myOfferScreen);
+              },
+            ),
             _DrawerDivider(),
 
             //========================My Exhibition item=========================
@@ -201,6 +222,17 @@ class CustomDrawer extends StatelessWidget {
             ),
 
             _DrawerDivider(),
+
+            //========================My Offer item=========================
+            _DrawerRowItem(
+              icon: Icons.local_offer_outlined,
+              text: AppString.myOffer,
+              onTap: () {
+                OrderHistoryController.instance!.comeFrom("drawer");
+                Get.toNamed(AppRoutes.myOfferScreen);
+              },
+            ),
+            _DrawerDivider(),
           ],
 
           if (LocalStorage.myRoll == Role.curator.role) ...[
@@ -222,6 +254,17 @@ class CustomDrawer extends StatelessWidget {
               },
             ),
 
+            _DrawerDivider(),
+
+            //========================My Offer item=========================
+            _DrawerRowItem(
+              icon: Icons.local_offer_outlined,
+              text: AppString.myOffer,
+              onTap: () {
+                OrderHistoryController.instance!.comeFrom("drawer");
+                Get.toNamed(AppRoutes.myOfferScreen);
+              },
+            ),
             _DrawerDivider(),
             //========================My Exhibition item=========================
             _DrawerRowItem(

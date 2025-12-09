@@ -11,6 +11,8 @@ import 'package:tasaned_project/features/another_screens/create_new_art/presenta
 import 'package:tasaned_project/features/another_screens/create_new_event/presentation/screens/create_new_event_ticket_booking_screen.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/screens/nasim/create_exibition_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/order_history_screen.dart';
+import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/my_offer_screen.dart';
+import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/offer_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/event_details/presentation/screens/event_details_screen.dart';
 import 'package:tasaned_project/features/another_screens/my_collection/presentation/screens/my_collections_screen.dart';
 import 'package:tasaned_project/features/another_screens/drawer_screens/presentation/screens/saved_screen.dart';
@@ -156,6 +158,8 @@ class AppRoutes {
   static const String exhibitionDetailsScreen = "/exhibitionDetailsScreen";
   static const String myListingScreen = "/myListingScreen";
   static const String purchaseHistory = "/purchaseHistory";
+  static const String myOfferScreen = "/myOfferScreen";
+  static const String offerDetailsScreen = "/offerDetailsScreen";
   static const String transactionHistory = "/transactionHistory";
   static const String upComingEventScreen = "/upComingEventScreen";
   static const String userReselScreen = "/UserReselScreen";
@@ -246,6 +250,11 @@ class AppRoutes {
     ),
     GetPage(name: myListingScreen, page: () => MyListingScreen()),
     GetPage(name: purchaseHistory, page: () => OrderHistoryScreen()),
+    GetPage(name: myOfferScreen, page: () => MyOfferScreen()),
+    GetPage(name: offerDetailsScreen, page: () {
+      final offerId = Get.arguments as String? ?? '';
+      return OfferDetailsScreen(offerId: offerId);
+    }),
     GetPage(name: transactionHistory, page: () => TransactionScreen()),
     GetPage(name: savedScreen, page: () => SavedScreen()),
     GetPage(name: followersScreen, page: () => FollowersScreen()),

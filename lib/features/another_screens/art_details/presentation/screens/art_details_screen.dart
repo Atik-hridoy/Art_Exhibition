@@ -577,6 +577,78 @@ void _showMakeOfferDialog(BuildContext context) {
                     maxline: 4,
                   ),
 
+                  // Show additional fields only if user doesn't have complete profile data
+                  if (!controller.hasCompleteProfileData) ...[
+                    20.height,
+                    CommonText(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.titleColor,
+                      text: "Your Information",
+                    ),
+                    8.height,
+                    CommonTextField(
+                      controller: controller.offerNameCtrl,
+                      hintText: "Enter your name",
+                      borderColor: AppColors.stroke,
+                      prefixIcon: Container(
+                        margin: EdgeInsets.only(left: 8.w, right: 6.w),
+                        padding: EdgeInsets.all(6.r),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.stroke),
+                          color: AppColors.transparent,
+                        ),
+                        child: Icon(
+                          Icons.person,
+                          size: 16.sp,
+                          color: AppColors.titleColor,
+                        ),
+                      ),
+                    ),
+                    12.height,
+                    CommonTextField(
+                      controller: controller.offerPhoneCtrl,
+                      hintText: "Enter your phone number",
+                      borderColor: AppColors.stroke,
+                      keyboardType: TextInputType.phone,
+                      prefixIcon: Container(
+                        margin: EdgeInsets.only(left: 8.w, right: 6.w),
+                        padding: EdgeInsets.all(6.r),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.stroke),
+                          color: AppColors.transparent,
+                        ),
+                        child: Icon(
+                          Icons.phone,
+                          size: 16.sp,
+                          color: AppColors.titleColor,
+                        ),
+                      ),
+                    ),
+                    12.height,
+                    CommonTextField(
+                      controller: controller.offerAddressCtrl,
+                      hintText: "Enter your address",
+                      borderColor: AppColors.stroke,
+                      prefixIcon: Container(
+                        margin: EdgeInsets.only(left: 8.w, right: 6.w),
+                        padding: EdgeInsets.all(6.r),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.stroke),
+                          color: AppColors.transparent,
+                        ),
+                        child: Icon(
+                          Icons.location_on,
+                          size: 16.sp,
+                          color: AppColors.titleColor,
+                        ),
+                      ),
+                    ),
+                  ],
+
                   20.height,
                   Row(
                     children: [
@@ -595,10 +667,8 @@ void _showMakeOfferDialog(BuildContext context) {
                       Expanded(
                         child: CommonButton(
                           titleText: AppString.submitOffer,
-                          onTap: () {
-                            // Use controller values if needed: controller.offerAmountCtrl.text, controller.offerMessageCtrl.text
-                            Get.back();
-                            Get.toNamed(AppRoutes.offerSubmittedScreen);
+                          onTap: () async {
+                            await controller.createOffer();
                           },
                           buttonRadius: 60,
                         ),

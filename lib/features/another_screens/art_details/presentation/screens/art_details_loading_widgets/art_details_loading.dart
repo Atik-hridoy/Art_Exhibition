@@ -13,7 +13,7 @@ import 'package:tasaned_project/utils/extensions/extension.dart';
 class ArtDetailsLoading extends StatelessWidget {
   ArtDetailsLoading({super.key});
 
-  final String screenType = Get.arguments['screenType'];
+  final String screenType = Get.arguments?['screenType'] ?? '';
 
   @override
   Widget build(BuildContext context) {
