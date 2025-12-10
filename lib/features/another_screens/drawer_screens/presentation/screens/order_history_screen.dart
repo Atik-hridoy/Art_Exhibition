@@ -74,12 +74,21 @@ class OrderHistoryScreen extends StatelessWidget {
       ),
       body: GetBuilder<OrderHistoryController>(
         builder: (controller) {
+          // Show loading for purchases tab
           if (controller.isLoadingPurchases && controller.selectedTab == 0) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
+          // Show loading for sales tab
+          if (controller.isLoadingSales && controller.selectedTab == 1) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          // Show error for purchases tab
           if (controller.purchasesError != null && controller.selectedTab == 0) {
             return Container(
               padding: EdgeInsets.all(20.w),
@@ -94,7 +103,7 @@ class OrderHistoryScreen extends StatelessWidget {
                     ),
                     16.height,
                     CommonText(
-                      text: 'Error loading orders',
+                      text: 'Error loading purchases',
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: AppColors.titleColor.withOpacity(0.6),
@@ -117,24 +126,72 @@ class OrderHistoryScreen extends StatelessWidget {
             );
           }
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Tabs
-                if (LocalStorage.myRoll != Role.user.role)
-                  OrderTabs(
-                    selectedTab: controller.selectedTab,
-                    onChanged: controller.changeTab,
-                  ),
-
-                12.height,
-                // Order list
-                OrderList(
-                  items: controller.filteredList,
-                  selectedTab: controller.selectedTab,
+          // Show error for sales tab
+          if (controller.salesError != null && controller.selectedTab == 1) {
+            return Container(
+              padding: EdgeInsets.all(20.w),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64.sp,
+                      color: AppColors.titleColor.withOpacity(0.3),
+                    ),
+                    16.height,
+                    CommonText(
+                      text: 'Error loading sales',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.titleColor.withOpacity(0.6),
+                    ),
+                    8.height,
+                    CommonText(
+                      text: controller.salesError!,
+                      fontSize: 12,
+                      color: AppColors.titleColor.withOpacity(0.4),
+                      textAlign: TextAlign.center,
+                    ),
+                    16.height,
+                    ElevatedButton(
+                      onPressed: controller.fetchMySales,
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              if (controller.selectedTab == 0) {
+                await controller.fetchMyPurchases();
+              } else {
+                await controller.fetchMySales();
+              }
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Tabs
+                  if (LocalStorage.myRoll != Role.user.role)
+                    OrderTabs(
+                      selectedTab: controller.selectedTab,
+                      onChanged: controller.changeTab,
+                    ),
+
+                  12.height,
+                  // Order list
+                  OrderList(
+                    items: controller.filteredList,
+                    selectedTab: controller.selectedTab,
+                  ),
+                ],
+              ),
             ),
           );
         },

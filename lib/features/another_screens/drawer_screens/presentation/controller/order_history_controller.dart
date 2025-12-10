@@ -28,10 +28,12 @@ class OrderHistoryController extends GetxController {
   ];
 
   bool isLoadingPurchases = true;
+  bool isLoadingSales = false;
   String? purchasesError;
+  String? salesError;
 
   List<OrderItemModel> purchases = [];
-  final List<OrderItemModel> sales = [];
+  List<OrderItemModel> sales = [];
 
   @override
   void onInit() {
@@ -55,10 +57,29 @@ class OrderHistoryController extends GetxController {
     }
   }
 
+  Future<void> fetchMySales() async {
+    try {
+      isLoadingSales = true;
+      salesError = null;
+      update();
+
+      final result = await _repository.getMySales();
+      sales = result ?? [];
+    } catch (e) {
+      salesError = e.toString();
+    } finally {
+      isLoadingSales = false;
+      update();
+    }
+  }
+
   void changeTab(int index) {
     if (selectedTab == index) return;
     selectedTab = index;
     selectedStatusFilter = null;
+    if (index == 1) {
+      fetchMySales();
+    }
     update();
   }
 

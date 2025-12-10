@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import '../../../../component/text/common_text.dart';
 import '../../../../component/text_field/common_text_field.dart';
 import '../../../../utils/constants/app_colors.dart';
@@ -82,6 +83,8 @@ class _MessageScreenState extends State<MessageScreen> {
                         time: message.time,
                         text: message.text,
                         isMe: message.isMe,
+                        mediaPath: message.mediaPath,
+                        mediaType: message.mediaType,
                         onTap: () {},
                       );
                     } else {
@@ -109,26 +112,86 @@ class _MessageScreenState extends State<MessageScreen> {
                 /// Send message text filed here
                 child: Row(
                   children: [
+                    // Media preview section
+                    if (controller.image != null || controller.video != null)
+                      Container(
+                        margin: EdgeInsets.only(right: 8.w),
+                        padding: EdgeInsets.all(8.r),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: 60.w,
+                              height: 60.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                color: Colors.grey[300],
+                              ),
+                              child: controller.image != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      child: Image.file(
+                                        File(controller.image!),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Icon(
+                                      Icons.videocam,
+                                      size: 30.sp,
+                                      color: Colors.grey[600],
+                                    ),
+                            ),
+                            Positioned(
+                              top: -5,
+                              right: -5,
+                              child: GestureDetector(
+                                onTap: controller.clearMedia,
+                                child: Container(
+                                  width: 20.w,
+                                  height: 20.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 14.sp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
+                    // Attachment button
                     Container(
                       padding: EdgeInsets.all(4.r),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.primaryColor
                       ),
-                      child: Icon(
-                        color: AppColors.white,
+                      child: GestureDetector(
+                        onTap: () => controller.showMediaPickerBottomSheet(context),
+                        child: Icon(
+                          color: AppColors.white,
                           size: 27.sp,
                           Icons.add),
+                      ),
                     ),
 
                     8.width,
                     Expanded(
                       child: CommonTextField(
-                      
                         hintText: AppString.messageHere,
                         suffixIcon: GestureDetector(
-                          onTap: controller.addNewMessage,
+                          onTap: (controller.image != null || controller.video != null)
+                              ? controller.sendMediaMessage
+                              : controller.addNewMessage,
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
@@ -137,15 +200,21 @@ class _MessageScreenState extends State<MessageScreen> {
                               color: AppColors.primaryColor
                             ),
                             padding: EdgeInsets.all(10.sp),
-                            child:  Icon(
+                            child: Icon(
                               size: 25.sp,
-                              Icons.send_outlined, color: AppColors.white,),
+                              (controller.image != null || controller.video != null)
+                                  ? Icons.send
+                                  : Icons.send_outlined,
+                              color: AppColors.white,
+                            ),
                           ),
                         ),
                         borderColor: AppColors.stroke,
                         borderRadius: 60,
                         controller: controller.messageController,
-                        onSubmitted: (p0) => controller.addNewMessage(),
+                        onSubmitted: (p0) => (controller.image != null || controller.video != null)
+                            ? controller.sendMediaMessage()
+                            : controller.addNewMessage(),
                       ),
                     ),
                   ],

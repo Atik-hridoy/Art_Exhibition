@@ -62,12 +62,15 @@ Widget chatListItem({required ChatModel item}) {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CommonText(
-                        text: item.latestMessage.message,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
+                      Expanded(
+                        child: CommonText(
+                          text: item.latestMessage.message,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-              
               
                       SizedBox(
                         height: 24.h,

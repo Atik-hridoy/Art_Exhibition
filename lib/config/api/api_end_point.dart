@@ -74,6 +74,7 @@ class ApiEndPoint {
   //   order 
 
   static const getMyOrder = 'order/my-orders';
+  static const getMySales = 'order/my-sales';
   static const order = 'order';
 
 

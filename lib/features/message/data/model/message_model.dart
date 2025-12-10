@@ -35,6 +35,7 @@ class MessageModel {
   final DateTime createdAt;
   final DateTime updatedAt;
   final int version;
+  final List<String> images;
 
   MessageModel({
     required this.id,
@@ -45,9 +46,19 @@ class MessageModel {
     required this.createdAt,
     required this.updatedAt,
     required this.version,
+    this.images = const [],
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
+    List<String> imagesList = [];
+    if (json['images'] != null) {
+      if (json['images'] is List) {
+        imagesList = (json['images'] as List).map((e) => e.toString()).toList();
+      } else if (json['images'] is String) {
+        imagesList = [json['images']];
+      }
+    }
+
     return MessageModel(
       id: json['_id'] ?? '',
       chat: json['chat'] ?? '',
@@ -59,6 +70,7 @@ class MessageModel {
       updatedAt:
           DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
       version: json['__v'] ?? 0,
+      images: imagesList,
     );
   }
 
@@ -72,6 +84,7 @@ class MessageModel {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       '__v': version,
+      'images': images,
     };
   }
 }

@@ -148,45 +148,51 @@ class ChatController extends GetxController {
   void _upsertChatFromSocket(Map<String, dynamic> payload) {
     print("ChatController: _upsertChatFromSocket called with payload: $payload");
     
-    // Extract the actual chat data from the nested structure
-    Map<String, dynamic> chatData;
-    if (payload['chat'] is Map<String, dynamic>) {
-      chatData = Map<String, dynamic>.from(payload['chat']);
-      // Copy the latestMessage from the root if it exists
-      if (payload['lastMessage'] != null) {
-        chatData['lastMessage'] = payload['lastMessage'];
-        chatData['latestMessage'] = payload['lastMessage'];
+    try {
+      // Extract the actual chat data from the nested structure
+      Map<String, dynamic> chatData;
+      if (payload['chat'] is Map<String, dynamic>) {
+        chatData = Map<String, dynamic>.from(payload['chat']);
+        // Copy the latestMessage from the root if it exists
+        if (payload['lastMessage'] != null) {
+          chatData['lastMessage'] = payload['lastMessage'];
+          chatData['latestMessage'] = payload['lastMessage'];
+        }
+      } else {
+        chatData = Map<String, dynamic>.from(payload);
       }
-    } else {
-      chatData = Map<String, dynamic>.from(payload);
-    }
-    
-    final normalized = _normalizeChatJson(chatData);
-    print("ChatController: Normalized payload: $normalized");
-    final updatedChat = ChatModel.fromJson(normalized);
-    print("ChatController: Parsed chat - ID: ${updatedChat.id}, Latest: ${updatedChat.latestMessage.message}");
+      
+      final normalized = _normalizeChatJson(chatData);
+      print("ChatController: Normalized payload: $normalized");
+      final updatedChat = ChatModel.fromJson(normalized);
+      print("ChatController: Parsed chat - ID: ${updatedChat.id}, Latest: ${updatedChat.latestMessage.message}");
 
-    final existingIndex = chats.indexWhere((chat) => chat.id == updatedChat.id);
-    print("ChatController: Existing chat index: $existingIndex (current chats: ${chats.length})");
-    
-    if (existingIndex != -1) {
-      print("ChatController: Removing existing chat at index $existingIndex");
-      chats.removeAt(existingIndex);
+      final existingIndex = chats.indexWhere((chat) => chat.id == updatedChat.id);
+      print("ChatController: Existing chat index: $existingIndex (current chats: ${chats.length})");
+      
+      if (existingIndex != -1) {
+        print("ChatController: Removing existing chat at index $existingIndex");
+        chats.removeAt(existingIndex);
+      }
+      
+      chats.insert(0, updatedChat);
+      print("ChatController: Inserted chat at position 0");
+      
+      chats
+        ..removeWhere((chat) => chat.id.isEmpty)
+        ..setAll(0, _sortChatsByLatest(chats));
+      
+      print("ChatController: Final chat list length: ${chats.length}");
+      print("ChatController: Top chat now: ${chats.isNotEmpty ? chats.first.participant.fullName : 'none'}");
+      
+      status = Status.completed;
+      update();
+      print("ChatController: UI update() called from _upsertChatFromSocket");
+    } catch (e) {
+      print("ChatController: Error processing chat data: $e");
+      print("ChatController: Payload that caused error: $payload");
+      // Don't crash the app, just log the error and continue
     }
-    
-    chats.insert(0, updatedChat);
-    print("ChatController: Inserted chat at position 0");
-    
-    chats
-      ..removeWhere((chat) => chat.id.isEmpty)
-      ..setAll(0, _sortChatsByLatest(chats));
-    
-    print("ChatController: Final chat list length: ${chats.length}");
-    print("ChatController: Top chat now: ${chats.isNotEmpty ? chats.first.participant.fullName : 'none'}");
-    
-    status = Status.completed;
-    update();
-    print("ChatController: UI update() called from _upsertChatFromSocket");
   }
 
   List<ChatModel> _sortChatsByLatest(List<ChatModel> source) {
@@ -313,14 +319,17 @@ class ChatController extends GetxController {
     if (normalized['participant'] == null &&
         normalized['participants'] is List &&
         (normalized['participants'] as List).isNotEmpty) {
-      final first = Map<String, dynamic>.from(
-        (normalized['participants'] as List).first as Map<String, dynamic>,
-      );
-      normalized['participant'] = {
-        "_id": first['_id'] ?? first['id'] ?? '',
-        "fullName": first['name'] ?? first['fullName'] ?? '',
-        "image": first['image'] ?? first['profileImage'] ?? '',
-      };
+      final firstParticipant = (normalized['participants'] as List).first;
+      if (firstParticipant is Map<String, dynamic>) {
+        final first = Map<String, dynamic>.from(firstParticipant);
+        normalized['participant'] = {
+          "_id": first['_id'] ?? first['id'] ?? '',
+          "fullName": first['name'] ?? first['fullName'] ?? '',
+          "image": first['image'] ?? first['profileImage'] ?? '',
+        };
+      } else {
+        print("ChatController: First participant is not a Map, skipping participant normalization");
+      }
     }
 
     if (normalized['latestMessage'] == null && normalized['lastMessage'] != null) {

@@ -22,7 +22,7 @@ import '../controller/art_details_controller.dart';
 class ArtDetailsScreen extends StatelessWidget {
   ArtDetailsScreen({super.key});
 
-  final String screenType = Get.arguments['screenType'];
+  final String screenType = Get.arguments?['screenType'] ?? '';
 
   @override
   Widget build(BuildContext context) {

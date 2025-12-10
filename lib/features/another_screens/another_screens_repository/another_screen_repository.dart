@@ -612,6 +612,33 @@ class OrderHistoryRepository {
     }
   }
 
+  Future<List<OrderItemModel>?> getMySales() async {
+    try {
+      final response = await ApiService.get(ApiEndPoint.getMySales);
+      
+      if (response.statusCode == 200) {
+        final dataList = response.data['data'] as List<dynamic>? ?? [];
+        
+        final List<OrderItemModel> orders = [];
+        for (int i = 0; i < dataList.length; i++) {
+          try {
+            final item = dataList[i];
+            final order = OrderItemModel.fromJson(item as Map<String, dynamic>);
+            orders.add(order);
+          } catch (e) {
+            // Continue with other items instead of failing completely
+          }
+        }
+        
+        return orders;
+      }
+      return null;
+    } catch (e) {
+      Utils.errorSnackBar('My sales', 'Please contact the developer');
+      return null;
+    }
+  }
+
   Future<List<OrderItemModel>?> getMyOffers() async {
     try {
       final response = await ApiService.get('offer/my-offer');

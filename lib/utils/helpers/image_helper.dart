@@ -15,7 +15,12 @@ class ImageHelper {
     // Remove leading slash if present to avoid double slashes
     String cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
     
-    // Combine base URL with clean path
+    // Fix for chat images - they need /uploads/images/ prefix
+    if (cleanPath.startsWith('images/')) {
+      return '${ApiEndPoint.imageUrl}/uploads/$cleanPath';
+    }
+    
+    // Combine base URL with clean path for other images
     return '${ApiEndPoint.imageUrl}/$cleanPath';
   }
   

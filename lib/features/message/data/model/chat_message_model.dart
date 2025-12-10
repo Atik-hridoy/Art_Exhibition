@@ -5,6 +5,8 @@ class ChatMessageModel {
   final bool isMe;
   final bool isCall;
   final bool isNotice;
+  final String? mediaPath;
+  final String? mediaType;
 
   ChatMessageModel({
     required this.time,
@@ -13,5 +15,7 @@ class ChatMessageModel {
     required this.isMe,
     this.isCall = false,
     this.isNotice = false,
+    this.mediaPath,
+    this.mediaType,
   });
 }
