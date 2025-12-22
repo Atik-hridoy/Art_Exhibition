@@ -86,24 +86,65 @@ class CreateArtWorkController extends GetxController {
   Map<String, dynamic> get artWorkBody => {
     "title": titleCtrl.value.text, // "Echoes of Light",
     "category": categoryList![selectedCategoryIndex].id, //"68c6aeefb9190bc121d417b5",
-    "price": num.tryParse(priceCtrl.value.text), // 6000,
+    "price": priceCtrl.value.text, // Send as string, not number
     "description": descriptionCtrl
         .value
         .text, //   "An abstract oil painting capturing golden light bouncing off rippling surfaces.",
     "daimentions": {
-      "height": num.tryParse(heightCtrl.text),
-      "width": num.tryParse(widthCtrl.text),
+      "height": heightCtrl.text, // Send as string
+      "width": widthCtrl.text, // Send as string
     },
     "status": "Unique", // stable for Artist
     "authentication":
         authentications[selectedAuthIndex], // "Certificate of Authenticity",
-    "resale": false,
+    
     "acceptOffer": acceptOffers, // true,
   };
 
-  void submit() {
-    ApiService.post(ApiEndPoint.featuresArt, body: artWorkBody);
-    CreateExhibitionSuccessPopup.show();
+  Future<void> submit() async {
+    if (imagePaths.isEmpty) {
+      Utils.errorSnackBar('Error', 'Please upload at least one image');
+      return;
+    }
+
+    if (categoryList == null || categoryList!.isEmpty) {
+      Utils.errorSnackBar('Error', 'Please load categories first');
+      return;
+    }
+
+    try {
+      // Create body with proper types (not strings)
+      Map<String, dynamic> bodyData = {
+        "title": titleCtrl.value.text,
+        "category": categoryList![selectedCategoryIndex].id,
+        "price": priceCtrl.value.text, // Keep as string for API compatibility
+        "description": descriptionCtrl.value.text,
+        "daimentions.height": heightCtrl.text, // Send as individual fields
+        "daimentions.width": widthCtrl.text, // Send as individual fields
+        "status": "Unique",
+        "authentication": authentications[selectedAuthIndex],
+        
+        "acceptOffer": acceptOffers, // Send as actual boolean
+      };
+
+      // Send all images as multipart with field name "images"
+      var response = await ApiService.multipartMultipleWithJson(
+        ApiEndPoint.featuresArt,
+        header: {},
+        body: bodyData,
+        method: "POST",
+        imageName: 'images',
+        imagePaths: imagePaths,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        CreateExhibitionSuccessPopup.show();
+      } else {
+        Utils.errorSnackBar('Error', response.data['message'] ?? 'Failed to create artwork');
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', e.toString());
+    }
   }
 
   @override

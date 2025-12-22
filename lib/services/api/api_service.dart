@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:mime/mime.dart';
@@ -72,6 +73,110 @@ class ApiService {
 
     body.forEach((key, value) {
       formData.fields.add(MapEntry(key, value));
+    });
+
+    final requestHeader = <String, String>{...?(header)};
+    requestHeader['Content-Type'] = "multipart/form-data";
+
+    return _request(url, method, body: formData, header: requestHeader);
+  }
+
+  /// ========== [ MULTIPART WITH MULTIPLE FILES AND JSON BODY ] ========== ///
+  static Future<ApiResponseModel> multipartMultipleWithJson(
+    String url, {
+    Map<String, String>? header,
+    Map<String, dynamic> body = const {},
+    String method = "POST",
+    String imageName = 'images',
+    List<String> imagePaths = const [],
+  }) async {
+    FormData formData = FormData();
+
+    // Add multiple files with the same field name
+    for (String imagePath in imagePaths) {
+      if (imagePath.isNotEmpty) {
+        final file = File(imagePath);
+        final extension = file.path.split('.').last.toLowerCase();
+        final originalName = file.uri.pathSegments.isNotEmpty
+            ? file.uri.pathSegments.last
+            : "image_${DateTime.now().millisecondsSinceEpoch}.$extension";
+        final mimeType = lookupMimeType(imagePath);
+
+        formData.files.add(
+          MapEntry(
+            imageName,
+            await MultipartFile.fromFile(
+              imagePath,
+              filename: originalName,
+              contentType: mimeType != null
+                  ? DioMediaType.parse(mimeType)
+                  : DioMediaType.parse("image/jpeg"),
+            ),
+          ),
+        );
+      }
+    }
+
+    // Add JSON-serializable fields properly
+    body.forEach((key, value) {
+      if (value is bool) {
+        // Send booleans as lowercase strings that Zod can parse
+        formData.fields.add(MapEntry(key, value ? "true" : "false"));
+      } else if (value is Map) {
+        // Send objects as JSON strings
+        formData.fields.add(MapEntry(key, jsonEncode(value)));
+      } else {
+        // Send other values as strings
+        formData.fields.add(MapEntry(key, value.toString()));
+      }
+    });
+
+    final requestHeader = <String, String>{...?(header)};
+    requestHeader['Content-Type'] = "multipart/form-data";
+
+    return _request(url, method, body: formData, header: requestHeader);
+  }
+
+  /// ========== [ MULTIPART WITH MULTIPLE FILES ] ========== ///
+  static Future<ApiResponseModel> multipartMultiple(
+    String url, {
+    Map<String, String>? header,
+    Map<String, String> body = const {},
+    String method = "POST",
+    String imageName = 'images',
+    List<String> imagePaths = const [],
+  }) async {
+    FormData formData = FormData();
+
+    // Add multiple files with the same field name
+    for (String imagePath in imagePaths) {
+      if (imagePath.isNotEmpty) {
+        final file = File(imagePath);
+        final extension = file.path.split('.').last.toLowerCase();
+        final originalName = file.uri.pathSegments.isNotEmpty
+            ? file.uri.pathSegments.last
+            : "image_${DateTime.now().millisecondsSinceEpoch}.$extension";
+        final mimeType = lookupMimeType(imagePath);
+
+        formData.files.add(
+          MapEntry(
+            imageName,
+            await MultipartFile.fromFile(
+              imagePath,
+              filename: originalName,
+              contentType: mimeType != null
+                  ? DioMediaType.parse(mimeType)
+                  : DioMediaType.parse("image/jpeg"),
+            ),
+          ),
+        );
+      }
+    }
+
+    // Add text fields - explicitly convert to string to avoid type coercion
+    body.forEach((key, value) {
+      // Ensure all values are sent as plain strings, not parsed by Dio
+      formData.fields.add(MapEntry(key, value.toString()));
     });
 
     final requestHeader = <String, String>{...?(header)};
