@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/services/api/api_response_model.dart';
 import '../../../../../../services/api/api_service.dart';
 
 class ExhibitionRepository {
   // Search artists from API
   static Future<ApiResponseModel> searchArtists({required String searchTerm}) async {
-    final url = "http://10.10.7.102:5009/api/v1/users?searchTerm=$searchTerm&role=ARTIST";
+    final url = "${ApiEndPoint.baseUrl}users?searchTerm=$searchTerm&role=ARTIST";
     return await ApiService.get(url);
   }
 
@@ -38,15 +39,16 @@ class ExhibitionRepository {
         );
       }
 
-      // Add all other data as fields
+      // Add all other data as fields (video URL is already in data, not a file)
       data.forEach((key, value) {
         if (value != null) {
           formData.fields.add(MapEntry(key, value.toString()));
         }
       });
 
+      // Use correct endpoint from ApiEndPoint
       final response = await ApiService.post(
-        "http://10.10.7.102:5009/api/v1/exhibition",
+        ApiEndPoint.exhibition,
         body: formData,
       );
 
@@ -91,7 +93,7 @@ class ExhibitionRepository {
         );
       }
 
-      // Add all other data as fields
+      // Add all other data as fields (video URL is already in data, not a file)
       data.forEach((key, value) {
         if (value != null) {
           formData.fields.add(MapEntry(key, value.toString()));
@@ -99,7 +101,7 @@ class ExhibitionRepository {
       });
 
       final response = await ApiService.patch(
-        "http://10.10.7.102:5009/api/v1/exhibition/$exhibitionId",
+        "${ApiEndPoint.baseUrl}${ApiEndPoint.exhibition}/$exhibitionId",
         body: formData,
       );
 

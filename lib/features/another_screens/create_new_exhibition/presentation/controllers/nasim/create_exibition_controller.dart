@@ -1,8 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasaned_project/config/api/api_end_point.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/controllers/nasim/artist_model.dart';
 import 'package:tasaned_project/features/another_screens/create_new_exhibition/presentation/controllers/nasim/exibition_repository.dart';
+import 'package:tasaned_project/services/api/api_service.dart';
+import 'package:tasaned_project/utils/app_utils.dart';
 import 'package:tasaned_project/utils/helpers/other_helper.dart';
 
 class CreateExhibitionController extends GetxController {
@@ -18,10 +24,20 @@ class CreateExhibitionController extends GetxController {
   final venueCtrl = TextEditingController();
   final galleryCtrl = TextEditingController();
 
+  // Field selection
+  final List<String> fieldOptions = ['Art', 'Photography', 'Sculpture', 'Mixed', 'Other'];
+  String selectedField = 'Art';
+
   // Gallery data
   final List<String> imagePaths = [];
   String? videoPath;
+  String? uploadedVideoUrl; // Store uploaded video URL from server
+  bool isUploadingVideo = false;
+  double videoUploadProgress = 0.0;
+  int currentChunk = 0;
+  int totalChunks = 0;
   static const int maxPhotos = 10;
+  static const int videoChunkSize = 3 * 1024 * 1024; // 3 MB chunks
 
   // Feature Artist data
   List<ArtistModel> allArtists = [];
@@ -77,7 +93,7 @@ class CreateExhibitionController extends GetxController {
   Future<void> pickImages() async {
     final remaining = maxPhotos - imagePaths.length;
     if (remaining <= 0) {
-      Get.snackbar('Limit Reached', 'You can upload maximum $maxPhotos photos');
+      Utils.errorSnackBar('Limit Reached', 'You can upload maximum $maxPhotos photos');
       return;
     }
     final picked = await OtherHelper.pickMultipleImage(imageLimit: remaining);
@@ -95,13 +111,93 @@ class CreateExhibitionController extends GetxController {
   }
 
   Future<void> pickVideo() async {
-    // Implement video picker using OtherHelper or similar
-    // For now, placeholder
-    Get.snackbar('Info', 'Video picker to be implemented');
+    try {
+      final picked = await OtherHelper.pickVideoFromGallery();
+      if (picked != null && picked.isNotEmpty) {
+        videoPath = picked;
+        update();
+        // Upload video immediately after picking
+        await _uploadVideo(picked);
+      }
+    } catch (e) {
+      Utils.errorSnackBar('Error', 'Failed to pick video');
+    }
+  }
+
+  Future<void> _uploadVideo(String videoFilePath) async {
+    RandomAccessFile? raf;
+    try {
+      isUploadingVideo = true;
+      videoUploadProgress = 0.0;
+      currentChunk = 0;
+      update();
+
+      final file = File(videoFilePath);
+      if (!file.existsSync()) {
+        Utils.errorSnackBar('Video not found', 'Please pick the file again.');
+        isUploadingVideo = false;
+        update();
+        return;
+      }
+
+      final totalBytes = await file.length();
+      totalChunks = (totalBytes / videoChunkSize).ceil();
+      raf = file.openSync(mode: FileMode.read);
+
+      final fileName = file.uri.pathSegments.last;
+
+      for (var index = 0; index < totalChunks; index++) {
+        final bytesRead = min(videoChunkSize, totalBytes - index * videoChunkSize);
+        final chunkBytes = raf.readSync(bytesRead);
+
+        final formData = dio.FormData.fromMap({
+          'chunkIndex': index,
+          'totalChunks': totalChunks,
+          'originalname': fileName,
+          'chunk': dio.MultipartFile.fromBytes(
+            chunkBytes,
+            filename: '$fileName.part$index',
+          ),
+        });
+
+        final response = await ApiService.post(
+          ApiEndPoint.uoloadVideo,
+          body: formData,
+          header: {'Content-Type': 'multipart/form-data'},
+        );
+
+        if (response.statusCode == 200) {
+          currentChunk = index + 1;
+          videoUploadProgress = currentChunk / totalChunks;
+
+          final payload = response.data['data'] ?? response.data;
+          if (payload is Map && payload['videoUrl'] != null) {
+            uploadedVideoUrl = payload['videoUrl'].toString();
+          } else if (payload is String) {
+            uploadedVideoUrl = payload;
+          }
+
+          update();
+        } else {
+          throw Exception(response.data['message'] ?? 'Chunk upload failed');
+        }
+      }
+
+      Utils.successSnackBar('Success', 'Video uploaded successfully');
+    } catch (e) {
+      Utils.errorSnackBar('Upload failed', e.toString());
+      videoPath = null;
+      uploadedVideoUrl = null;
+    } finally {
+      raf?.closeSync();
+      isUploadingVideo = false;
+      update();
+    }
   }
 
   void removeVideo() {
     videoPath = null;
+    uploadedVideoUrl = null;
     update();
   }
 
@@ -126,11 +222,11 @@ class CreateExhibitionController extends GetxController {
         allArtists = data.map((json) => ArtistModel.fromJson(json)).toList();
         visibleArtists = List.from(allArtists);
       } else {
-        Get.snackbar('Error', response.message);
+        Utils.errorSnackBar('Error', response.message);
         visibleArtists = [];
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to search artists');
+      Utils.errorSnackBar('Error', 'Failed to search artists');
       visibleArtists = [];
     } finally {
       isLoadingArtists = false;
@@ -162,30 +258,30 @@ class CreateExhibitionController extends GetxController {
     switch (currentStep) {
       case 0: // Basic Information
         if (titleCtrl.text.trim().isEmpty) {
-          Get.snackbar('Required', 'Please enter exhibition title');
+          Utils.errorSnackBar('Required', 'Please enter exhibition title');
           return false;
         }
         if (descriptionCtrl.text.trim().isEmpty) {
-          Get.snackbar('Required', 'Please enter description');
+          Utils.errorSnackBar('Required', 'Please enter description');
           return false;
         }
         if (startDateCtrl.text.trim().isEmpty) {
-          Get.snackbar('Required', 'Please select start date');
+          Utils.errorSnackBar('Required', 'Please select start date');
           return false;
         }
         if (endDateCtrl.text.trim().isEmpty) {
-          Get.snackbar('Required', 'Please select end date');
+          Utils.errorSnackBar('Required', 'Please select end date');
           return false;
         }
         if (venueCtrl.text.trim().isEmpty) {
-          Get.snackbar('Required', 'Please enter venue');
+          Utils.errorSnackBar('Required', 'Please enter venue');
           return false;
         }
         return true;
 
       case 1: // Gallery
         if (imagePaths.isEmpty) {
-          Get.snackbar('Required', 'Please upload at least one image');
+          Utils.errorSnackBar('Required', 'Please upload at least one image');
           return false;
         }
         // TODO: Implement video later
@@ -201,11 +297,11 @@ class CreateExhibitionController extends GetxController {
 
       case 3: // Ticket & Booking
         if (priceCtrl.text.trim().isEmpty) {
-          Get.snackbar('Required', 'Please enter ticket price');
+          Utils.errorSnackBar('Required', 'Please enter ticket price');
           return false;
         }
         if (bookingUrlCtrl.text.trim().isEmpty) {
-          Get.snackbar('Required', 'Please enter booking URL');
+          Utils.errorSnackBar('Required', 'Please enter booking URL');
           return false;
         }
         return true;
@@ -240,6 +336,12 @@ class CreateExhibitionController extends GetxController {
       String startDate = parseDate(startDateCtrl.text);
       String endDate = parseDate(endDateCtrl.text);
 
+      // Validate and format booking URL
+      String bookingUrl = bookingUrlCtrl.text.trim();
+      if (!bookingUrl.startsWith('http://') && !bookingUrl.startsWith('https://')) {
+        bookingUrl = 'https://$bookingUrl';
+      }
+
       // Prepare exhibition data
       final Map<String, dynamic> exhibitionData = {
         'title': titleCtrl.text.trim(),
@@ -248,8 +350,8 @@ class CreateExhibitionController extends GetxController {
         'endDate': endDate,
         'visitingHour': visitingHoursCtrl.text.trim(),
         'venue': venueCtrl.text.trim(),
-        'field': 'Artss', //  galleryCtrl.text.trim(),
-        'bookingUrl': bookingUrlCtrl.text.trim(),
+        'field': selectedField,
+        'bookingUrl': bookingUrl,
         'ticketPrice': int.tryParse(priceCtrl.text.trim()) ?? 0,
         'status': 'Upcoming',
       };
@@ -261,6 +363,11 @@ class CreateExhibitionController extends GetxController {
         );
       }
 
+      // Add uploaded video URL if available
+      if (uploadedVideoUrl != null && uploadedVideoUrl!.isNotEmpty) {
+        exhibitionData['video'] = uploadedVideoUrl;
+      }
+
       // if (selectedArtists.isNotEmpty) {
       //   exhibitionData['artists'] = selectedArtists.map((a) => a.toJson()).toList();
       // }
@@ -269,18 +376,18 @@ class CreateExhibitionController extends GetxController {
       final response = await ExhibitionRepository.createExhibition(
         data: exhibitionData,
         imagePaths: imagePaths,
-        videoPath: videoPath,
+        videoPath: null, // Don't send local path, use uploaded URL instead
       );
 
       if (response.isSuccess) {
         Get.back();
-        Get.snackbar('Success', 'Exhibition created successfully');
+        Utils.successSnackBar('Success', 'Exhibition created successfully');
         // Show success popup if needed
       } else {
-        Get.snackbar('Error', response.message);
+        Utils.errorSnackBar('Error', response.message);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create exhibition');
+      Utils.errorSnackBar('Error', 'Failed to create exhibition');
     } finally {
       isSubmitting = false;
       update();
@@ -288,7 +395,7 @@ class CreateExhibitionController extends GetxController {
   }
 
   void saveAsDraft() {
-    Get.snackbar('Info', 'Draft saved locally');
+    Utils.successSnackBar('Info', 'Draft saved locally');
     Get.back();
   }
 

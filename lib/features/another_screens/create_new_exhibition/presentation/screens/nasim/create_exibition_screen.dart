@@ -186,6 +186,39 @@ class CreateExhibitionScreen extends StatelessWidget {
           fillColor: AppColors.white,
         ),
         12.height,
+        _label('Exhibition Field'),
+        8.height,
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(color: AppColors.stroke),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: DropdownButton<String>(
+            value: c.selectedField,
+            isExpanded: true,
+            underline: SizedBox(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                c.selectedField = newValue;
+                c.update();
+              }
+            },
+            items: c.fieldOptions.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: CommonText(
+                  text: value,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.titleColor,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        12.height,
         _label(AppString.gallery),
         8.height,
         CommonTextField(
@@ -349,6 +382,115 @@ class CreateExhibitionScreen extends StatelessWidget {
   }
 
   Widget _buildVideoUploadArea(CreateExhibitionController c) {
+    // If video is uploaded successfully
+    if (c.uploadedVideoUrl != null && c.uploadedVideoUrl!.isNotEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          border: Border.all(color: AppColors.primaryColor),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.check_circle, color: AppColors.primaryColor, size: 24.sp),
+                12.width,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CommonText(
+                        text: 'Video Uploaded',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.titleColor,
+                      ),
+                      4.height,
+                      CommonText(
+                        text: c.videoPath!.split('/').last,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.bodyClr,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: c.removeVideo,
+                  child: Icon(Icons.close, color: AppColors.bodyClr, size: 20.sp),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    // If video is being uploaded
+    if (c.isUploadingVideo) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          border: Border.all(color: AppColors.stroke),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                CircularProgressIndicator(
+                  color: AppColors.primaryColor,
+                  value: c.videoUploadProgress,
+                ),
+                12.width,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CommonText(
+                        text: 'Uploading video...',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.titleColor,
+                      ),
+                      4.height,
+                      CommonText(
+                        text: 'Chunk ${c.currentChunk}/${c.totalChunks}',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.bodyClr,
+                      ),
+                      4.height,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4.r),
+                        child: LinearProgressIndicator(
+                          value: c.videoUploadProgress,
+                          minHeight: 4.h,
+                          backgroundColor: AppColors.normalGray,
+                          valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    // If no video selected
     return InkWell(
       onTap: c.pickVideo,
       child: DottedBorder(

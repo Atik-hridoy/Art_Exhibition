@@ -213,8 +213,6 @@ Future<List<FeaturesArtCardModel>?> getRecommendedArt({
           .map((e) {
             try {
               if (e is String) {
-                // For now, skip the complex conversion and return null
-                // We'll fix the backend API instead
                 return null;
               } else if (e is Map<String, dynamic>) {
                 return FeaturesArtCardModel.fromJson(e);
@@ -229,27 +227,7 @@ Future<List<FeaturesArtCardModel>?> getRecommendedArt({
           .cast<FeaturesArtCardModel>()
           .toList();
       
-      // If no items were parsed, return mock data for testing
-      if (responseBody.isEmpty) {
-        return [
-          FeaturesArtCardModel(
-            id: '68f8aadc656cd48ac0cdcb93', // Real ID from API logs
-            title: 'Nasims Dream',
-            image: '/uploads/image/profile12-1757839714417.jpg',
-            price: 20,
-            isOnFavorite: true,
-          ),
-          FeaturesArtCardModel(
-            id: '68e12c277824f46549f811ba', // Real ID from API logs
-            title: 'Sunset Over Update',
-            image: '/uploads/image/img_1759-1760613800123.jpg',
-            price: 600,
-            isOnFavorite: true,
-          ),
-        ];
-      }
-      
-      return responseBody;
+      return responseBody; // Return actual API data (empty list if no results)
     }
     return null;
   } catch (e) {
