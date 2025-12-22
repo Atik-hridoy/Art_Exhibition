@@ -23,26 +23,34 @@ class FeaturesArtCardModel {
     
     // Try 'images' array first
     final images = json['images'];
+    print('Images field: $images, type: ${images.runtimeType}');
     if (images is List && images.isNotEmpty) {
       imagePath = images.first ?? '';
+      print('Got image from images array: $imagePath');
     }
     
     // Try 'image' field if 'images' didn't work
     if (imagePath.isEmpty) {
       imagePath = json['image'] ?? '';
+      print('Got image from image field: $imagePath');
     }
     
     // Try 'artImage' field if still empty
     if (imagePath.isEmpty) {
       imagePath = json['artImage'] ?? '';
+      print('Got image from artImage field: $imagePath');
     }
+
+    print('Final image path: $imagePath');
 
     return FeaturesArtCardModel(
       id: json['_id'] ?? '',
       artist: json['artist'] != null ? Artist.fromJson(json['artist']) : null,
       image: imagePath,
       title: json['title'] ?? '',
-      category: json['category'] != null ? Category.fromJson(json['category']) : null,
+      category: json['category'] != null && json['category'] is Map<String, dynamic>
+          ? Category.fromJson(json['category'])
+          : null,
       price: json['price'],
       isOnFavorite: json['isOnFavorite'] ?? false,
     );

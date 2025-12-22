@@ -111,7 +111,7 @@ class CommonImage extends StatelessWidget {
         width: size ?? width,
         fit: fill,
         errorBuilder: (context, error, stackTrace) {
-        // Only log critical errors, not common asset loading issues
+
         if (error is Exception && !error.toString().contains('Unable to load asset')) {
           errorLog(error, source: "Common Image");
         }

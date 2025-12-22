@@ -29,15 +29,16 @@ class HomeController extends GetxController {
   Future<void> featuredArt() async {
     try {
       featureArtIsLoading = true;
+      update();
+      
       var response = await getFeaturedArt();
       if (response != null) {
         featureArtList = response;
-        featureArtIsLoading = false;
       }
-      update();
     } catch (error) {
-      featureArtIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
+    } finally {
+      featureArtIsLoading = false;
       update();
     }
   }
@@ -64,15 +65,16 @@ class HomeController extends GetxController {
   Future<void> popuparArtist() async {
     try {
       populartArtistIsLoading = true;
+      update();
+      
       var response = await getPopularArtist();
       if (response != null) {
         popularArtistList = response;
-        populartArtistIsLoading = false;
       }
-      update();
     } catch (error) {
-      populartArtistIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
+    } finally {
+      populartArtistIsLoading = false;
       update();
     }
   }
@@ -80,15 +82,16 @@ class HomeController extends GetxController {
   Future<void> recommendedArt() async {
     try {
       recommendedArtIsLoading = true;
+      update();
+      
       var response = await getRecommendedArt();
       if (response != null) {
         recommendedArtList = response;
-        recommendedArtIsLoading = false;
       }
-      update();
     } catch (error) {
-      recommendedArtIsLoading = false;
       Utils.errorSnackBar('Error', error.toString());
+    } finally {
+      recommendedArtIsLoading = false;
       update();
     }
   }

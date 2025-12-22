@@ -159,6 +159,32 @@ Future<ArtistDetailsModel?> getArtistDetails(String artistId) async {
   }
 }
 
+Future<ApiResponseModel?> followArtist(String artistId) async {
+  try {
+    final response = await ApiService.post(
+      ApiEndPoint.following,
+      body: {'followingId': artistId},
+    );
+    return response;
+  } catch (e) {
+    Utils.errorSnackBar('Error', 'Failed to follow artist');
+    return null;
+  }
+}
+
+Future<ApiResponseModel?> unfollowArtist(String artistId) async {
+  try {
+    final response = await ApiService.post(
+      ApiEndPoint.unFollowing,
+      body: {'followingId': artistId},
+    );
+    return response;
+  } catch (e) {
+    Utils.errorSnackBar('Error', 'Failed to unfollow artist');
+    return null;
+  }
+}
+
 Future<List<ArtistCardModel>?> getPopularArtist({
   int page = 1,
   int limit = 10,
@@ -209,17 +235,32 @@ Future<List<FeaturesArtCardModel>?> getRecommendedArt({
     );
 
     if (response.statusCode == 200) {
-      var responseBody = (response.data['data'] as List<dynamic>? ?? [])
+      print('=== RECOMMENDED ART RESPONSE ===');
+      print('Status: ${response.statusCode}');
+      print('Data type: ${response.data.runtimeType}');
+      print('Data keys: ${response.data.keys}');
+      
+      final dataList = response.data['data'] as List<dynamic>? ?? [];
+      print('Data list length: ${dataList.length}');
+      
+      var responseBody = dataList
           .map((e) {
             try {
+              print('Processing item: ${e.runtimeType}');
               if (e is String) {
+                print('Item is String, skipping');
                 return null;
               } else if (e is Map<String, dynamic>) {
-                return FeaturesArtCardModel.fromJson(e);
+                print('Item is Map, parsing... ID: ${e['_id']}, Title: ${e['title']}');
+                final model = FeaturesArtCardModel.fromJson(e);
+                print('Parsed successfully: ${model.title}');
+                return model;
               } else {
+                print('Item is unknown type: ${e.runtimeType}, skipping');
                 return null;
               }
             } catch (parseError) {
+              print('Parse error: $parseError');
               return null;
             }
           })
@@ -227,10 +268,13 @@ Future<List<FeaturesArtCardModel>?> getRecommendedArt({
           .cast<FeaturesArtCardModel>()
           .toList();
       
-      return responseBody; // Return actual API data (empty list if no results)
+      print('Final list length: ${responseBody.length}');
+      print('=== END RECOMMENDED ART ===');
+      return responseBody;
     }
     return null;
   } catch (e) {
+    print('Error in getRecommendedArt: $e');
     Utils.errorSnackBar('An error with repository', 'Please contact with developer$e');
     return null;
   }

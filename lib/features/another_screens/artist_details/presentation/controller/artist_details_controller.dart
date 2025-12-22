@@ -46,8 +46,36 @@ class ArtistDetailsController extends GetxController {
     update();
   }
 
-  void toggleFollowing() {
-    isFollowing = !isFollowing;
-    update();
+  Future<void> toggleFollowing() async {
+    try {
+      isFollowing = !isFollowing;
+      update();
+
+      // Call API to follow/unfollow
+      if (isFollowing) {
+        final response = await followArtist(artistId);
+        if (response != null && response.statusCode == 200) {
+          Utils.successSnackBar('Success', 'Artist followed');
+        } else {
+          // Revert if API call fails
+          isFollowing = !isFollowing;
+          Utils.errorSnackBar('Error', 'Failed to follow artist');
+        }
+      } else {
+        final response = await unfollowArtist(artistId);
+        if (response != null && response.statusCode == 200) {
+          Utils.successSnackBar('Success', 'Artist unfollowed');
+        } else {
+          // Revert if API call fails
+          isFollowing = !isFollowing;
+          Utils.errorSnackBar('Error', 'Failed to unfollow artist');
+        }
+      }
+      update();
+    } catch (e) {
+      isFollowing = !isFollowing;
+      Utils.errorSnackBar('Error', 'Something went wrong: $e');
+      update();
+    }
   }
 }

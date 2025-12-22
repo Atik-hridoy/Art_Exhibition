@@ -23,7 +23,7 @@ class ApiEndPoint {
   //////////////  Art //////////////////
   
   static const featuresArt = 'arts';
-  static const recommendedArt = 'arts/recommended';
+   static const recommendedArt = 'arts/recommended';
   static const savedItem = 'save';
 
   static const category = 'category';
